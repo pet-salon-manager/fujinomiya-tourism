@@ -8,10 +8,10 @@
 <title>富士宮たびナビ</title>
 <style>
 :root{--ink:#18312a;--muted:#61746e;--card:rgba(255,255,255,.92);--accent:#0a765d;--accent2:#e8b85a;--line:#dce8e4}
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:linear-gradient(180deg,#dff1ec 0,#f7fbf9 38%,#fff 100%);min-height:100vh}
-.hero{padding:44px 20px 22px;background:radial-gradient(circle at 80% 10%,#fff9 0 18%,transparent 19%),linear-gradient(145deg,#cdece3,#eef8f4);border-bottom:1px solid var(--line)}
-.kicker{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--accent)}
-h1{margin:8px 0 8px;font-size:34px;line-height:1.05}.lead{color:var(--muted);line-height:1.7;margin:0;max-width:700px}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:linear-gradient(rgba(241,248,245,.90),rgba(255,255,255,.95)),url("https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%AC%E5%AE%AE%E6%B5%85%E9%96%93%E5%A4%A7%E7%A4%BE%E9%B3%A5%E5%B1%85.JPG") center top/cover fixed no-repeat;min-height:100vh}
+.hero{padding:54px 20px 30px;background:linear-gradient(90deg,rgba(10,54,42,.82),rgba(10,54,42,.35)),url("https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%AC%E5%AE%AE%E6%B5%85%E9%96%93%E5%A4%A7%E7%A4%BE%E9%B3%A5%E5%B1%85.JPG") center 38%/cover no-repeat;border-bottom:1px solid var(--line);color:#fff;min-height:330px;display:flex;align-items:flex-end}
+.kicker{font-size:13px;font-weight:800;letter-spacing:.08em;color:#dff7ee}
+h1{margin:8px 0 8px;font-size:38px;line-height:1.05;text-shadow:0 2px 10px #0007}.lead{color:#f6fffb;line-height:1.7;margin:0;max-width:700px}
 .wrap{max-width:980px;margin:auto;padding:18px 16px 90px}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 button,.btn{appearance:none;border:0;border-radius:14px;padding:13px 14px;font-weight:800;font-size:15px;cursor:pointer;text-decoration:none;text-align:center}
@@ -19,7 +19,7 @@ button,.btn{appearance:none;border:0;border-radius:14px;padding:13px 14px;font-w
 .search{display:flex;gap:8px;margin:16px 0}.search input{flex:1;border:1px solid var(--line);border-radius:14px;padding:14px 15px;font-size:16px;background:#fff}
 .chips{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.chip{white-space:nowrap;background:#fff;border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:999px}.chip.active{background:var(--ink);color:#fff}
 h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 24px #16392e0d;position:relative}.card h3{margin:4px 34px 7px 0;font-size:18px}.meta{font-size:12px;color:var(--accent);font-weight:800}.desc{font-size:14px;line-height:1.65;color:var(--muted);min-height:68px}.row{display:flex;gap:8px;margin-top:12px}.row a{flex:1}.fav{position:absolute;right:12px;top:12px;background:#fff;border:1px solid var(--line);width:38px;height:38px;padding:0;border-radius:50%;font-size:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 24px #16392e0d;position:relative}.card h3{margin:4px 34px 7px 0;font-size:18px}.meta{font-size:12px;color:var(--accent);font-weight:800}.desc{font-size:14px;line-height:1.65;color:var(--muted);min-height:68px}.detail{font-size:12px;color:#52655f;line-height:1.6;margin-top:8px}.row{display:flex;gap:8px;margin-top:12px}.row a{flex:1}.fav{position:absolute;right:12px;top:12px;background:#fff;border:1px solid var(--line);width:38px;height:38px;padding:0;border-radius:50%;font-size:18px}
 .course{background:#163b32;color:#fff;border-radius:22px;padding:18px;margin-top:10px}.course p{color:#dce8e4;line-height:1.7}.course ol{padding-left:20px;line-height:1.9}
 .notice{font-size:12px;color:var(--muted);line-height:1.6;background:#fff7e8;border:1px solid #f1dfb7;border-radius:14px;padding:12px;margin-top:18px}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px}
@@ -43,7 +43,12 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
   <div class="search"><input id="search" placeholder="白糸、朝霧、やきそば など"></div>
   <div class="chips" id="chips"></div>
 
-  <h2>おすすめスポット</h2>
+  <section class="course" style="background:rgba(255,255,255,.94);color:var(--ink);border:1px solid var(--line)">
+    <strong style="font-size:20px">🥢 富士宮やきそばを食べ歩こう</strong>
+    <p style="color:var(--muted)">浅間大社周辺から淀師・万野原新田・朝霧方面まで、富士宮やきそばを中心に地元の飲食店を追加しました。「富士宮やきそば」カテゴリを押すとまとめて表示できます。</p>
+  </section>
+
+  <h2>観光・グルメスポット</h2>
   <section class="grid" id="cards"></section>
 
   <h2>モデルコース</h2>
@@ -59,11 +64,12 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
   </section>
 
   <div class="notice">この試作版は「アプリとして使える構成」を先に作っています。営業時間・料金・休館日・登山規制など変わりやすい情報は、公開前に公式情報との照合が必要です。</div>
+  <div class="notice">背景写真：富士山本宮浅間大社（Wikimedia Commons掲載写真を参照）。店舗情報は変更される場合があるため、来店前に地図・電話などで最新情報をご確認ください。</div>
 </main>
 
 <script>
 let spots=[], selected="すべて";
-const cats=["すべて","観光","自然","体験","グルメ","学ぶ","登山","お気に入り"];
+const cats=["すべて","富士宮やきそば","飲食店","観光","自然","体験","グルメ","学ぶ","登山","お気に入り"];
 const favs=()=>JSON.parse(localStorage.getItem("favs")||"[]");
 function saveFav(name){let f=favs(); f=f.includes(name)?f.filter(x=>x!==name):[...f,name];localStorage.setItem("favs",JSON.stringify(f));render()}
 function mapUrl(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
@@ -79,7 +85,7 @@ function render(){
  document.getElementById("cards").innerHTML=list.length?list.map(s=>`
   <article class="card">
    <button class="fav" onclick='saveFav(${JSON.stringify(s.name)})'>${f.includes(s.name)?"♥":"♡"}</button>
-   <div class="meta">${s.cat} ・ ${s.area}</div><h3>${s.name}</h3><div class="desc">${s.desc}</div>
+   <div class="meta">${s.cat} ・ ${s.area}</div><h3>${s.name}</h3><div class="desc">${s.desc}</div><div class="detail">${s.address?`📍 ${s.address}`:""}${s.phone?`<br>☎️ ${s.phone}`:""}</div>
    <div class="row"><a class="btn secondary" target="_blank" rel="noopener" href="${mapUrl(s.q)}">地図</a><a class="btn primary" target="_blank" rel="noopener" href="${dirUrl(s.q)}">現在地から案内</a></div>
   </article>`).join(""):`<div class="empty">該当するスポットがありません。</div>`;
 }
