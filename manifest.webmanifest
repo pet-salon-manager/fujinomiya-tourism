@@ -1,0 +1,9 @@
+{
+  "name": "富士宮たびナビ",
+  "short_name": "富士宮ナビ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eff7f4",
+  "theme_color": "#0a765d",
+  "description": "静岡県富士宮市に特化した観光案内アプリ"
+}

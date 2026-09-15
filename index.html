@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eff7f4">
+<link rel="manifest" href="manifest.webmanifest">
+<title>富士宮たびナビ</title>
+<style>
+:root{--ink:#18312a;--muted:#61746e;--card:rgba(255,255,255,.92);--accent:#0a765d;--accent2:#e8b85a;--line:#dce8e4}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:linear-gradient(180deg,#dff1ec 0,#f7fbf9 38%,#fff 100%);min-height:100vh}
+.hero{padding:44px 20px 22px;background:radial-gradient(circle at 80% 10%,#fff9 0 18%,transparent 19%),linear-gradient(145deg,#cdece3,#eef8f4);border-bottom:1px solid var(--line)}
+.kicker{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--accent)}
+h1{margin:8px 0 8px;font-size:34px;line-height:1.05}.lead{color:var(--muted);line-height:1.7;margin:0;max-width:700px}
+.wrap{max-width:980px;margin:auto;padding:18px 16px 90px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+button,.btn{appearance:none;border:0;border-radius:14px;padding:13px 14px;font-weight:800;font-size:15px;cursor:pointer;text-decoration:none;text-align:center}
+.primary{background:var(--accent);color:#fff}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.search{display:flex;gap:8px;margin:16px 0}.search input{flex:1;border:1px solid var(--line);border-radius:14px;padding:14px 15px;font-size:16px;background:#fff}
+.chips{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.chip{white-space:nowrap;background:#fff;border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:999px}.chip.active{background:var(--ink);color:#fff}
+h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 24px #16392e0d;position:relative}.card h3{margin:4px 34px 7px 0;font-size:18px}.meta{font-size:12px;color:var(--accent);font-weight:800}.desc{font-size:14px;line-height:1.65;color:var(--muted);min-height:68px}.row{display:flex;gap:8px;margin-top:12px}.row a{flex:1}.fav{position:absolute;right:12px;top:12px;background:#fff;border:1px solid var(--line);width:38px;height:38px;padding:0;border-radius:50%;font-size:18px}
+.course{background:#163b32;color:#fff;border-radius:22px;padding:18px;margin-top:10px}.course p{color:#dce8e4;line-height:1.7}.course ol{padding-left:20px;line-height:1.9}
+.notice{font-size:12px;color:var(--muted);line-height:1.6;background:#fff7e8;border:1px solid #f1dfb7;border-radius:14px;padding:12px;margin-top:18px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}.hero{padding-top:34px}.actions{grid-template-columns:1fr}h1{font-size:30px}.desc{min-height:0}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap" style="padding-bottom:0">
+    <div class="kicker">FUJINOMIYA CITY GUIDE</div>
+    <h1>富士宮たびナビ</h1>
+    <p class="lead">富士山・白糸ノ滝・朝霧高原・富士宮やきそばまで。富士宮市の観光を、迷わず楽しむためのシンプルな案内アプリ。</p>
+    <div class="actions">
+      <button class="primary" onclick="nearby()">📍 現在地から探す</button>
+      <a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82+%E8%A6%B3%E5%85%89" target="_blank" rel="noopener">🗺 地図で見る</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="search"><input id="search" placeholder="白糸、朝霧、やきそば など"></div>
+  <div class="chips" id="chips"></div>
+
+  <h2>おすすめスポット</h2>
+  <section class="grid" id="cards"></section>
+
+  <h2>モデルコース</h2>
+  <section class="course">
+    <strong>はじめての富士宮・1日コース</strong>
+    <p>中心市街地から富士山麓へ抜ける、富士宮らしさを感じやすい定番構成です。</p>
+    <ol><li>静岡県富士山世界遺産センター</li><li>富士山本宮浅間大社・湧玉池</li><li>富士宮やきそば</li><li>白糸ノ滝・音止の滝</li><li>朝霧高原</li></ol>
+  </section>
+  <section class="course">
+    <strong>家族で楽しむ・半日〜1日</strong>
+    <p>移動しながら体験型スポットを中心に楽しむコースです。</p>
+    <ol><li>まかいの牧場</li><li>富士ミルクランド</li><li>道の駅 朝霧高原</li><li>田貫湖</li></ol>
+  </section>
+
+  <div class="notice">この試作版は「アプリとして使える構成」を先に作っています。営業時間・料金・休館日・登山規制など変わりやすい情報は、公開前に公式情報との照合が必要です。</div>
+</main>
+
+<script>
+let spots=[], selected="すべて";
+const cats=["すべて","観光","自然","体験","グルメ","学ぶ","登山","お気に入り"];
+const favs=()=>JSON.parse(localStorage.getItem("favs")||"[]");
+function saveFav(name){let f=favs(); f=f.includes(name)?f.filter(x=>x!==name):[...f,name];localStorage.setItem("favs",JSON.stringify(f));render()}
+function mapUrl(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
+function dirUrl(q){return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(q)+"&travelmode=driving"}
+function renderChips(){const el=document.getElementById("chips");el.innerHTML=cats.map(c=>`<button class="chip ${c===selected?'active':''}" onclick="selected='${c}';renderChips();render()">${c}</button>`).join("")}
+function render(){
+ const q=document.getElementById("search").value.trim().toLowerCase(), f=favs();
+ const list=spots.filter(s=>{
+   const hit=!q || (s.name+s.cat+s.area+s.desc).toLowerCase().includes(q);
+   const cat=selected==="すべて" || (selected==="お気に入り"?f.includes(s.name):s.cat===selected);
+   return hit&&cat;
+ });
+ document.getElementById("cards").innerHTML=list.length?list.map(s=>`
+  <article class="card">
+   <button class="fav" onclick='saveFav(${JSON.stringify(s.name)})'>${f.includes(s.name)?"♥":"♡"}</button>
+   <div class="meta">${s.cat} ・ ${s.area}</div><h3>${s.name}</h3><div class="desc">${s.desc}</div>
+   <div class="row"><a class="btn secondary" target="_blank" rel="noopener" href="${mapUrl(s.q)}">地図</a><a class="btn primary" target="_blank" rel="noopener" href="${dirUrl(s.q)}">現在地から案内</a></div>
+  </article>`).join(""):`<div class="empty">該当するスポットがありません。</div>`;
+}
+function nearby(){
+ if(!navigator.geolocation){alert("この端末では位置情報を利用できません。");return}
+ navigator.geolocation.getCurrentPosition(()=>{
+   window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("観光 富士宮市"),"_blank")
+ },()=>alert("位置情報の利用を許可すると、現在地から周辺を探せます。"))
+}
+fetch("spots.json").then(r=>r.json()).then(d=>{spots=d;renderChips();render()});
+document.getElementById("search").addEventListener("input",render);
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
