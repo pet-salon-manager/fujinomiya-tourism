@@ -86,7 +86,16 @@ body.admin-mode .edit-chip{display:block}
 .admin-photo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .admin-photo-actions button{padding:10px 12px;border-radius:12px;border:0;font-weight:800}
 
+
+.pager{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 28px}
+.pager button{min-width:110px;border:0;border-radius:16px;padding:13px 18px;font-weight:800;font-size:16px}
+.pager button:disabled{opacity:.35}
+.pager .page-info{text-align:center;font-weight:800;color:var(--ink)}
+.pager .page-sub{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-top:4px}
+@media(max-width:480px){.pager button{min-width:92px;padding:12px}.pager{gap:8px}}
+
 </style>
+  <link rel="apple-touch-icon" href="assets/icon-512.png?v=23">
 </head>
 <body>
 <header class="hero">
@@ -162,6 +171,8 @@ let supabaseAccessToken = sessionStorage.getItem("fujinomiya_supabase_access_tok
 let supabaseRefreshToken = localStorage.getItem("fujinomiya_supabase_refresh_token") || sessionStorage.getItem("fujinomiya_supabase_refresh_token") || "";
 
 let spots = [];
+const PAGE_SIZE = 5;
+let currentPage = 1;
 let selected = "すべて";
 const cats = ["すべて","観光","自然","体験","グルメ","富士宮やきそば","飲食店","宿泊","温泉","キャンプ","学ぶ","登山","交通","お気に入り"];
 
@@ -630,10 +641,10 @@ loadSpotsFromSupabase()
     }
   });
 
-document.getElementById("search").addEventListener("input", render);
+document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=22").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=23").catch(()=>{});
 }
 </script>
 </body>
