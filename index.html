@@ -3,127 +3,166 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#eff7f4">
+<meta name="theme-color" content="#eaf8f5">
 <link rel="manifest" href="manifest.webmanifest">
 <title>富士宮たびナビ</title>
 <style>
-:root{--ink:#18312a;--muted:#61746e;--card:rgba(255,255,255,.92);--accent:#0a765d;--accent2:#e8b85a;--line:#dce8e4}
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:linear-gradient(rgba(241,248,245,.90),rgba(255,255,255,.95)),url("https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%AC%E5%AE%AE%E6%B5%85%E9%96%93%E5%A4%A7%E7%A4%BE%E9%B3%A5%E5%B1%85.JPG") center top/cover fixed no-repeat;min-height:100vh}
-.hero{padding:54px 20px 30px;background:linear-gradient(90deg,rgba(10,54,42,.82),rgba(10,54,42,.35)),url("https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%AC%E5%AE%AE%E6%B5%85%E9%96%93%E5%A4%A7%E7%A4%BE%E9%B3%A5%E5%B1%85.JPG") center 38%/cover no-repeat;border-bottom:1px solid var(--line);color:#fff;min-height:330px;display:flex;align-items:flex-end}
-.kicker{font-size:13px;font-weight:800;letter-spacing:.08em;color:#dff7ee}
-h1{margin:8px 0 8px;font-size:38px;line-height:1.05;text-shadow:0 2px 10px #0007}.lead{color:#f6fffb;line-height:1.7;margin:0;max-width:700px}
-.wrap{max-width:980px;margin:auto;padding:18px 16px 90px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
-button,.btn{appearance:none;border:0;border-radius:14px;padding:13px 14px;font-weight:800;font-size:15px;cursor:pointer;text-decoration:none;text-align:center}
-.primary{background:var(--accent);color:#fff}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
-.search{display:flex;gap:8px;margin:16px 0}.search input{flex:1;border:1px solid var(--line);border-radius:14px;padding:14px 15px;font-size:16px;background:#fff}
-.chips{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.chip{white-space:nowrap;background:#fff;border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:999px}.chip.active{background:var(--ink);color:#fff}
-h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 24px #16392e0d;position:relative}.card h3{margin:4px 34px 7px 0;font-size:18px}.meta{font-size:12px;color:var(--accent);font-weight:800}.desc{font-size:14px;line-height:1.65;color:var(--muted);min-height:68px}.detail{font-size:12px;color:#52655f;line-height:1.6;margin-top:8px}.row{display:flex;gap:8px;margin-top:12px}.row a{flex:1}.fav{position:absolute;right:12px;top:12px;background:#fff;border:1px solid var(--line);width:38px;height:38px;padding:0;border-radius:50%;font-size:18px}
-.course{background:#163b32;color:#fff;border-radius:22px;padding:18px;margin-top:10px}.course p{color:#dce8e4;line-height:1.7}.course ol{padding-left:20px;line-height:1.9}
-.notice{font-size:12px;color:var(--muted);line-height:1.6;background:#fff7e8;border:1px solid #f1dfb7;border-radius:14px;padding:12px;margin-top:18px}
-.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px}
-@media(max-width:680px){.grid{grid-template-columns:1fr}.hero{padding-top:34px}.actions{grid-template-columns:1fr}h1{font-size:30px}.desc{min-height:0}}
-
-.card-photo{width:calc(100% + 32px);height:210px;object-fit:cover;display:block;margin:-16px -16px 14px;border-radius:20px 20px 0 0;background:#dfe9e5}
-.photo-wrap{position:relative}
-.photo-badge{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.62);color:#fff;font-size:11px;font-weight:700;padding:6px 9px;border-radius:999px;backdrop-filter:blur(6px)}
-.photo-link{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.92);color:#17312a;text-decoration:none;font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px}
-
-
-body{background:linear-gradient(180deg,#e9f8f5 0%,#f3fbf9 100%)!important}
-.wrap{max-width:760px!important}
-.card{border-radius:26px!important;box-shadow:0 8px 22px rgba(22,57,46,.08)!important}
-.chip{font-size:15px!important;font-weight:800!important;padding:11px 16px!important}
-.search input{border-radius:20px!important;padding:17px 18px!important;background:#fff!important}
-h2{font-size:24px!important}
-
+:root{--ink:#12352e;--muted:#61746e;--card:#fff;--accent:#0a8069;--line:#d9e7e2;--bg:#eaf8f5}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:var(--bg)}
+.hero{min-height:520px;padding:56px 28px 34px;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(rgba(0,45,39,.58),rgba(0,45,39,.62)),url("https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%AC%E5%AE%AE%E6%B5%85%E9%96%93%E5%A4%A7%E7%A4%BE%E9%B3%A5%E5%B1%85.JPG") center/cover no-repeat}
+.wrap{width:min(760px,100%);margin:auto;padding:0 28px}
+.kicker{font-size:14px;font-weight:800;letter-spacing:.08em}
+h1{font-size:42px;line-height:1.05;margin:10px 0 18px;text-shadow:0 2px 12px #0007}
+.lead{font-size:18px;line-height:1.8;margin:0 0 22px}
+.hero button{width:100%}
+button,.btn{border:0;border-radius:18px;padding:16px 18px;font-weight:800;font-size:16px;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;cursor:pointer}
+.primary{background:var(--accent);color:#fff}
+.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+main.wrap{padding-top:28px;padding-bottom:90px}
+.search{margin:8px 0 16px}
+.search input{width:100%;border:1px solid var(--line);border-radius:22px;padding:18px 20px;font-size:17px;background:#fff}
+.chips{display:flex;gap:10px;overflow:auto;padding:0 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:11px 16px;font-size:15px}
+.chip.active{background:var(--ink);color:#fff}
+.guide{background:#fff8e7;border:1px solid #efd9a5;border-radius:22px;padding:18px 20px;color:#667872;line-height:1.7;margin:12px 0 26px}
+h2{font-size:28px;margin:24px 0 18px}
+.grid{display:grid;grid-template-columns:1fr;gap:18px}
+.card{position:relative;background:#fff;border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:0 10px 28px rgba(18,53,46,.06)}
+.photo-wrap{position:relative;background:#dfe9e5}
+.card-photo{width:100%;height:260px;object-fit:cover;display:block}
+.photo-badge{position:absolute;left:18px;bottom:16px;background:rgba(0,0,0,.68);color:#fff;font-size:12px;font-weight:800;padding:7px 10px;border-radius:999px}
+.card-body{padding:22px 24px 24px}
+.meta{font-size:14px;color:var(--accent);font-weight:800;margin-bottom:8px}
+.card h3{font-size:24px;margin:0 54px 12px 0;line-height:1.35}
+.desc{font-size:16px;line-height:1.85;color:var(--muted)}
+.detail{font-size:14px;line-height:1.8;color:#51635e;margin-top:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.fav{position:absolute;right:18px;top:18px;width:48px;height:48px;padding:0;border-radius:50%;font-size:24px;background:#fff;color:#0a93d8;border:1px solid var(--line);z-index:2}
+.empty{text-align:center;color:var(--muted);padding:40px 20px;background:#fff;border-radius:22px}
+.count{font-size:13px;color:var(--muted);font-weight:600}
+@media(max-width:600px){
+ .hero{min-height:500px;padding-left:0;padding-right:0}
+ .wrap{padding-left:28px;padding-right:28px}
+ h1{font-size:38px}
+ .card-photo{height:220px}
+ .row{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 <header class="hero">
-  <div class="wrap" style="padding-bottom:0">
+  <div class="wrap">
     <div class="kicker">FUJINOMIYA CITY GUIDE</div>
     <h1>富士宮たびナビ</h1>
-    <p class="lead">富士山・白糸ノ滝・朝霧高原・富士宮やきそばまで。富士宮市の観光を、迷わず楽しむためのシンプルな案内アプリ。</p>
-    <div class="actions">
-      <button class="primary" onclick="nearby()">📍 現在地から探す</button>
-      
-    </div>
+    <p class="lead">富士宮市の観光地・グルメ・温泉・宿泊・キャンプ場を、ホーム画面からそのまま見られる観光案内アプリです。</p>
+    <button class="primary" onclick="nearby()">📍 現在地から探す</button>
   </div>
 </header>
 
 <main class="wrap">
   <div class="search"><input id="search" placeholder="白糸、朝霧、やきそば など"></div>
   <div class="chips" id="chips"></div>
+  <div class="guide">観光地・飲食店・宿泊・温泉などは、このホーム画面に直接一覧表示します。カテゴリを押すと、このページ内の表示だけを絞り込みます。</div>
 
-  <h2>おすすめスポット <span id="spotCount" style="font-size:13px;color:var(--muted);font-weight:600"></span></h2>
+  <h2>おすすめスポット <span class="count" id="spotCount"></span></h2>
   <section class="grid" id="cards"></section>
-
-  <div class="notice">観光地・飲食店・宿泊・温泉などは、このホーム画面に直接一覧表示します。カテゴリを押すと、このページ内の表示だけを絞り込みます。</div>
-
-  <section class="course" style="background:rgba(255,255,255,.94);color:var(--ink);border:1px solid var(--line)">
-    <strong style="font-size:20px">🥢 富士宮やきそばを食べ歩こう</strong>
-    <p style="color:var(--muted)">浅間大社周辺から淀師・万野原新田・朝霧方面まで、富士宮やきそばを中心に地元の飲食店を追加しました。「富士宮やきそば」カテゴリを押すとまとめて表示できます。</p>
-  </section>
-
-  <h2>おすすめスポット <span id="spotCount" style="font-size:13px;color:var(--muted);font-weight:600"></span></h2>
-  <section class="grid" id="cards"></section>
-
-  <h2>モデルコース</h2>
-  <section class="course">
-    <strong>はじめての富士宮・1日コース</strong>
-    <p>中心市街地から富士山麓へ抜ける、富士宮らしさを感じやすい定番構成です。</p>
-    <ol><li>静岡県富士山世界遺産センター</li><li>富士山本宮浅間大社・湧玉池</li><li>富士宮やきそば</li><li>白糸ノ滝・音止の滝</li><li>朝霧高原</li></ol>
-  </section>
-  <section class="course">
-    <strong>家族で楽しむ・半日〜1日</strong>
-    <p>移動しながら体験型スポットを中心に楽しむコースです。</p>
-    <ol><li>まかいの牧場</li><li>富士ミルクランド</li><li>道の駅 朝霧高原</li><li>田貫湖</li></ol>
-  </section>
-
-  <div class="notice">この試作版は「アプリとして使える構成」を先に作っています。料金・休館日・登山規制など変わりやすい情報は、公開前に公式情報との照合が必要です。</div>
-  <div class="notice">背景写真：富士山本宮浅間大社（Wikimedia Commons掲載写真を参照）。店舗情報は変更される場合があるため、来店前に地図・電話などで最新情報をご確認ください。</div>
-<div class="notice">関係のない写真が表示されないように、自動写真検索は停止しました。実際の写真が未確認の施設は、説明文に沿った実写風イメージを表示します。</div>
 </main>
 
 <script>
-let spots=[], selected="すべて";
-const cats=["すべて","観光","自然","体験","グルメ","富士宮やきそば","飲食店","宿泊","温泉","キャンプ","学ぶ","登山","お気に入り"];
-const favs=()=>JSON.parse(localStorage.getItem("favs")||"[]");
-function saveFav(name){let f=favs(); f=f.includes(name)?f.filter(x=>x!==name):[...f,name];localStorage.setItem("favs",JSON.stringify(f));render()}
-function mapUrl(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
-function dirUrl(q){return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(q)+"&travelmode=driving"}
-function renderChips(){const el=document.getElementById("chips");el.innerHTML=cats.map(c=>`<button class="chip ${c===selected?'active':''}" onclick="selected='${c}';renderChips();render()">${c}</button>`).join("")}
+let spots = [];
+let selected = "すべて";
+const cats = ["すべて","観光","自然","体験","グルメ","富士宮やきそば","飲食店","宿泊","温泉","キャンプ","学ぶ","登山","交通","お気に入り"];
 
-  }
+const favs = () => JSON.parse(localStorage.getItem("favs") || "[]");
+
+function saveFav(name){
+  let f = favs();
+  f = f.includes(name) ? f.filter(x => x !== name) : [...f, name];
+  localStorage.setItem("favs", JSON.stringify(f));
+  render();
+}
+
+function mapUrl(q){
+  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q || "");
+}
+
+function dirUrl(q){
+  return "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(q || "") + "&travelmode=driving";
+}
+
+function renderChips(){
+  const el = document.getElementById("chips");
+  el.innerHTML = cats.map(c =>
+    `<button class="chip ${c===selected ? "active" : ""}" onclick="selected=${JSON.stringify(c)};renderChips();render()">${c}</button>`
+  ).join("");
 }
 
 function render(){
- const q=document.getElementById("search").value.trim().toLowerCase(), f=favs();
- const list=spots.filter(s=>{
-   const hit=!q || (s.name+s.cat+s.area+s.desc).toLowerCase().includes(q);
-   const cat=selected==="すべて" || (selected==="お気に入り"?f.includes(s.name):s.cat===selected);
-   return hit&&cat;
- });
- document.getElementById("spotCount").textContent=`（${list.length}件表示 / ${spots.length}件登録）`;
- document.getElementById("cards").innerHTML=list.length?list.map(s=>`
-  <article class="card">
-   <div class="photo-wrap"><img class="card-photo" src="${s.image || ''}" alt="${s.name}の画像" loading="lazy"><span class="photo-badge">${s.imageType==="illustration"?"実写風イメージ":"実写写真"}</span><span class="photo-link">${s.imageType==="illustration"?"画像説明":"写真元"}</span></div>
-   <button class="fav" onclick='saveFav(${JSON.stringify(s.name)})'>${f.includes(s.name)?"♥":"♡"}</button>
-   <div class="meta">${s.cat} ・ ${s.area}</div><h3>${s.name}</h3><div class="desc">${s.desc}</div><div class="detail">${s.address?`📍 ${s.address}`:""}${s.phone?`<br>☎️ ${s.phone}`:""}</div>
-   <div class="row"><a class="btn secondary" target="_blank" rel="noopener" href="${mapUrl(s.q)}">地図</a><a class="btn primary" target="_blank" rel="noopener" href="${dirUrl(s.q)}">現在地から案内</a></div>
-  </article>`).join(""):`<div class="empty">該当するスポットがありません。</div>`;
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const f = favs();
+
+  const list = spots.filter(s => {
+    const hay = [s.name,s.cat,s.area,s.desc,s.address].filter(Boolean).join(" ").toLowerCase();
+    const textHit = !q || hay.includes(q);
+    const catHit = selected === "すべて" || (selected === "お気に入り" ? f.includes(s.name) : s.cat === selected);
+    return textHit && catHit;
+  });
+
+  document.getElementById("spotCount").textContent = `（${list.length}件 / 全${spots.length}件）`;
+
+  document.getElementById("cards").innerHTML = list.length ? list.map(s => `
+    <article class="card">
+      <button class="fav" onclick='saveFav(${JSON.stringify(s.name)})'>${f.includes(s.name) ? "♥" : "♡"}</button>
+      ${s.image ? `<div class="photo-wrap">
+        <img class="card-photo" src="${s.image}" alt="${s.name}の画像" loading="lazy">
+        <span class="photo-badge">${s.imageType === "illustration" ? "実写風イメージ" : "実写写真"}</span>
+      </div>` : ""}
+      <div class="card-body">
+        <div class="meta">${s.cat || ""}${s.area ? ` ・ ${s.area}` : ""}</div>
+        <h3>${s.name}</h3>
+        <div class="desc">${s.desc || ""}</div>
+        ${(s.address || s.phone) ? `<div class="detail">${s.address ? `📍 ${s.address}` : ""}${s.phone ? `<br>☎️ ${s.phone}` : ""}</div>` : ""}
+        <div class="row">
+          <a class="btn secondary" target="_blank" rel="noopener" href="${mapUrl(s.q || s.name + " 富士宮")}">地図</a>
+          <a class="btn primary" target="_blank" rel="noopener" href="${dirUrl(s.q || s.name + " 富士宮")}">現在地から案内</a>
+        </div>
+      </div>
+    </article>
+  `).join("") : `<div class="empty">該当する施設がありません。</div>`;
 }
+
 function nearby(){
- if(!navigator.geolocation){alert("この端末では位置情報を利用できません。");return}
- navigator.geolocation.getCurrentPosition(()=>{
-   window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("観光 富士宮市"),"_blank")
- },()=>alert("位置情報の利用を許可すると、現在地から周辺を探せます。"))
+  if(!navigator.geolocation){
+    alert("この端末では位置情報を利用できません。");
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    () => window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("観光 富士宮市"), "_blank"),
+    () => alert("位置情報の利用を許可すると、現在地から周辺を探せます。")
+  );
 }
-fetch("spots.json").then(r=>r.json()).then(d=>{spots=d;renderChips();render()});
-document.getElementById("search").addEventListener("input",render);
-if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+
+fetch("./spots.json?rev=12", {cache:"no-store"})
+  .then(r => {
+    if(!r.ok) throw new Error("spots.json");
+    return r.json();
+  })
+  .then(d => {
+    spots = d;
+    renderChips();
+    render();
+  })
+  .catch(() => {
+    document.getElementById("cards").innerHTML = `<div class="empty">施設データを読み込めませんでした。spots.json が同じ場所にアップロードされているか確認してください。</div>`;
+  });
+
+document.getElementById("search").addEventListener("input", render);
+
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("./sw.js?rev=12").catch(()=>{});
+}
 </script>
 </body>
 </html>
