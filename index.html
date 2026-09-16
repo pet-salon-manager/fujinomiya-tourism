@@ -78,6 +78,14 @@ body.admin-mode .edit-chip{display:block}
 .card-photo-fallback{display:none}
 @media(max-width:600px){.card-photo-wrap{height:210px}}
 
+
+.admin-photo-box{grid-column:1/-1;border:1px solid var(--line);border-radius:16px;padding:14px;background:#f8fbfa}
+.admin-photo-box label{display:block;font-weight:800;margin-bottom:8px}
+.admin-photo-box input[type=file],.admin-photo-box input[type=text]{width:100%;box-sizing:border-box}
+.admin-photo-preview{width:100%;max-height:260px;object-fit:cover;border-radius:14px;display:none;margin-top:12px;border:1px solid var(--line)}
+.admin-photo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.admin-photo-actions button{padding:10px 12px;border-radius:12px;border:0;font-weight:800}
+
 </style>
 </head>
 <body>
@@ -98,7 +106,7 @@ body.admin-mode .edit-chip{display:block}
     <h2 style="margin-top:0">管理者編集</h2>
     <div class="admin-note">
       店舗も観光地・公園・温泉・宿泊・登山スポットなどの「場所」も、同じ画面から追加・修正できます。
-      施設・場所データはSupabaseクラウドDBに保存します。管理者が追加・修正・削除した内容は、他の利用者にも共通反映されます。
+      施設・場所データはSupabaseクラウドDBに保存します。写真も管理画面から追加・変更できます。管理者が追加・修正・削除した内容は、他の利用者にも共通反映されます。
     </div>
 
     <div class="admin-grid" style="margin-top:14px">
@@ -113,6 +121,18 @@ body.admin-mode .edit-chip{display:block}
       <input class="full" id="admAddress" placeholder="住所">
       <input class="full" id="admHomepage" placeholder="ホームページURL">
       <textarea class="full" id="admDesc" placeholder="説明文"></textarea>
+
+      <div class="admin-photo-box">
+        <label for="admPhotoFile">写真</label>
+        <input id="admPhotoFile" type="file" accept="image/*">
+        <input id="admPhotoUrl" type="text" placeholder="写真URL" style="margin-top:10px">
+        <div class="admin-photo-actions">
+          <button type="button" class="admin-secondary" id="admUploadPhotoBtn">写真をアップロード</button>
+          <button type="button" class="admin-danger" id="admClearPhotoBtn">写真を外す</button>
+        </div>
+        <img id="admPhotoPreview" class="admin-photo-preview" alt="写真プレビュー">
+      </div>
+
     </div>
 
     <div class="admin-actions">
@@ -360,9 +380,85 @@ async function supabaseLogout(){
   sessionStorage.removeItem("fujinomiya_supabase_refresh_token");
 }
 
+
+function updateAdminPhotoPreview(){
+  const url = document.getElementById("admPhotoUrl")?.value.trim();
+  const img = document.getElementById("admPhotoPreview");
+  if(!img) return;
+  if(url){
+    img.src = url;
+    img.style.display = "block";
+  }else{
+    img.removeAttribute("src");
+    img.style.display = "none";
+  }
+}
+
+function safeFileName(name){
+  return (name || "photo.jpg")
+    .normalize("NFKD")
+    .replace(/[^\w.\-]+/g,"_")
+    .replace(/_+/g,"_")
+    .slice(-120);
+}
+
+async function uploadAdminPhoto(){
+  if(!supabaseAccessToken && supabaseRefreshToken){
+    await refreshSupabaseSession();
+  }
+  if(!supabaseAccessToken){
+    throw new Error("管理者ログインが必要です。");
+  }
+
+  const file = document.getElementById("admPhotoFile")?.files?.[0];
+  if(!file){
+    throw new Error("アップロードする写真を選んでください。");
+  }
+
+  const ext = (file.name.includes(".") ? file.name.split(".").pop() : "jpg").toLowerCase();
+  const spotName = document.getElementById("admName").value.trim() || "spot";
+  const objectPath = "spots/" + safeFileName(spotName + "_" + Date.now() + "." + ext);
+  const endpoint = SUPABASE_URL + "/storage/v1/object/spot-images/" + objectPath.split("/").map(encodeURIComponent).join("/");
+
+  async function doUpload(){
+    return fetch(endpoint, {
+      method:"POST",
+      headers:{
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":"Bearer " + supabaseAccessToken,
+        "Content-Type":file.type || "application/octet-stream",
+        "x-upsert":"true"
+      },
+      body:file
+    });
+  }
+
+  let res = await doUpload();
+
+  if((res.status === 401 || res.status === 403) && supabaseRefreshToken){
+    const ok = await refreshSupabaseSession();
+    if(ok) res = await doUpload();
+  }
+
+  if(!res.ok){
+    const msg = await res.text();
+    throw new Error(msg || ("写真アップロード失敗 HTTP " + res.status));
+  }
+
+  const publicUrl = SUPABASE_URL + "/storage/v1/object/public/spot-images/" + objectPath;
+  document.getElementById("admPhotoUrl").value = publicUrl;
+  updateAdminPhotoPreview();
+  return publicUrl;
+}
+
+
 function clearAdminForm(){
   editingName=null;
-  ["admName","admArea","admPhone","admAddress","admHomepage","admDesc"].forEach(id=>document.getElementById(id).value="");
+  ["admName","admArea","admPhone","admAddress","admHomepage","admDesc","admPhotoUrl"].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value="";
+  });
+  const pf=document.getElementById("admPhotoFile"); if(pf) pf.value="";
+  updateAdminPhotoPreview();
   document.getElementById("admCat").value="観光";
 }
 
@@ -378,6 +474,8 @@ function editSpot(name){
   document.getElementById("admAddress").value=s.address||"";
   document.getElementById("admHomepage").value=s.homepage||"";
   document.getElementById("admDesc").value=s.desc||"";
+  document.getElementById("admPhotoUrl").value=s.image||"";
+  updateAdminPhotoPreview();
   document.getElementById("adminPanel").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
@@ -392,6 +490,8 @@ function currentFormSpot(){
     address:document.getElementById("admAddress").value.trim() || null,
     homepage:document.getElementById("admHomepage").value.trim() || null,
     desc:document.getElementById("admDesc").value.trim() || null,
+    image:document.getElementById("admPhotoUrl").value.trim() || null,
+    "imageType":document.getElementById("admPhotoUrl").value.trim() ? "photo" : null,
     q:name+" 富士宮",
     updated_at:new Date().toISOString()
   };
@@ -481,6 +581,29 @@ document.getElementById("adminLoginBtn").onclick=async()=>{
 document.getElementById("admSaveBtn").onclick=saveAdminSpot;
 document.getElementById("admNewBtn").onclick=clearAdminForm;
 document.getElementById("admDeleteBtn").onclick=deleteAdminSpot;
+
+document.getElementById("admUploadPhotoBtn").onclick=async()=>{
+  try{
+    await uploadAdminPhoto();
+    alert("写真をアップロードしました。続けて「保存」を押すと施設に反映されます。");
+  }catch(e){
+    alert("写真をアップロードできませんでした。\n" + e.message);
+  }
+};
+document.getElementById("admClearPhotoBtn").onclick=()=>{
+  const u=document.getElementById("admPhotoUrl"); if(u) u.value="";
+  const f=document.getElementById("admPhotoFile"); if(f) f.value="";
+  updateAdminPhotoPreview();
+};
+document.getElementById("admPhotoUrl").addEventListener("input", updateAdminPhotoPreview);
+document.getElementById("admPhotoFile").addEventListener("change", e=>{
+  const file=e.target.files?.[0];
+  if(!file) return;
+  const img=document.getElementById("admPhotoPreview");
+  img.src=URL.createObjectURL(file);
+  img.style.display="block";
+});
+
 document.getElementById("admLogoutBtn").onclick=async()=>{await supabaseLogout();setAdminMode(false);};
 
 
@@ -510,7 +633,7 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", render);
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=12").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=22").catch(()=>{});
 }
 </script>
 </body>
