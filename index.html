@@ -24,6 +24,12 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
 .notice{font-size:12px;color:var(--muted);line-height:1.6;background:#fff7e8;border:1px solid #f1dfb7;border-radius:14px;padding:12px;margin-top:18px}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px}
 @media(max-width:680px){.grid{grid-template-columns:1fr}.hero{padding-top:34px}.actions{grid-template-columns:1fr}h1{font-size:30px}.desc{min-height:0}}
+
+.card-photo{width:calc(100% + 32px);height:210px;object-fit:cover;display:block;margin:-16px -16px 14px;border-radius:20px 20px 0 0;background:#dfe9e5}
+.photo-wrap{position:relative}
+.photo-badge{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.62);color:#fff;font-size:11px;font-weight:700;padding:6px 9px;border-radius:999px;backdrop-filter:blur(6px)}
+.photo-link{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.92);color:#17312a;text-decoration:none;font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px}
+
 </style>
 </head>
 <body>
@@ -48,8 +54,25 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
     <p style="color:var(--muted)">浅間大社周辺から淀師・万野原新田・朝霧方面まで、富士宮やきそばを中心に地元の飲食店を追加しました。「富士宮やきそば」カテゴリを押すとまとめて表示できます。</p>
   </section>
 
-  <h2>観光・グルメスポット</h2>
+  <h2>観光・グルメスポット <span id="spotCount" style="font-size:13px;color:var(--muted);font-weight:600"></span></h2>
   <section class="grid" id="cards"></section>
+
+  
+  <h2>富士宮市内をさらに探す</h2>
+  <section class="grid" id="liveSearchGrid">
+    <article class="card"><div class="meta">グルメ</div><h3>飲食店をもっと探す</h3><div class="desc">富士宮市内の飲食店をGoogle Mapsでまとめて検索します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E9%A3%B2%E9%A3%9F%E5%BA%97+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">ご当地グルメ</div><h3>富士宮やきそば全体検索</h3><div class="desc">市内の富士宮やきそば提供店を広く探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%AF%8C%E5%A3%AB%E5%AE%AE%E3%82%84%E3%81%8D%E3%81%9D%E3%81%B0+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">カフェ</div><h3>カフェ・喫茶店</h3><div class="desc">富士宮市内のカフェ・喫茶店を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%82%AB%E3%83%95%E3%82%A7+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">スイーツ</div><h3>和菓子・洋菓子・ジェラート</h3><div class="desc">富士宮市内の甘味・スイーツ系店舗を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%82%B9%E3%82%A4%E3%83%BC%E3%83%84+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">宿泊</div><h3>ホテル・旅館</h3><div class="desc">市内の宿泊施設をまとめて探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%AE%BF%E6%B3%8A+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">温泉</div><h3>温泉・日帰り湯</h3><div class="desc">観光後に寄れる温浴施設を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E6%B8%A9%E6%B3%89+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">アウトドア</div><h3>キャンプ場</h3><div class="desc">朝霧高原を中心に市内のキャンプ場を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%82%AD%E3%83%A3%E3%83%B3%E3%83%97%E5%A0%B4+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">自然</div><h3>公園・自然スポット</h3><div class="desc">市内の公園や自然スポットをまとめて探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%85%AC%E5%9C%92+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">歴史</div><h3>神社・寺・史跡</h3><div class="desc">富士山信仰や地域史に関係する場所を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E7%A5%9E%E7%A4%BE+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">買い物</div><h3>お土産・直売所</h3><div class="desc">地元産品やお土産を買える場所を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%81%8A%E5%9C%9F%E7%94%A3+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">移動</div><h3>駐車場</h3><div class="desc">観光地周辺の駐車場を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E9%A7%90%E8%BB%8A%E5%A0%B4+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+    <article class="card"><div class="meta">移動</div><h3>ガソリンスタンド・EV充電</h3><div class="desc">ドライブ中に使える給油・充電スポットを探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%82%AC%E3%82%BD%E3%83%AA%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%83%89+EV%E5%85%85%E9%9B%BB+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
+  </section>
 
   <h2>モデルコース</h2>
   <section class="course">
@@ -65,16 +88,55 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
 
   <div class="notice">この試作版は「アプリとして使える構成」を先に作っています。営業時間・料金・休館日・登山規制など変わりやすい情報は、公開前に公式情報との照合が必要です。</div>
   <div class="notice">背景写真：富士山本宮浅間大社（Wikimedia Commons掲載写真を参照）。店舗情報は変更される場合があるため、来店前に地図・電話などで最新情報をご確認ください。</div>
+<div class="notice">各カードの写真はWikimedia Commonsから施設名・地名で自動検索して表示します。該当写真が見つからない場合は富士宮の実写イメージ写真を表示します。</div>
 </main>
 
 <script>
 let spots=[], selected="すべて";
-const cats=["すべて","富士宮やきそば","飲食店","観光","自然","体験","グルメ","学ぶ","登山","お気に入り"];
+const cats=["すべて","富士宮やきそば","飲食店","観光","観光案内","自然","体験","グルメ","温泉","宿泊","キャンプ","公園","神社・史跡","文化","学ぶ","登山","交通","お気に入り"];
 const favs=()=>JSON.parse(localStorage.getItem("favs")||"[]");
 function saveFav(name){let f=favs(); f=f.includes(name)?f.filter(x=>x!==name):[...f,name];localStorage.setItem("favs",JSON.stringify(f));render()}
 function mapUrl(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
 function dirUrl(q){return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(q)+"&travelmode=driving"}
 function renderChips(){const el=document.getElementById("chips");el.innerHTML=cats.map(c=>`<button class="chip ${c===selected?'active':''}" onclick="selected='${c}';renderChips();render()">${c}</button>`).join("")}
+
+const PHOTO_FALLBACK = "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%AC%E5%AE%AE%E6%B5%85%E9%96%93%E5%A4%A7%E7%A4%BE%E9%B3%A5%E5%B1%85.JPG";
+const photoCache = JSON.parse(localStorage.getItem("fujinomiyaPhotoCache")||"{}");
+async function commonsPhotoFor(s){
+  if(photoCache[s.name]) return photoCache[s.name];
+  const terms=[`${s.name} 富士宮`,s.name,`${s.area} 富士宮 ${s.cat}`];
+  for(const term of terms){
+    try{
+      const api="https://commons.wikimedia.org/w/api.php?origin=*&action=query&generator=search&gsrnamespace=6&gsrlimit=5&prop=imageinfo&iiprop=url&iiurlwidth=900&format=json&gsrsearch="+encodeURIComponent(term);
+      const data=await fetch(api).then(r=>r.json());
+      const pages=Object.values(data.query?.pages||{});
+      const best=pages[0];
+      const ii=best?.imageinfo?.[0];
+      const url=ii?.thumburl||ii?.url;
+      if(url){
+        const hit={url,page:"https://commons.wikimedia.org/wiki/"+encodeURIComponent(best.title),fallback:false};
+        photoCache[s.name]=hit;
+        localStorage.setItem("fujinomiyaPhotoCache",JSON.stringify(photoCache));
+        return hit;
+      }
+    }catch(e){}
+  }
+  return {url:PHOTO_FALLBACK,page:"https://commons.wikimedia.org/",fallback:true};
+}
+async function loadCardPhotos(){
+  for(const img of document.querySelectorAll("img[data-spot]")){
+    const s=spots.find(x=>x.name===img.dataset.spot);
+    if(!s) continue;
+    const hit=await commonsPhotoFor(s);
+    img.src=hit.url;
+    const wrap=img.closest(".photo-wrap");
+    if(wrap){
+      wrap.querySelector(".photo-badge").textContent=hit.fallback?"富士宮イメージ":"実写写真";
+      wrap.querySelector(".photo-link").href=hit.page;
+    }
+  }
+}
+
 function render(){
  const q=document.getElementById("search").value.trim().toLowerCase(), f=favs();
  const list=spots.filter(s=>{
@@ -82,12 +144,15 @@ function render(){
    const cat=selected==="すべて" || (selected==="お気に入り"?f.includes(s.name):s.cat===selected);
    return hit&&cat;
  });
+ document.getElementById("spotCount").textContent=`（${list.length}件表示 / ${spots.length}件登録）`;
  document.getElementById("cards").innerHTML=list.length?list.map(s=>`
   <article class="card">
+   <div class="photo-wrap"><img class="card-photo" data-spot="${s.name.replace(/"/g,'&quot;')}" alt="${s.name}の写真" loading="lazy"><span class="photo-badge">写真を取得中</span><a class="photo-link" target="_blank" rel="noopener">写真元</a></div>
    <button class="fav" onclick='saveFav(${JSON.stringify(s.name)})'>${f.includes(s.name)?"♥":"♡"}</button>
    <div class="meta">${s.cat} ・ ${s.area}</div><h3>${s.name}</h3><div class="desc">${s.desc}</div><div class="detail">${s.address?`📍 ${s.address}`:""}${s.phone?`<br>☎️ ${s.phone}`:""}</div>
    <div class="row"><a class="btn secondary" target="_blank" rel="noopener" href="${mapUrl(s.q)}">地図</a><a class="btn primary" target="_blank" rel="noopener" href="${dirUrl(s.q)}">現在地から案内</a></div>
   </article>`).join(""):`<div class="empty">該当するスポットがありません。</div>`;
+ setTimeout(loadCardPhotos,0);
 }
 function nearby(){
  if(!navigator.geolocation){alert("この端末では位置情報を利用できません。");return}
