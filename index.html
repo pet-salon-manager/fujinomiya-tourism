@@ -72,6 +72,12 @@ body.admin-mode .edit-chip{display:block}
 .admin-note{font-size:13px;line-height:1.7;color:var(--muted);background:#fff8e7;border:1px solid #efd9a5;border-radius:14px;padding:12px}
 @media(max-width:600px){.admin-grid{grid-template-columns:1fr}.admin-grid .full{grid-column:auto}}
 
+
+.card-photo-wrap{width:100%;height:230px;overflow:hidden;border-radius:22px 22px 0 0;background:#eef4f2;margin:-1px -1px 14px;width:calc(100% + 2px)}
+.card-photo{width:100%;height:100%;object-fit:cover;display:block}
+.card-photo-fallback{display:none}
+@media(max-width:600px){.card-photo-wrap{height:210px}}
+
 </style>
 </head>
 <body>
@@ -122,7 +128,7 @@ body.admin-mode .edit-chip{display:block}
 
   <div class="search"><input id="search" placeholder="白糸、朝霧、やきそば など"></div>
   <div class="chips" id="chips"></div>
-  <div class="guide">観光地・飲食店・宿泊・温泉などは、このホーム画面に直接一覧表示します。各カードからホームページ確認、店舗検索、現在地からの案内ができます。</div>
+  <div class="guide">観光地・飲食店・宿泊・温泉などは、このホーム画面に直接一覧表示します。登録写真がある施設・店舗はカード上部に写真を表示します。各カードからホームページ確認、検索、現在地からの案内ができます。</div>
 
   <h2>おすすめスポット <span class="count" id="spotCount"></span></h2>
   <section class="grid" id="cards"></section>
@@ -133,7 +139,7 @@ body.admin-mode .edit-chip{display:block}
 const SUPABASE_URL = "https://tgyaelnwcjuyhvkjjqov.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_MpKiuNLw-kg-39dJPJB1LQ_4uiXM5Bv";
 let supabaseAccessToken = sessionStorage.getItem("fujinomiya_supabase_access_token") || "";
-let supabaseRefreshToken = sessionStorage.getItem("fujinomiya_supabase_refresh_token") || "";
+let supabaseRefreshToken = localStorage.getItem("fujinomiya_supabase_refresh_token") || sessionStorage.getItem("fujinomiya_supabase_refresh_token") || "";
 
 let spots = [];
 let selected = "すべて";
@@ -191,6 +197,12 @@ function render(){
 
   document.getElementById("cards").innerHTML = list.length ? list.map(s => `
     <article class="card">
+      ${s.image ? `
+        <div class="card-photo-wrap">
+          <img class="card-photo" src="${s.image}" alt="${(s.name||"施設")+"の写真"}" loading="lazy"
+               onerror="this.closest('.card-photo-wrap').style.display='none'">
+        </div>
+      ` : ""}
       <button class="edit-chip" onclick='editSpot(${JSON.stringify(s.name)})'>編集</button>
       <button class="fav" onclick='saveFav(${JSON.stringify(s.name)})'>${f.includes(s.name) ? "♥" : "♡"}</button>
       <div class="card-body">
@@ -225,19 +237,81 @@ let adminMode = false;
 let editingName = null;
 let baseSpots = [];
 
-async function supabaseRequest(path, options = {}, authenticated = false){
+async function refreshSupabaseSession(){
+  if(!supabaseRefreshToken) return false;
+
+  const res = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=refresh_token", {
+    method:"POST",
+    headers:{
+      "apikey":SUPABASE_PUBLISHABLE_KEY,
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({refresh_token:supabaseRefreshToken})
+  });
+
+  const data = await res.json().catch(()=>({}));
+
+  if(!res.ok || !data.access_token){
+    supabaseAccessToken = "";
+    supabaseRefreshToken = "";
+    sessionStorage.removeItem("fujinomiya_supabase_access_token");
+    sessionStorage.removeItem("fujinomiya_supabase_refresh_token");
+  localStorage.removeItem("fujinomiya_supabase_refresh_token");
+    localStorage.removeItem("fujinomiya_supabase_refresh_token");
+    return false;
+  }
+
+  supabaseAccessToken = data.access_token;
+  supabaseRefreshToken = data.refresh_token || supabaseRefreshToken;
+
+  sessionStorage.setItem("fujinomiya_supabase_access_token", supabaseAccessToken);
+  sessionStorage.setItem("fujinomiya_supabase_refresh_token", supabaseRefreshToken);
+  localStorage.setItem("fujinomiya_supabase_refresh_token", supabaseRefreshToken);
+  localStorage.setItem("fujinomiya_supabase_refresh_token", supabaseRefreshToken);
+
+  return true;
+}
+
+async function supabaseRequest(path, options = {}, authenticated = false, retry = true){
   const headers = Object.assign({
     "apikey": SUPABASE_PUBLISHABLE_KEY,
     "Content-Type": "application/json"
   }, options.headers || {});
-  if(authenticated && supabaseAccessToken){
-    headers["Authorization"] = "Bearer " + supabaseAccessToken;
+
+  if(authenticated){
+    if(!supabaseAccessToken && supabaseRefreshToken){
+      await refreshSupabaseSession();
+    }
+    if(supabaseAccessToken){
+      headers["Authorization"] = "Bearer " + supabaseAccessToken;
+    }
   }
+
   const res = await fetch(SUPABASE_URL + path, {...options, headers});
+
   if(!res.ok){
     const msg = await res.text();
+
+    const tokenExpired =
+      authenticated &&
+      retry &&
+      (
+        res.status === 401 ||
+        res.status === 403 ||
+        msg.includes("JWT expired") ||
+        msg.includes("PGRST303")
+      );
+
+    if(tokenExpired && supabaseRefreshToken){
+      const refreshed = await refreshSupabaseSession();
+      if(refreshed){
+        return supabaseRequest(path, options, authenticated, false);
+      }
+    }
+
     throw new Error(msg || ("HTTP " + res.status));
   }
+
   if(res.status === 204) return null;
   const ct = res.headers.get("content-type") || "";
   return ct.includes("application/json") ? res.json() : res.text();
@@ -351,7 +425,7 @@ async function saveAdminSpot(){
     await refreshSpots();
     alert("Supabaseに保存しました。全利用者へ反映されます。");
   }catch(e){
-    alert("保存できませんでした。RLS設定またはログイン状態を確認してください。\n" + e.message);
+    if(String(e.message).includes("JWT") || String(e.message).includes("PGRST303")){ alert("ログインの有効期限を更新できませんでした。いったんログアウトして再ログインしてください。"); } else { alert("保存できませんでした。\n" + e.message); }
   }
 }
 
@@ -367,7 +441,7 @@ async function deleteAdminSpot(){
     clearAdminForm();
     await refreshSpots();
   }catch(e){
-    alert("削除できませんでした。\n" + e.message);
+    if(String(e.message).includes("JWT") || String(e.message).includes("PGRST303")){ alert("ログインの有効期限を更新できませんでした。いったんログアウトして再ログインしてください。"); } else { alert("削除できませんでした。\n" + e.message); }
   }
 }
 
@@ -393,7 +467,17 @@ async function adminLogin(){
   }
 }
 
-document.getElementById("adminLoginBtn").onclick=()=>adminMode?null:adminLogin();
+document.getElementById("adminLoginBtn").onclick=async()=>{
+  if(adminMode) return;
+  if(supabaseRefreshToken){
+    const ok = await refreshSupabaseSession();
+    if(ok){
+      setAdminMode(true);
+      return;
+    }
+  }
+  adminLogin();
+};
 document.getElementById("admSaveBtn").onclick=saveAdminSpot;
 document.getElementById("admNewBtn").onclick=clearAdminForm;
 document.getElementById("admDeleteBtn").onclick=deleteAdminSpot;
