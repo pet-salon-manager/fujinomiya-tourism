@@ -129,3 +129,22 @@
 - 静岡県富士山世界遺産センター → https://mtfuji-whc.jp/
 - 白糸ノ滝 → https://www.city.fujinomiya.lg.jp/1015150000/p001607.html
 - 湧玉池 → https://www.pref.shizuoka.jp/kankosports/bunkageijutsu/bunkazai/1002825/1041003/1041889/1004987/1021566.html
+
+## v17 管理者編集
+- 管理者ログインを追加
+- 初回ログイン時に管理者PINを設定
+- 店舗だけでなく観光地・公園・温泉・宿泊・登山スポットなど「場所」も同じ画面から追加・修正
+- 店名/場所名、カテゴリ、エリア、住所、電話、ホームページ、説明文を編集可能
+- カードに管理者用「編集」ボタンを表示
+- 新規追加・削除・JSON書き出し/読み込みに対応
+- このGitHub Pages版では編集は端末ローカル保存。全利用者への共通反映にはクラウドDBが必要
+
+## v18 SupabaseクラウドDB接続
+- Project URL: https://tgyaelnwcjuyhvkjjqov.supabase.co
+- Publishable keyをブラウザアプリに設定
+- 一覧データはSupabase public.spotsから直接読み込み
+- Supabase障害時のみspots.jsonを予備データとして使用
+- 管理者ログインはSupabase Authのメールアドレス/パスワード
+- 管理者の追加・修正・削除はSupabaseへ直接保存
+- 全利用者へ変更内容を共通反映
+- `fujinomiya_supabase_admin_policies.sql` をSupabase SQL Editorで実行して書き込み権限を有効化してください
