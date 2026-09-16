@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="富士宮ナビ">
 
-<link rel="manifest" href="manifest.webmanifest">
 <title>富士宮たびナビ</title>
 <style>
 :root{--ink:#12352e;--muted:#61746e;--card:#fff;--accent:#0a8069;--line:#d9e7e2;--bg:#eaf8f5}
@@ -95,7 +94,12 @@ body.admin-mode .edit-chip{display:block}
 @media(max-width:480px){.pager button{min-width:92px;padding:12px}.pager{gap:8px}}
 
 </style>
-  <link rel="apple-touch-icon" href="assets/icon-512.png?v=23">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
+<link rel="manifest" href="./manifest.webmanifest?v=24">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
 <header class="hero">
@@ -644,7 +648,7 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=23").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=24").catch(()=>{});
 }
 </script>
 </body>

@@ -182,3 +182,10 @@
 - 検索やカテゴリ変更時は1ページ目へ戻る
 - iPhoneホームアイコンを富士山・浅間大社・滝・桜をモチーフにした富士宮らしい画像へ変更
 - apple-touch-icon と manifest のアイコンを新画像へ統一
+
+## v24 iPhoneホームアイコン強制更新
+- iOS向けに180x180の `apple-touch-icon-v24.png` をルート直下に配置
+- `apple-touch-icon-precomposed` も追加
+- manifestアイコンをバージョン付きの別ファイル名へ変更
+- manifestのstart_url/id、Service Worker revisionをv24へ更新
+- iPhoneの「ホーム画面に追加」プレビューが旧アイコンを掴みにくい構成へ修正
