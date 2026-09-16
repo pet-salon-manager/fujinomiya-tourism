@@ -30,6 +30,14 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
 .photo-badge{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.62);color:#fff;font-size:11px;font-weight:700;padding:6px 9px;border-radius:999px;backdrop-filter:blur(6px)}
 .photo-link{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.92);color:#17312a;text-decoration:none;font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px}
 
+
+body{background:linear-gradient(180deg,#e9f8f5 0%,#f3fbf9 100%)!important}
+.wrap{max-width:760px!important}
+.card{border-radius:26px!important;box-shadow:0 8px 22px rgba(22,57,46,.08)!important}
+.chip{font-size:15px!important;font-weight:800!important;padding:11px 16px!important}
+.search input{border-radius:20px!important;padding:17px 18px!important;background:#fff!important}
+h2{font-size:24px!important}
+
 </style>
 </head>
 <body>
@@ -40,7 +48,7 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
     <p class="lead">富士山・白糸ノ滝・朝霧高原・富士宮やきそばまで。富士宮市の観光を、迷わず楽しむためのシンプルな案内アプリ。</p>
     <div class="actions">
       <button class="primary" onclick="nearby()">📍 現在地から探す</button>
-      <a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82+%E8%A6%B3%E5%85%89" target="_blank" rel="noopener">🗺 地図で見る</a>
+      
     </div>
   </div>
 </header>
@@ -48,260 +56,21 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
 <main class="wrap">
   <div class="search"><input id="search" placeholder="白糸、朝霧、やきそば など"></div>
   <div class="chips" id="chips"></div>
+  <div class="notice">観光地・飲食店・宿泊・温泉などは、このホーム画面に直接一覧表示します。カテゴリを押すと、このページ内の表示だけを絞り込みます。</div>
 
   <section class="course" style="background:rgba(255,255,255,.94);color:var(--ink);border:1px solid var(--line)">
     <strong style="font-size:20px">🥢 富士宮やきそばを食べ歩こう</strong>
     <p style="color:var(--muted)">浅間大社周辺から淀師・万野原新田・朝霧方面まで、富士宮やきそばを中心に地元の飲食店を追加しました。「富士宮やきそば」カテゴリを押すとまとめて表示できます。</p>
   </section>
 
-  <h2>観光・グルメスポット <span id="spotCount" style="font-size:13px;color:var(--muted);font-weight:600"></span></h2>
+  <h2>おすすめスポット <span id="spotCount" style="font-size:13px;color:var(--muted);font-weight:600"></span></h2>
   <section class="grid" id="cards"></section>
-
-  
-  <h2>富士宮市内をさらに探す</h2>
-  <section class="grid" id="liveSearchGrid">
-    <article class="card"><div class="meta">グルメ</div><h3>飲食店をもっと探す</h3><div class="desc">富士宮市内の飲食店をGoogle Mapsでまとめて検索します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E9%A3%B2%E9%A3%9F%E5%BA%97+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">ご当地グルメ</div><h3>富士宮やきそば全体検索</h3><div class="desc">市内の富士宮やきそば提供店を広く探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%AF%8C%E5%A3%AB%E5%AE%AE%E3%82%84%E3%81%8D%E3%81%9D%E3%81%B0+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">カフェ</div><h3>カフェ・喫茶店</h3><div class="desc">富士宮市内のカフェ・喫茶店を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%82%AB%E3%83%95%E3%82%A7+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">スイーツ</div><h3>和菓子・洋菓子・ジェラート</h3><div class="desc">富士宮市内の甘味・スイーツ系店舗を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%82%B9%E3%82%A4%E3%83%BC%E3%83%84+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">宿泊</div><h3>ホテル・旅館</h3><div class="desc">市内の宿泊施設をまとめて探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%AE%BF%E6%B3%8A+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">温泉</div><h3>温泉・日帰り湯</h3><div class="desc">観光後に寄れる温浴施設を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E6%B8%A9%E6%B3%89+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">アウトドア</div><h3>キャンプ場</h3><div class="desc">朝霧高原を中心に市内のキャンプ場を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%82%AD%E3%83%A3%E3%83%B3%E3%83%97%E5%A0%B4+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">自然</div><h3>公園・自然スポット</h3><div class="desc">市内の公園や自然スポットをまとめて探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%85%AC%E5%9C%92+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">歴史</div><h3>神社・寺・史跡</h3><div class="desc">富士山信仰や地域史に関係する場所を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E7%A5%9E%E7%A4%BE+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">買い物</div><h3>お土産・直売所</h3><div class="desc">地元産品やお土産を買える場所を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%81%8A%E5%9C%9F%E7%94%A3+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">移動</div><h3>駐車場</h3><div class="desc">観光地周辺の駐車場を探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E9%A7%90%E8%BB%8A%E5%A0%B4+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-    <article class="card"><div class="meta">移動</div><h3>ガソリンスタンド・EV充電</h3><div class="desc">ドライブ中に使える給油・充電スポットを探します。</div><div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E3%82%AC%E3%82%BD%E3%83%AA%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%83%89+EV%E5%85%85%E9%9B%BB+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">一覧を見る</a></div></article>
-  </section>
 
   
   
   <section class="course" style="background:rgba(255,255,255,.96);color:var(--ink);border:1px solid var(--line)">
     <strong style="font-size:20px">🍽 固定登録済み飲食店 100店舗</strong>
     <p style="color:var(--muted)">営業時間は表示しない方針に変更しました。店名・住所・電話番号を固定保存し、実写写真が未確認の店舗は説明文に合う実写風イメージを表示します。</p>
-  </section>
-
-  <h2 id="restaurant-hundreds">富士宮グルメを100店舗を固定登録＋さらに探す</h2>
-  <section class="course" style="background:rgba(255,255,255,.95);color:var(--ink);border:1px solid var(--line)">
-    <strong style="font-size:20px">🍽 富士宮市内の飲食店を大量検索</strong>
-    <p style="color:var(--muted)">固定登録の飲食店だけでなく、Google Maps検索を使って富士宮市内の飲食店をジャンル別に探せるようにしました。富士宮やきそば、定食、和食、ラーメン、焼肉、寿司、カフェ、スイーツなど35ジャンルに対応しています。これにより、アプリから数百店舗規模の実在飲食店へアクセスできます。</p>
-    <div class="actions">
-      <a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E9%A3%B2%E9%A3%9F%E5%BA%97+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">富士宮市の飲食店を全部探す</a>
-      <a class="btn secondary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%AF%8C%E5%A3%AB%E5%AE%AE%E3%82%84%E3%81%8D%E3%81%9D%E3%81%B0+%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82">富士宮やきそばを探す</a>
-    </div>
-  </section>
-  <section class="grid">
-    
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>富士宮やきそば</h3>
-        <div class="desc">富士宮市内の「富士宮やきそば」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=富士宮やきそば+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>定食・食堂</h3>
-        <div class="desc">富士宮市内の「定食・食堂」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=定食+食堂+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>和食</h3>
-        <div class="desc">富士宮市内の「和食」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=和食+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>寿司</h3>
-        <div class="desc">富士宮市内の「寿司」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=寿司+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>そば・うどん</h3>
-        <div class="desc">富士宮市内の「そば・うどん」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=そば+うどん+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ラーメン</h3>
-        <div class="desc">富士宮市内の「ラーメン」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ラーメン+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>中華</h3>
-        <div class="desc">富士宮市内の「中華」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=中華料理+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>焼肉</h3>
-        <div class="desc">富士宮市内の「焼肉」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=焼肉+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>焼鳥</h3>
-        <div class="desc">富士宮市内の「焼鳥」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=焼き鳥+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>とんかつ</h3>
-        <div class="desc">富士宮市内の「とんかつ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=とんかつ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>天ぷら</h3>
-        <div class="desc">富士宮市内の「天ぷら」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=天ぷら+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>うなぎ</h3>
-        <div class="desc">富士宮市内の「うなぎ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=うなぎ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>海鮮</h3>
-        <div class="desc">富士宮市内の「海鮮」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=海鮮+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>居酒屋</h3>
-        <div class="desc">富士宮市内の「居酒屋」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=居酒屋+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ステーキ</h3>
-        <div class="desc">富士宮市内の「ステーキ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ステーキ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ハンバーグ</h3>
-        <div class="desc">富士宮市内の「ハンバーグ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ハンバーグ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>洋食</h3>
-        <div class="desc">富士宮市内の「洋食」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=洋食+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>イタリアン</h3>
-        <div class="desc">富士宮市内の「イタリアン」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=イタリアン+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>フレンチ</h3>
-        <div class="desc">富士宮市内の「フレンチ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=フレンチ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>カレー</h3>
-        <div class="desc">富士宮市内の「カレー」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=カレー+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ピザ</h3>
-        <div class="desc">富士宮市内の「ピザ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ピザ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>パン・ベーカリー</h3>
-        <div class="desc">富士宮市内の「パン・ベーカリー」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=パン+ベーカリー+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>カフェ</h3>
-        <div class="desc">富士宮市内の「カフェ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=カフェ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>喫茶店</h3>
-        <div class="desc">富士宮市内の「喫茶店」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=喫茶店+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>スイーツ</h3>
-        <div class="desc">富士宮市内の「スイーツ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=スイーツ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>和菓子</h3>
-        <div class="desc">富士宮市内の「和菓子」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=和菓子+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ジェラート・アイス</h3>
-        <div class="desc">富士宮市内の「ジェラート・アイス」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ジェラート+アイス+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ファミレス</h3>
-        <div class="desc">富士宮市内の「ファミレス」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ファミリーレストラン+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ファストフード</h3>
-        <div class="desc">富士宮市内の「ファストフード」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ファストフード+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>テイクアウト</h3>
-        <div class="desc">富士宮市内の「テイクアウト」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=テイクアウト+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>弁当</h3>
-        <div class="desc">富士宮市内の「弁当」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=弁当+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>道の駅グルメ</h3>
-        <div class="desc">富士宮市内の「道の駅グルメ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=道の駅+グルメ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>朝食</h3>
-        <div class="desc">富士宮市内の「朝食」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=朝食+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ランチ</h3>
-        <div class="desc">富士宮市内の「ランチ」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ランチ+富士宮市">店舗を探す</a></div>
-      </article>
-      <article class="card">
-        <div class="meta">飲食店検索</div>
-        <h3>ディナー</h3>
-        <div class="desc">富士宮市内の「ディナー」を地図検索でまとめて探します。登録外の店舗も含めて幅広く探せます。</div>
-        <div class="row"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=ディナー+富士宮市">店舗を探す</a></div>
-      </article>
   </section>
 
   <h2>モデルコース</h2>
@@ -323,7 +92,7 @@ h2{font-size:21px;margin:24px 0 10px}.grid{display:grid;grid-template-columns:re
 
 <script>
 let spots=[], selected="すべて";
-const cats=["すべて","富士宮やきそば","飲食店","観光","観光案内","自然","体験","グルメ","温泉","宿泊","キャンプ","公園","神社・史跡","文化","学ぶ","登山","交通","お気に入り"];
+const cats=["すべて","観光","自然","体験","グルメ","富士宮やきそば","飲食店","宿泊","温泉","キャンプ","学ぶ","登山","お気に入り"];
 const favs=()=>JSON.parse(localStorage.getItem("favs")||"[]");
 function saveFav(name){let f=favs(); f=f.includes(name)?f.filter(x=>x!==name):[...f,name];localStorage.setItem("favs",JSON.stringify(f));render()}
 function mapUrl(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
