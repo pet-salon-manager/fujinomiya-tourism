@@ -16,7 +16,8 @@
     "desc": "富士山の伏流水が湧く、浅間大社境内の名所。中心部散策に組み込みやすいスポットです。 富士山の伏流水が湧く名所で、水の透明感や静かな雰囲気が印象的です。浅間大社参拝とあわせて見学しやすい代表スポットです。 富士宮らしい自然や景観を感じやすく、散策・写真撮影・のんびり過ごしたい人に向いています。",
     "q": "湧玉池 富士宮",
     "image": "assets/illustrations/湧玉池.svg",
-    "imageType": "illustration"
+    "imageType": "illustration",
+    "homepage": "https://www.pref.shizuoka.jp/kankosports/bunkageijutsu/bunkazai/1002825/1041003/1041889/1004987/1021566.html"
   },
   {
     "name": "静岡県富士山世界遺産センター",
@@ -25,7 +26,8 @@
     "desc": "富士山の自然・文化・信仰を学べる施設。富士宮観光の最初に立ち寄る場所として便利です。 展示や建築空間を通じて、富士山の自然・信仰・文化を学べる施設です。観光の最初に立ち寄ると、その後の見方が深まりやすくなります。 地域の歴史や富士山信仰、文化的背景に触れやすい場所で、初めて富士宮を訪れる人にも分かりやすいスポットです。",
     "q": "静岡県富士山世界遺産センター",
     "image": "assets/illustrations/静岡県富士山世界遺産センター.svg",
-    "imageType": "illustration"
+    "imageType": "illustration",
+    "homepage": "https://mtfuji-whc.jp/"
   },
   {
     "name": "白糸ノ滝",
@@ -34,7 +36,8 @@
     "desc": "富士山の雪解け水が湧き出すことで知られる、富士宮を代表する滝。周辺散策も楽しめます。 幅広く流れ落ちる美しい滝景観で知られ、富士宮を代表する景勝地です。近くの音止の滝と一緒に回る定番ルートが人気です。 富士宮らしい自然や景観を感じやすく、散策・写真撮影・のんびり過ごしたい人に向いています。",
     "q": "白糸ノ滝 静岡県富士宮市",
     "image": "assets/illustrations/白糸ノ滝.svg",
-    "imageType": "illustration"
+    "imageType": "illustration",
+    "homepage": "https://www.city.fujinomiya.lg.jp/1015150000/p001607.html"
   },
   {
     "name": "音止の滝",

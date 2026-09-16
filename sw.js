@@ -1,4 +1,4 @@
-const C='fujinomiya-v15';
+const C='fujinomiya-v16';
 self.addEventListener('install',e=>{self.skipWaiting();});
 self.addEventListener('activate',e=>{
   e.waitUntil(

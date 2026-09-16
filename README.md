@@ -124,3 +124,8 @@
 - 富士山本宮浅間大社の「ホームページ」ボタンを http://www.fuji-hongu.or.jp/sengen/ に直接接続
 - iPhoneホームアイコンをv15ファイル名へ変更しキャッシュ更新
 - manifestとapple-touch-iconをv15へ更新
+
+## v16 公式ホームページ直リンク
+- 静岡県富士山世界遺産センター → https://mtfuji-whc.jp/
+- 白糸ノ滝 → https://www.city.fujinomiya.lg.jp/1015150000/p001607.html
+- 湧玉池 → https://www.pref.shizuoka.jp/kankosports/bunkageijutsu/bunkazai/1002825/1041003/1041889/1004987/1021566.html
