@@ -116,3 +116,11 @@
 - 富士山・赤鳥居・神社の風景を使った新アイコンを追加
 - manifest.webmanifest に 192px / 512px アイコンを設定
 - apple-touch-icon も追加
+
+## v15 修正
+- 「すべて」以外のカテゴリボタンが押せない不具合を修正
+- カテゴリボタンを data-cat + addEventListener 方式に変更
+- 「店舗を検索」ボタンを「検索」に変更
+- 富士山本宮浅間大社の「ホームページ」ボタンを http://www.fuji-hongu.or.jp/sengen/ に直接接続
+- iPhoneホームアイコンをv15ファイル名へ変更しキャッシュ更新
+- manifestとapple-touch-iconをv15へ更新
