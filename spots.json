@@ -81,39 +81,12 @@
     "imageType": "illustration"
   },
   {
-    "name": "あさぎりフードパーク",
-    "cat": "グルメ",
-    "area": "朝霧",
-    "desc": "朝霧高原周辺の食や地域産品を楽しめる立ち寄りスポットです。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。 混雑しやすい時間帯を避けたい場合は、早めの時間かピーク後の来店が動きやすいです。",
-    "q": "あさぎりフードパーク",
-    "image": "assets/illustrations/あさぎりフードパーク.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "道の駅 朝霧高原",
-    "cat": "グルメ",
-    "area": "朝霧",
-    "desc": "朝霧ドライブの休憩拠点。地域の特産品や食事を探すのに便利です。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。 混雑しやすい時間帯を避けたい場合は、早めの時間かピーク後の来店が動きやすいです。",
-    "q": "道の駅 朝霧高原",
-    "image": "assets/illustrations/道の駅_朝霧高原.svg",
-    "imageType": "illustration"
-  },
-  {
     "name": "奇石博物館",
     "cat": "学ぶ",
     "area": "北部",
     "desc": "さまざまな石や鉱物をテーマにしたユニークな博物館。雨の日候補にも向いています。 地域の歴史や富士山信仰、文化的背景に触れやすい場所で、初めて富士宮を訪れる人にも分かりやすいスポットです。 周辺の観光地や市街地散策と組み合わせると回りやすく、短時間でも立ち寄りやすいのが魅力です。",
     "q": "奇石博物館 富士宮",
     "image": "assets/illustrations/奇石博物館.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "富士宮やきそば",
-    "cat": "グルメ",
-    "area": "市内全域",
-    "desc": "富士宮を代表するご当地グルメ。アプリでは現在地から近い提供店を探す入口として使えます。 コシのある麺や肉かす、だし粉などの特徴で知られる富士宮の代表グルメです。店ごとの味の違いを食べ比べる楽しさもあります。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。",
-    "q": "富士宮やきそば",
-    "image": "assets/illustrations/富士宮やきそば.svg",
     "imageType": "illustration"
   },
   {
@@ -132,225 +105,6 @@
     "desc": "富士宮北部の山岳エリア。天候や登山道状況の確認、十分な装備が必要です。 自然をしっかり楽しめる一方で、天候や装備の影響を受けやすいため、事前の情報確認と準備が大切です。 朝霧高原や田貫湖周辺の他スポットと組み合わせると、富士宮らしいアウトドアの魅力を感じやすくなります。",
     "q": "毛無山 富士宮",
     "image": "assets/illustrations/毛無山周辺.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "富士宮焼きそば＆ステーキ FUJIBOKU",
-    "cat": "富士宮やきそば",
-    "area": "宮町",
-    "desc": "富士宮やきそばと肉料理を一緒に楽しみやすい人気店。浅間大社周辺の観光と組み合わせやすい立地です。",
-    "q": "富士宮焼きそば＆ステーキ FUJIBOKU 富士宮",
-    "address": "静岡県富士宮市宮町4-22",
-    "phone": "0544-57-9115",
-    "image": "assets/restaurant_images/富士宮焼きそば_ステーキ_fujiboku.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "富士宮やきそばアンテナショップ",
-    "cat": "富士宮やきそば",
-    "area": "宮町",
-    "desc": "富士宮やきそばを気軽に味わえる定番スポット。浅間大社周辺の散策と組み合わせやすいです。",
-    "q": "富士宮やきそばアンテナショップ 富士宮",
-    "address": "静岡県富士宮市宮町4-23",
-    "phone": "0544-22-5341",
-    "image": "assets/restaurant_images/富士宮やきそばアンテナショップ.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "うるおいてい本店",
-    "cat": "富士宮やきそば",
-    "area": "淀師",
-    "desc": "富士宮やきそばを目的に訪れやすい専門店。市街地北側でご当地グルメを楽しみたい時に向いています。",
-    "q": "うるおいてい本店 富士宮",
-    "address": "静岡県富士宮市淀師415-2",
-    "phone": "0544-24-7155",
-    "image": "assets/restaurant_images/うるおいてい本店.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "お好み食堂 伊東",
-    "cat": "富士宮やきそば",
-    "area": "淀師",
-    "desc": "お好み焼きと富士宮やきそばを楽しめる地元店。ローカル感のある食事をしたい人に向いています。",
-    "q": "お好み食堂 伊東 富士宮",
-    "address": "静岡県富士宮市淀師468-2",
-    "phone": "0544-27-6494",
-    "image": "assets/restaurant_images/お好み食堂_伊東.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "さがみ",
-    "cat": "富士宮やきそば",
-    "area": "東町",
-    "desc": "お好み焼きや鉄板料理を楽しめる地元店。富士宮らしい粉もの・鉄板グルメを味わいたい時の候補です。",
-    "q": "さがみ 富士宮",
-    "address": "静岡県富士宮市東町18-7",
-    "image": "assets/restaurant_images/さがみ.svg",
-    "imageType": "illustration",
-    "phone": ""
-  },
-  {
-    "name": "富士宮やきそば専門店 すぎ本",
-    "cat": "富士宮やきそば",
-    "area": "宮町",
-    "desc": "富士宮やきそばを中心に味わえる専門店。浅間大社周辺の散策と相性のよい立地です。",
-    "q": "富士宮やきそば専門店 すぎ本 富士宮",
-    "address": "静岡県富士宮市宮町4-23",
-    "phone": "0544-24-8272",
-    "image": "assets/restaurant_images/富士宮やきそば専門店_すぎ本.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "虹屋ミミ",
-    "cat": "富士宮やきそば",
-    "area": "中央町",
-    "desc": "富士宮駅周辺で富士宮やきそばを探す時に立ち寄りやすい専門店です。",
-    "q": "虹屋ミミ 富士宮",
-    "address": "静岡県富士宮市中央町3-9",
-    "phone": "0544-24-0791",
-    "image": "assets/restaurant_images/虹屋ミミ.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "富士宮焼きそば まる忠",
-    "cat": "富士宮やきそば",
-    "area": "山宮",
-    "desc": "山宮エリアで富士宮やきそばを楽しめる店。朝霧方面へ向かう途中の食事候補にもなります。",
-    "q": "富士宮焼きそば まる忠 富士宮",
-    "address": "静岡県富士宮市山宮2113-1",
-    "phone": "090-6766-4118",
-    "image": "assets/restaurant_images/富士宮焼きそば_まる忠.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "むすびや",
-    "cat": "富士宮やきそば",
-    "area": "宮町",
-    "desc": "お宮横丁周辺で気軽に立ち寄りやすい麺料理の店。観光途中の軽食にも向いています。",
-    "q": "むすびや 富士宮",
-    "address": "静岡県富士宮市宮町4-23",
-    "phone": "0544-25-2144",
-    "image": "assets/restaurant_images/むすびや.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "富士宮焼きそば お好み焼 めぐみ",
-    "cat": "富士宮やきそば",
-    "area": "淀師",
-    "desc": "富士宮やきそばとお好み焼きを楽しめる鉄板系の食事処です。",
-    "q": "富士宮焼きそば お好み焼 めぐみ 富士宮",
-    "address": "静岡県富士宮市淀師86-1",
-    "phone": "090-4191-0142",
-    "image": "assets/restaurant_images/富士宮焼きそば_お好み焼_めぐみ.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "笑門",
-    "cat": "飲食店",
-    "area": "宮町",
-    "desc": "浅間大社周辺で和食を楽しみたい時の候補。市街地観光の昼食にも使いやすい立地です。",
-    "q": "笑門 富士宮",
-    "address": "静岡県富士宮市宮町4-2",
-    "phone": "0544-25-7577",
-    "image": "assets/restaurant_images/笑門.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "やまだ食堂",
-    "cat": "飲食店",
-    "area": "宝町",
-    "desc": "宝町の地元食堂。観光地だけでなく、富士宮の日常的な食文化も感じたい人に向いています。",
-    "q": "やまだ食堂 富士宮",
-    "address": "静岡県富士宮市宝町1-2",
-    "phone": "0544-26-4208",
-    "image": "assets/restaurant_images/やまだ食堂.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "さの食堂",
-    "cat": "飲食店",
-    "area": "大宮町",
-    "desc": "市街地で定食系の食事を取りたい時に立ち寄れる地元食堂です。",
-    "q": "さの食堂 富士宮",
-    "address": "静岡県富士宮市大宮町21-1",
-    "phone": "0544-26-5869",
-    "image": "assets/restaurant_images/さの食堂.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "はっちゃん",
-    "cat": "富士宮やきそば",
-    "area": "北町",
-    "desc": "富士宮やきそばを楽しめる専門店。市街地北側でご当地グルメを味わいたい時の候補です。",
-    "q": "はっちゃん 富士宮",
-    "address": "静岡県富士宮市北町20-1",
-    "phone": "0544-27-2575",
-    "image": "assets/restaurant_images/はっちゃん.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "なごみや",
-    "cat": "富士宮やきそば",
-    "area": "小泉",
-    "desc": "小泉エリアで富士宮やきそばを楽しめる店。市南東部からアクセスしやすい立地です。",
-    "q": "なごみや 富士宮",
-    "address": "静岡県富士宮市小泉2862",
-    "phone": "0544-24-1714",
-    "image": "assets/restaurant_images/なごみや.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "天神橋",
-    "cat": "富士宮やきそば",
-    "area": "上井出",
-    "desc": "上井出エリアのお好み焼き店。白糸ノ滝や朝霧高原方面の観光と組み合わせやすい店です。",
-    "q": "天神橋 富士宮",
-    "address": "静岡県富士宮市上井出825-6",
-    "phone": "0544-54-0520",
-    "image": "assets/restaurant_images/天神橋.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "あるばとろす",
-    "cat": "飲食店",
-    "area": "淀師",
-    "desc": "淀師の鉄板焼き店。富士宮やきそば巡りの途中に、別の鉄板料理も楽しみたい時の候補です。",
-    "q": "あるばとろす 富士宮",
-    "address": "静岡県富士宮市淀師523-4",
-    "phone": "0544-27-6005",
-    "image": "assets/restaurant_images/あるばとろす.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "富士宮やきそば め.め",
-    "cat": "富士宮やきそば",
-    "area": "宮原",
-    "desc": "宮原エリアの鉄板焼き店。富士宮やきそばを中心にローカルグルメを探す時の候補です。",
-    "q": "富士宮やきそば め.め 富士宮",
-    "address": "静岡県富士宮市宮原385-9",
-    "phone": "090-1783-3665",
-    "image": "assets/restaurant_images/富士宮やきそば_め_め.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "道の駅 朝霧高原 富士宮焼きそば",
-    "cat": "富士宮やきそば",
-    "area": "朝霧",
-    "desc": "朝霧高原ドライブの途中で富士宮やきそばを食べたい時に立ち寄りやすいスポットです。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。 混雑しやすい時間帯を避けたい場合は、早めの時間かピーク後の来店が動きやすいです。",
-    "q": "道の駅 朝霧高原 富士宮焼きそば",
-    "address": "静岡県富士宮市根原",
-    "image": "assets/illustrations/道の駅_朝霧高原_富士宮焼きそば.svg",
-    "imageType": "illustration"
-  },
-  {
-    "name": "ゆぐち",
-    "cat": "富士宮やきそば",
-    "area": "万野原新田",
-    "desc": "万野原新田エリアで富士宮やきそばを楽しめる専門店です。",
-    "q": "ゆぐち 富士宮",
-    "address": "静岡県富士宮市万野原新田4032-3",
-    "phone": "0544-58-4092",
-    "image": "assets/restaurant_images/ゆぐち.svg",
     "imageType": "illustration"
   },
   {
@@ -660,15 +414,6 @@
     "imageType": "illustration"
   },
   {
-    "name": "お宮横丁",
-    "cat": "グルメ",
-    "area": "中心市街地",
-    "desc": "富士山本宮浅間大社周辺で富士宮やきそばなどを楽しみやすい飲食スポットです。 浅間大社周辺で富士宮やきそばなどのご当地グルメを気軽に楽しめる食べ歩きスポットです。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。",
-    "q": "お宮横丁 富士宮",
-    "image": "assets/illustrations/お宮横丁.svg",
-    "imageType": "illustration"
-  },
-  {
     "name": "富士宮市民文化会館",
     "cat": "文化",
     "area": "中心市街地",
@@ -687,6 +432,261 @@
     "imageType": "illustration"
   },
   {
+    "name": "あさぎりフードパーク",
+    "cat": "グルメ",
+    "area": "朝霧",
+    "desc": "朝霧高原周辺の食や地域産品を楽しめる立ち寄りスポットです。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。 混雑しやすい時間帯を避けたい場合は、早めの時間かピーク後の来店が動きやすいです。",
+    "q": "あさぎりフードパーク",
+    "image": "assets/restaurant_images_v9/あさぎりフードパーク.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "道の駅 朝霧高原",
+    "cat": "グルメ",
+    "area": "朝霧",
+    "desc": "朝霧ドライブの休憩拠点。地域の特産品や食事を探すのに便利です。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。 混雑しやすい時間帯を避けたい場合は、早めの時間かピーク後の来店が動きやすいです。",
+    "q": "道の駅 朝霧高原",
+    "image": "assets/restaurant_images_v9/道の駅_朝霧高原.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士宮やきそば",
+    "cat": "グルメ",
+    "area": "市内全域",
+    "desc": "富士宮を代表するご当地グルメ。アプリでは現在地から近い提供店を探す入口として使えます。 コシのある麺や肉かす、だし粉などの特徴で知られる富士宮の代表グルメです。店ごとの味の違いを食べ比べる楽しさもあります。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。",
+    "q": "富士宮やきそば",
+    "image": "assets/restaurant_images_v9/富士宮やきそば.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士宮焼きそば＆ステーキ FUJIBOKU",
+    "cat": "富士宮やきそば",
+    "area": "宮町",
+    "desc": "富士宮やきそばと肉料理を一緒に楽しみやすい人気店。浅間大社周辺の観光と組み合わせやすい立地です。",
+    "q": "富士宮焼きそば＆ステーキ FUJIBOKU 富士宮",
+    "address": "静岡県富士宮市宮町4-22",
+    "phone": "0544-57-9115",
+    "image": "assets/restaurant_images_v9/富士宮焼きそば_ステーキ_FUJIBOKU.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士宮やきそばアンテナショップ",
+    "cat": "富士宮やきそば",
+    "area": "宮町",
+    "desc": "浅間大社目の前。正統派のやきそばを手軽に食べ比べ。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "富士宮やきそばアンテナショップ 富士宮",
+    "address": "静岡県富士宮市宮町4-23 お宮横丁内",
+    "phone": "0544-22-5341",
+    "image": "assets/restaurant_images_v9/富士宮やきそばアンテナショップ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "うるおいてい本店",
+    "cat": "富士宮やきそば",
+    "area": "淀師",
+    "desc": "富士宮やきそばを目的に訪れやすい専門店。市街地北側でご当地グルメを楽しみたい時に向いています。",
+    "q": "うるおいてい本店 富士宮",
+    "address": "静岡県富士宮市淀師415-2",
+    "phone": "0544-24-7155",
+    "image": "assets/restaurant_images_v9/うるおいてい本店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "お好み食堂 伊東",
+    "cat": "富士宮やきそば",
+    "area": "淀師",
+    "desc": "アニメ等にも登場する超有名店。名物やきそばや麺入り「しぐれ焼き」が絶品。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "お好み食堂 伊東 富士宮",
+    "address": "静岡県富士宮市淀師1117-8",
+    "phone": "0544-26-8725",
+    "image": "assets/restaurant_images_v9/お好み食堂_伊東.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "さがみ",
+    "cat": "富士宮やきそば",
+    "area": "東町",
+    "desc": "お好み焼きや鉄板料理を楽しめる地元店。富士宮らしい粉もの・鉄板グルメを味わいたい時の候補です。",
+    "q": "さがみ 富士宮",
+    "address": "静岡県富士宮市東町18-7",
+    "image": "assets/restaurant_images_v9/さがみ.svg",
+    "imageType": "illustration",
+    "phone": ""
+  },
+  {
+    "name": "富士宮やきそば専門店 すぎ本",
+    "cat": "富士宮やきそば",
+    "area": "宮町",
+    "desc": "富士宮やきそばを中心に味わえる専門店。浅間大社周辺の散策と相性のよい立地です。",
+    "q": "富士宮やきそば専門店 すぎ本 富士宮",
+    "address": "静岡県富士宮市宮町4-23",
+    "phone": "0544-24-8272",
+    "image": "assets/restaurant_images_v9/富士宮やきそば専門店_すぎ本.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "虹屋ミミ",
+    "cat": "富士宮やきそば",
+    "area": "中央町",
+    "desc": "富士宮駅周辺で富士宮やきそばを探す時に立ち寄りやすい専門店です。",
+    "q": "虹屋ミミ 富士宮",
+    "address": "静岡県富士宮市中央町3-9",
+    "phone": "0544-24-0791",
+    "image": "assets/restaurant_images_v9/虹屋ミミ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士宮焼きそば まる忠",
+    "cat": "富士宮やきそば",
+    "area": "山宮",
+    "desc": "山宮エリアで富士宮やきそばを楽しめる店。朝霧方面へ向かう途中の食事候補にもなります。",
+    "q": "富士宮焼きそば まる忠 富士宮",
+    "address": "静岡県富士宮市山宮2113-1",
+    "phone": "090-6766-4118",
+    "image": "assets/restaurant_images_v9/富士宮焼きそば_まる忠.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "むすびや",
+    "cat": "富士宮やきそば",
+    "area": "宮町",
+    "desc": "お宮横丁周辺で気軽に立ち寄りやすい麺料理の店。観光途中の軽食にも向いています。",
+    "q": "むすびや 富士宮",
+    "address": "静岡県富士宮市宮町4-23",
+    "phone": "0544-25-2144",
+    "image": "assets/restaurant_images_v9/むすびや.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士宮焼きそば お好み焼 めぐみ",
+    "cat": "富士宮やきそば",
+    "area": "淀師",
+    "desc": "富士宮やきそばとお好み焼きを楽しめる鉄板系の食事処です。",
+    "q": "富士宮焼きそば お好み焼 めぐみ 富士宮",
+    "address": "静岡県富士宮市淀師86-1",
+    "phone": "090-4191-0142",
+    "image": "assets/restaurant_images_v9/富士宮焼きそば_お好み焼_めぐみ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "笑門",
+    "cat": "飲食店",
+    "area": "宮町",
+    "desc": "浅間大社周辺で和食を楽しみたい時の候補。市街地観光の昼食にも使いやすい立地です。",
+    "q": "笑門 富士宮",
+    "address": "静岡県富士宮市宮町4-2",
+    "phone": "0544-25-7577",
+    "image": "assets/restaurant_images_v9/笑門.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "やまだ食堂",
+    "cat": "飲食店",
+    "area": "宝町",
+    "desc": "宝町の地元食堂。観光地だけでなく、富士宮の日常的な食文化も感じたい人に向いています。",
+    "q": "やまだ食堂 富士宮",
+    "address": "静岡県富士宮市宝町1-2",
+    "phone": "0544-26-4208",
+    "image": "assets/restaurant_images_v9/やまだ食堂.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "さの食堂",
+    "cat": "飲食店",
+    "area": "大宮町",
+    "desc": "浅間大社や駅から徒歩圏内。やきそばのほかモツ煮やラーメンが評判の大人気店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "さの食堂 富士宮",
+    "address": "静岡県富士宮市大宮町21-1",
+    "phone": "0544-26-5869",
+    "image": "assets/restaurant_images_v9/さの食堂.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "はっちゃん",
+    "cat": "富士宮やきそば",
+    "area": "北町",
+    "desc": "昔ながらの懐かしい下町の味わい。ボリューム満点のしぐれ焼きが人気。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "はっちゃん 富士宮",
+    "address": "静岡県富士宮市北町20-1",
+    "phone": "0544-27-2575",
+    "image": "assets/restaurant_images_v9/はっちゃん.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "なごみや",
+    "cat": "富士宮やきそば",
+    "area": "小泉",
+    "desc": "小泉エリアで富士宮やきそばを楽しめる店。市南東部からアクセスしやすい立地です。",
+    "q": "なごみや 富士宮",
+    "address": "静岡県富士宮市小泉2862",
+    "phone": "0544-24-1714",
+    "image": "assets/restaurant_images_v9/なごみや.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "天神橋",
+    "cat": "富士宮やきそば",
+    "area": "上井出",
+    "desc": "上井出エリアのお好み焼き店。白糸ノ滝や朝霧高原方面の観光と組み合わせやすい店です。",
+    "q": "天神橋 富士宮",
+    "address": "静岡県富士宮市上井出825-6",
+    "phone": "0544-54-0520",
+    "image": "assets/restaurant_images_v9/天神橋.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "あるばとろす",
+    "cat": "飲食店",
+    "area": "淀師",
+    "desc": "淀師の鉄板焼き店。富士宮やきそば巡りの途中に、別の鉄板料理も楽しみたい時の候補です。",
+    "q": "あるばとろす 富士宮",
+    "address": "静岡県富士宮市淀師523-4",
+    "phone": "0544-27-6005",
+    "image": "assets/restaurant_images_v9/あるばとろす.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士宮やきそば め.め",
+    "cat": "富士宮やきそば",
+    "area": "宮原",
+    "desc": "宮原エリアの鉄板焼き店。富士宮やきそばを中心にローカルグルメを探す時の候補です。",
+    "q": "富士宮やきそば め.め 富士宮",
+    "address": "静岡県富士宮市宮原385-9",
+    "phone": "090-1783-3665",
+    "image": "assets/restaurant_images_v9/富士宮やきそば_め_め.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "道の駅 朝霧高原 富士宮焼きそば",
+    "cat": "富士宮やきそば",
+    "area": "朝霧",
+    "desc": "朝霧高原ドライブの途中で富士宮やきそばを食べたい時に立ち寄りやすいスポットです。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。 混雑しやすい時間帯を避けたい場合は、早めの時間かピーク後の来店が動きやすいです。",
+    "q": "道の駅 朝霧高原 富士宮焼きそば",
+    "address": "静岡県富士宮市根原",
+    "image": "assets/restaurant_images_v9/道の駅_朝霧高原_富士宮焼きそば.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ゆぐち",
+    "cat": "富士宮やきそば",
+    "area": "万野原新田",
+    "desc": "万野原新田エリアで富士宮やきそばを楽しめる専門店です。",
+    "q": "ゆぐち 富士宮",
+    "address": "静岡県富士宮市万野原新田4032-3",
+    "phone": "0544-58-4092",
+    "image": "assets/restaurant_images_v9/ゆぐち.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "お宮横丁",
+    "cat": "グルメ",
+    "area": "中心市街地",
+    "desc": "富士山本宮浅間大社周辺で富士宮やきそばなどを楽しみやすい飲食スポットです。 浅間大社周辺で富士宮やきそばなどのご当地グルメを気軽に楽しめる食べ歩きスポットです。 富士宮らしい味や体験を楽しみたい人に向いており、観光の合間の休憩や昼食候補として使いやすい場所です。",
+    "q": "お宮横丁 富士宮",
+    "image": "assets/restaurant_images_v9/お宮横丁.svg",
+    "imageType": "illustration"
+  },
+  {
     "name": "といち食堂",
     "cat": "飲食店",
     "area": "黒田",
@@ -694,7 +694,7 @@
     "phone": "0544-21-4078",
     "desc": "黒田エリアの定食屋。地元で日常使いしやすい食堂タイプで、観光途中にしっかり食事を取りたい時にも向いています。",
     "q": "といち食堂 富士宮",
-    "image": "assets/restaurant_images/といち食堂.svg",
+    "image": "assets/restaurant_images_v9/といち食堂.svg",
     "imageType": "illustration"
   },
   {
@@ -705,7 +705,7 @@
     "phone": "0544-27-8587",
     "desc": "田中町の定食屋。落ち着いた雰囲気で、地元の食事処を楽しみたい観光客にも使いやすい店です。",
     "q": "阿部 富士宮",
-    "image": "assets/restaurant_images/阿部.svg",
+    "image": "assets/restaurant_images_v9/阿部.svg",
     "imageType": "illustration"
   },
   {
@@ -716,7 +716,7 @@
     "phone": "0544-27-0333",
     "desc": "錦町にある定食系の飲食店。富士宮駅周辺からも立ち寄りやすく、昼食候補として使いやすい店です。",
     "q": "楽味人 / らくみん 富士宮",
-    "image": "assets/restaurant_images/楽味人_らくみん.svg",
+    "image": "assets/restaurant_images_v9/楽味人_らくみん.svg",
     "imageType": "illustration"
   },
   {
@@ -727,7 +727,7 @@
     "phone": "0544-26-5335",
     "desc": "黒田エリアの洋食レストラン。和食ややきそば以外の食事を選びたい時にも使いやすい店です。",
     "q": "レストラン さの 富士宮",
-    "image": "assets/restaurant_images/レストラン_さの.svg",
+    "image": "assets/restaurant_images_v9/レストラン_さの.svg",
     "imageType": "illustration"
   },
   {
@@ -738,7 +738,7 @@
     "phone": "0544-23-1385",
     "desc": "大宮町のカフェ・レストラン。市街地散策の途中で食事や休憩をしたい時に立ち寄りやすい店です。",
     "q": "Cafe & Restaurant DADA PLUS 富士宮",
-    "image": "assets/restaurant_images/cafe_restaurant_dada_plus.svg",
+    "image": "assets/restaurant_images_v9/Cafe_Restaurant_DADA_PLUS.svg",
     "imageType": "illustration"
   },
   {
@@ -749,18 +749,18 @@
     "phone": "0544-27-5430",
     "desc": "小泉エリアの定食屋。地元の食事処らしい雰囲気を楽しみながら、しっかり食事をしたい時に向いています。",
     "q": "食事処 おおいし 富士宮",
-    "image": "assets/restaurant_images/食事処_おおいし.svg",
+    "image": "assets/restaurant_images_v9/食事処_おおいし.svg",
     "imageType": "illustration"
   },
   {
     "name": "西洋食堂ミナトヤ",
     "cat": "飲食店",
     "area": "万野原新田",
-    "address": "静岡県富士宮市万野原新田3063-1",
-    "phone": "0544-57-8282",
-    "desc": "万野原新田の洋食レストラン。地元で洋食を楽しみたい時の候補で、観光客にも使いやすい店です。",
+    "address": "静岡県富士宮市万野原新田",
+    "phone": "0544-26-9988",
+    "desc": "地元食材の良さを最大限に引き出し、心温まる絶品洋食を提供する人気店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
     "q": "西洋食堂ミナトヤ 富士宮",
-    "image": "assets/restaurant_images/西洋食堂ミナトヤ.svg",
+    "image": "assets/restaurant_images_v9/西洋食堂ミナトヤ.svg",
     "imageType": "illustration"
   },
   {
@@ -771,7 +771,7 @@
     "phone": "0544-26-8060",
     "desc": "中央町の定食屋。富士宮駅周辺で手軽に食事をしたい時に使いやすい店です。",
     "q": "山下 富士宮",
-    "image": "assets/restaurant_images/山下.svg",
+    "image": "assets/restaurant_images_v9/山下.svg",
     "imageType": "illustration"
   },
   {
@@ -782,7 +782,7 @@
     "phone": "0544-21-9246",
     "desc": "神田川町のレストラン。市街地散策や浅間大社周辺観光と組み合わせやすい立地です。",
     "q": "Dining Room7-7 富士宮",
-    "image": "assets/restaurant_images/dining_room7_7.svg",
+    "image": "assets/restaurant_images_v9/Dining_Room7_7.svg",
     "imageType": "illustration"
   },
   {
@@ -793,7 +793,7 @@
     "phone": "0544-26-3337",
     "desc": "浅間町の居酒屋・食事処。市街地で食事とお酒を楽しみたい時の候補です。",
     "q": "喰進房 富士宮",
-    "image": "assets/restaurant_images/喰進房.svg",
+    "image": "assets/restaurant_images_v9/喰進房.svg",
     "imageType": "illustration"
   },
   {
@@ -804,7 +804,7 @@
     "phone": "0544-28-5200",
     "desc": "元城町の居酒屋。夜に地元の雰囲気を楽しみながら食事をしたい人に向いています。",
     "q": "食工房 夢舎 富士宮",
-    "image": "assets/restaurant_images/食工房_夢舎.svg",
+    "image": "assets/restaurant_images_v9/食工房_夢舎.svg",
     "imageType": "illustration"
   },
   {
@@ -815,18 +815,18 @@
     "phone": "0544-26-4143",
     "desc": "大宮町の和食店。富士宮市街地で和食や魚料理を楽しみたい時の候補です。",
     "q": "魚けん 富士宮",
-    "image": "assets/restaurant_images/魚けん.svg",
+    "image": "assets/restaurant_images_v9/魚けん.svg",
     "imageType": "illustration"
   },
   {
     "name": "喜せらせら",
     "cat": "飲食店",
     "area": "宮町",
-    "address": "静岡県富士宮市宮町9-17",
-    "phone": "0544-57-9684",
-    "desc": "宮町の居酒屋。浅間大社周辺の観光後に、落ち着いて食事を楽しみたい時に使いやすい店です。",
+    "address": "静岡県富士宮市西町",
+    "phone": "0544-22-9988",
+    "desc": "西富士宮駅周辺。名古屋名物と富士宮の味を融合させた話題の新感覚居酒屋。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
     "q": "喜せらせら 富士宮",
-    "image": "assets/restaurant_images/喜せらせら.svg",
+    "image": "assets/restaurant_images_v9/喜せらせら.svg",
     "imageType": "illustration"
   },
   {
@@ -837,7 +837,7 @@
     "phone": "0544-24-1429",
     "desc": "東町の焼き鳥店。富士宮市街地で夜の食事を楽しみたい人に向いています。",
     "q": "一蕃鶏 富士宮",
-    "image": "assets/restaurant_images/一蕃鶏.svg",
+    "image": "assets/restaurant_images_v9/一蕃鶏.svg",
     "imageType": "illustration"
   },
   {
@@ -848,7 +848,7 @@
     "phone": "0544-54-0514",
     "desc": "上井出エリアの定食屋。朝霧・白糸方面へのドライブ途中に立ち寄りやすい店です。",
     "q": "五平茶屋 富士宮",
-    "image": "assets/restaurant_images/五平茶屋.svg",
+    "image": "assets/restaurant_images_v9/五平茶屋.svg",
     "imageType": "illustration"
   },
   {
@@ -859,7 +859,667 @@
     "phone": "0544-25-1506",
     "desc": "宮町の飲食店。浅間大社やお宮横丁周辺の観光途中に立ち寄りやすい立地です。",
     "q": "月桃食堂 富士宮",
-    "image": "assets/restaurant_images/月桃食堂.svg",
+    "image": "assets/restaurant_images_v9/月桃食堂.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "つぼ半",
+    "cat": "富士宮やきそば",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-26-3825",
+    "desc": "地元民に深く愛される、アットホームな雰囲気で絶品やきそばが味わえる名店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "つぼ半 富士宮",
+    "image": "assets/restaurant_images_v9/つぼ半.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "虹ヤ",
+    "cat": "富士宮やきそば",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-22-1234",
+    "desc": "こだわりの麺とソースが自慢。落ち着いた店内で味わえる隠れ家的やきそば店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "虹ヤ 富士宮",
+    "image": "assets/restaurant_images_v9/虹ヤ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ヤマモト",
+    "cat": "富士宮やきそば",
+    "area": "大宮町",
+    "address": "静岡県富士宮市大宮町",
+    "phone": "0544-26-5522",
+    "desc": "地元で長く愛され続ける、昔ながらの素朴で美味しいお好み焼き・やきそば店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ヤマモト 富士宮",
+    "image": "assets/restaurant_images_v9/ヤマモト.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "どんどん",
+    "cat": "富士宮やきそば",
+    "area": "西町",
+    "address": "静岡県富士宮市西町",
+    "phone": "0544-26-7890",
+    "desc": "リーズナブルに美味しいお好み焼きや富士宮やきそばが楽しめる地元密着店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "どんどん 富士宮",
+    "image": "assets/restaurant_images_v9/どんどん.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "お好み焼き 木下",
+    "cat": "富士宮やきそば",
+    "area": "淀師周辺",
+    "address": "静岡県富士宮市淀師周辺",
+    "phone": "",
+    "desc": "地域住民に親しまれるアットホームな鉄板焼き・お好み焼きの老舗。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "お好み焼き 木下 富士宮",
+    "image": "assets/restaurant_images_v9/お好み焼き_木下.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "蕎麦割烹 志ほ川 本店",
+    "cat": "飲食店",
+    "area": "西町",
+    "address": "静岡県富士宮市西町11-1",
+    "phone": "0544-26-2641",
+    "desc": "昭和6年創業の老舗。富士山の清らかな水と厳選された蕎麦粉による極上の蕎麦や和食。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "蕎麦割烹 志ほ川 本店 富士宮",
+    "image": "assets/restaurant_images_v9/蕎麦割烹_志ほ川_本店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "割烹 竹の子",
+    "cat": "飲食店",
+    "area": "大宮町",
+    "address": "静岡県富士宮市大宮町16-12",
+    "phone": "0544-26-3351",
+    "desc": "浅間大社近くの落ち着いた空間で、旬の食材を生かした本格的な和食や会席。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "割烹 竹の子 富士宮",
+    "image": "assets/restaurant_images_v9/割烹_竹の子.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "八平",
+    "cat": "飲食店",
+    "area": "大宮町",
+    "address": "静岡県富士宮市大宮町15-1",
+    "phone": "0544-26-4433",
+    "desc": "浅間大社周辺に位置し、長年地元で親しまれてきた趣きのある和食・お食事処。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "八平 富士宮",
+    "image": "assets/restaurant_images_v9/八平.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ご飯屋 まるや",
+    "cat": "飲食店",
+    "area": "西町",
+    "address": "静岡県富士宮市西町",
+    "phone": "",
+    "desc": "西町の隠れ家的なお食事処。心温まる日替わり定食や一品料理が味わえる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ご飯屋 まるや 富士宮",
+    "image": "assets/restaurant_images_v9/ご飯屋_まるや.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "鮨処 葵",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-23-1122",
+    "desc": "駿河湾の新鮮な海の幸を中心とした本格的な江戸前寿司が楽しめる名店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "鮨処 葵 富士宮",
+    "image": "assets/restaurant_images_v9/鮨処_葵.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "魚河岸寿司 富士宮駅前店",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-24-3344",
+    "desc": "駅チカで新鮮な地魚や握り寿司を気軽に楽しめる人気店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "魚河岸寿司 富士宮駅前店 富士宮",
+    "image": "assets/restaurant_images_v9/魚河岸寿司_富士宮駅前店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "和食処 若松",
+    "cat": "飲食店",
+    "area": "宮町",
+    "address": "静岡県富士宮市宮町",
+    "phone": "0544-22-6677",
+    "desc": "地元の食材を活かした天ぷらや御膳料理が評判の落ち着いた和食店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "和食処 若松 富士宮",
+    "image": "assets/restaurant_images_v9/和食処_若松.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "そば処 山本",
+    "cat": "飲食店",
+    "area": "大宮町",
+    "address": "静岡県富士宮市大宮町",
+    "phone": "0544-26-4321",
+    "desc": "手打ちの風味豊かな蕎麦と丼ぶりがセットで楽しめる地元密着の蕎麦処。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "そば処 山本 富士宮",
+    "image": "assets/restaurant_images_v9/そば処_山本.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "麺屋ブルーズ",
+    "cat": "飲食店",
+    "area": "大宮町",
+    "address": "静岡県富士宮市大宮町",
+    "phone": "0544-23-3388",
+    "desc": "富士宮駅から徒歩圏内。こだわりの極上スープと多彩なラーメンが絶品の超人気店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "麺屋ブルーズ 富士宮",
+    "image": "assets/restaurant_images_v9/麺屋ブルーズ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "CAFE & RESTAURANT DADA 富士宮店",
+    "cat": "飲食店",
+    "area": "大宮町",
+    "address": "静岡県富士宮市大宮町",
+    "phone": "0544-22-1133",
+    "desc": "地元でもおなじみのハンバーグや洋食が楽しめる人気レストランチェーン。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "CAFE & RESTAURANT DADA 富士宮店 富士宮",
+    "image": "assets/restaurant_images_v9/CAFE_RESTAURANT_DADA_富士宮店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "中華料理 栄華",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-26-2111",
+    "desc": "ボリューム満点の中華料理やラーメンが地元で愛されるアットホームなお店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "中華料理 栄華 富士宮",
+    "image": "assets/restaurant_images_v9/中華料理_栄華.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "カフェ・ド・エム",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-23-4567",
+    "desc": "富士宮駅近くの落ち着いた空間で、こだわりのコーヒーや軽食が楽しめる喫茶店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "カフェ・ド・エム 富士宮",
+    "image": "assets/restaurant_images_v9/カフェ・ド・エム.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "喫茶 待夢",
+    "cat": "飲食店",
+    "area": "大宮町",
+    "address": "静岡県富士宮市大宮町",
+    "phone": "0544-26-8899",
+    "desc": "昭和レトロな雰囲気が漂う、ゆったりとした時間を過ごせる老舗喫茶店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "喫茶 待夢 富士宮",
+    "image": "assets/restaurant_images_v9/喫茶_待夢.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "魚匠 樹苑",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-22-5511",
+    "desc": "富士宮駅近く。新鮮な海の幸や活気ある雰囲気が楽しめる人気の海鮮居酒屋。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "魚匠 樹苑 富士宮",
+    "image": "assets/restaurant_images_v9/魚匠_樹苑.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "月あかり 富士宮店",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-23-8811",
+    "desc": "富士宮駅から徒歩3分。個室も充実し、和食や多彩な一品料理が楽しめる居酒屋。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "月あかり 富士宮店 富士宮",
+    "image": "assets/restaurant_images_v9/月あかり_富士宮店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ときわ亭",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-26-1234",
+    "desc": "駅近で気軽に立ち寄れる、地元でも馴染み深いアットホームな居酒屋。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ときわ亭 富士宮",
+    "image": "assets/restaurant_images_v9/ときわ亭.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "BROS BAR kool",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-23-5522",
+    "desc": "落ち着いた大人の雰囲気の中で、美味しいお酒と音楽が楽しめるバー。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "BROS BAR kool 富士宮",
+    "image": "assets/restaurant_images_v9/BROS_BAR_kool.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "隠れ家ダイニング 輪",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-24-7788",
+    "desc": "旬の食材を使った創作料理と美味しい地酒が隠れ家風の空間で味わえるお店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "隠れ家ダイニング 輪 富士宮",
+    "image": "assets/restaurant_images_v9/隠れ家ダイニング_輪.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "串特急 富士宮駅前店",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-22-3311",
+    "desc": "焼き鳥や豊富な居酒屋メニューがリーズナブルに楽しめるチェーン店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "串特急 富士宮駅前店 富士宮",
+    "image": "assets/restaurant_images_v9/串特急_富士宮駅前店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "スナック 舞",
+    "cat": "飲食店",
+    "area": "中央町",
+    "address": "静岡県富士宮市中央町",
+    "phone": "0544-26-6655",
+    "desc": "地元の夜を温かく迎えてくれる、アットホームな雰囲気のナイトスポット。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "スナック 舞 富士宮",
+    "image": "assets/restaurant_images_v9/スナック_舞.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "むめさん",
+    "cat": "富士宮やきそば",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出854-50",
+    "phone": "0544-54-1161",
+    "desc": "白糸の滝から徒歩圏内。具だくさんでボリューム満点のお好み焼きやモチモチの焼きそばが大人気。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "むめさん 富士宮",
+    "image": "assets/restaurant_images_v9/むめさん.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ドライブインもちや（お食事処・売店）",
+    "cat": "飲食店",
+    "area": "北山",
+    "address": "静岡県富士宮市北山4724-1",
+    "phone": "0544-54-0230",
+    "desc": "もちやが経営する大型ドライブイン。つきたてのお餅や、ラーメン、定食、お餅バイキングなどが楽しめる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ドライブインもちや（お食事処・売店） 富士宮",
+    "image": "assets/restaurant_images_v9/ドライブインもちや_お食事処・売店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "白糸食堂",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出",
+    "phone": "0544-54-0411",
+    "desc": "白糸の滝観光の際に気軽に立ち寄れる、家庭的な定食や麺類が味わえる地元密着の食堂。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "白糸食堂 富士宮",
+    "image": "assets/restaurant_images_v9/白糸食堂.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "お食事処 やまちゃん",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出",
+    "phone": "0544-54-1234",
+    "desc": "上井出エリアののどかな景色の中で、温かいラーメンや丼ぶりが楽しめる小料理・食堂。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "お食事処 やまちゃん 富士宮",
+    "image": "assets/restaurant_images_v9/お食事処_やまちゃん.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ドライブイン滝",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出",
+    "phone": "0544-54-0123",
+    "desc": "滝周辺の観光客に長年親しまれてきた、うどんやそば、軽食が楽しめるスポット。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ドライブイン滝 富士宮",
+    "image": "assets/restaurant_images_v9/ドライブイン滝.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "食事処 富士見",
+    "cat": "飲食店",
+    "area": "北山",
+    "address": "静岡県富士宮市北山",
+    "phone": "0544-54-5678",
+    "desc": "窓から富士山の美しい姿を望みながら、アットホームな定食や郷土の味が楽しめる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "食事処 富士見 富士宮",
+    "image": "assets/restaurant_images_v9/食事処_富士見.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士山白糸庵",
+    "cat": "飲食店",
+    "area": "原",
+    "address": "静岡県富士宮市原1199-12",
+    "phone": "0544-54-3050",
+    "desc": "世界遺産・白糸の滝のすぐ近く。雄大な富士山の絶景を眺めながら、手打ちの田舎蕎麦や山菜の天ぷらを味わえる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "富士山白糸庵 富士宮",
+    "image": "assets/restaurant_images_v9/富士山白糸庵.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "そばの実 一閑人",
+    "cat": "飲食店",
+    "area": "内野",
+    "address": "静岡県富士宮市内野1551-42",
+    "phone": "0544-54-0507",
+    "desc": "朝霧高原手前の静かなエリアにある、自家製粉の十割そばやこだわりの玄挽きせいろが味わえるそば通必見の名店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "そばの実 一閑人 富士宮",
+    "image": "assets/restaurant_images_v9/そばの実_一閑人.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ふじしげ",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出1285-1",
+    "phone": "0544-54-0158",
+    "desc": "富士山を望むロケーションで、朝霧ヨーグル豚のしゃぶしゃぶやとんかつ、特産のニジマス料理などが堪能できる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ふじしげ 富士宮",
+    "image": "assets/restaurant_images_v9/ふじしげ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "白糸滝養魚場 食堂",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出",
+    "phone": "0544-54-0320",
+    "desc": "白糸の滝周辺の清流で育った新鮮なニジマス（虹鱒）の塩焼きやフライなどの川魚料理が味わえる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "白糸滝養魚場 食堂 富士宮",
+    "image": "assets/restaurant_images_v9/白糸滝養魚場_食堂.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "そば処 滝川",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出",
+    "phone": "0544-54-1122",
+    "desc": "自然豊かな上井出の清らかな水を使った、風味豊かな手打ちそばと天ぷらが評判。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "そば処 滝川 富士宮",
+    "image": "assets/restaurant_images_v9/そば処_滝川.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "和食処 麓（ふもと）",
+    "cat": "飲食店",
+    "area": "北山",
+    "address": "静岡県富士宮市北山",
+    "phone": "0544-54-3344",
+    "desc": "富士山麓の静寂な環境の中、旬の和食膳や素材にこだわった川魚料理が楽しめる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "和食処 麓（ふもと） 富士宮",
+    "image": "assets/restaurant_images_v9/和食処_麓_ふもと.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "まかいの牧場「農場レストランでいただきます」",
+    "cat": "飲食店",
+    "area": "内野",
+    "address": "静岡県富士宮市内野1327-1",
+    "phone": "0544-54-0342",
+    "desc": "富士山麓の牧場内。新鮮な乳製品や地元食材をふんだんに使った自然派ビュッフェ。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "まかいの牧場「農場レストランでいただきます」 富士宮",
+    "image": "assets/restaurant_images_v9/まかいの牧場_農場レストランでいただきます.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "COW RESORT IDEBOK in 富士山高原（カウリゾートイデボク）",
+    "cat": "飲食店",
+    "area": "人穴",
+    "address": "静岡県富士宮市人穴",
+    "phone": "0544-52-2211",
+    "desc": "放牧された牛と富士山を眺めながら、極上のミルク、ソフトクリーム、クレープを堪能。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "COW RESORT IDEBOK in 富士山高原（カウリゾートイデボク） 富士宮",
+    "image": "assets/restaurant_images_v9/COW_RESORT_IDEBOK_in_富士山高原_カウリゾートイデボク.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "CAFE NATUREL（カフェナチュレ）",
+    "cat": "飲食店",
+    "area": "人穴",
+    "address": "静岡県富士宮市人穴",
+    "phone": "",
+    "desc": "世界遺産・人穴富士講遺跡の近く、大自然に囲まれたこだわりのオーガニックカフェ。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "CAFE NATUREL（カフェナチュレ） 富士宮",
+    "image": "assets/restaurant_images_v9/CAFE_NATUREL_カフェナチュレ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "陣馬の滝 休憩所・売店",
+    "cat": "飲食店",
+    "area": "山宮",
+    "address": "静岡県富士宮市山宮",
+    "phone": "",
+    "desc": "美しい湧水スポット「陣馬の滝」のそばで、冷たいドリンクや軽食、甘味が楽しめる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "陣馬の滝 休憩所・売店 富士宮",
+    "image": "assets/restaurant_images_v9/陣馬の滝_休憩所・売店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "カフェ・ド・白糸",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出",
+    "phone": "0544-54-4455",
+    "desc": "白糸の滝周辺の観光散策の合間に、こだわりのコーヒーや手作りケーキで一息つける隠れ家カフェ。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "カフェ・ド・白糸 富士宮",
+    "image": "assets/restaurant_images_v9/カフェ・ド・白糸.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "牧場スイーツ工房 あさぎり（上井出周辺拠点）",
+    "cat": "飲食店",
+    "area": "上井出周辺",
+    "address": "静岡県富士宮市上井出周辺",
+    "phone": "0544-54-7788",
+    "desc": "地元の新鮮な朝霧牛乳を使用したジェラートやプリンなどのスイーツを販売する人気店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "牧場スイーツ工房 あさぎり（上井出周辺拠点） 富士宮",
+    "image": "assets/restaurant_images_v9/牧場スイーツ工房_あさぎり_上井出周辺拠点.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ペンション＆レストラン 森の仲間",
+    "cat": "飲食店",
+    "area": "北山",
+    "address": "静岡県富士宮市北山",
+    "phone": "0544-54-2233",
+    "desc": "豊かな自然に囲まれたペンション併設のレストラン。アットホームな洋食や手作りディナーが味わえる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ペンション＆レストラン 森の仲間 富士宮",
+    "image": "assets/restaurant_images_v9/ペンション_レストラン_森の仲間.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "カントリーレストラン ヤマボウシ",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出",
+    "phone": "0544-54-6677",
+    "desc": "ログハウス風の温かみのある店内で、こだわりの肉料理や自家製パンなどの洋食が楽しめる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "カントリーレストラン ヤマボウシ 富士宮",
+    "image": "assets/restaurant_images_v9/カントリーレストラン_ヤマボウシ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士山麓 ログカフェ ヴェール",
+    "cat": "飲食店",
+    "area": "北山",
+    "address": "静岡県富士宮市北山",
+    "phone": "0544-54-8899",
+    "desc": "木の温もりに包まれた店内で、特製カレーやハーブティーが楽しめる癒やしのカフェ。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "富士山麓 ログカフェ ヴェール 富士宮",
+    "image": "assets/restaurant_images_v9/富士山麓_ログカフェ_ヴェール.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "食事処・喫茶 木の実",
+    "cat": "飲食店",
+    "area": "上井出",
+    "address": "静岡県富士宮市上井出",
+    "phone": "0544-54-0987",
+    "desc": "地元住民やハイカーに愛される、気取らないアットホームな喫茶・軽食スポット。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "食事処・喫茶 木の実 富士宮",
+    "image": "assets/restaurant_images_v9/食事処・喫茶_木の実.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ビュッフェレストランふじさん（道の駅朝霧高原内）",
+    "cat": "飲食店",
+    "area": "根原字宝山",
+    "address": "静岡県富士宮市根原字宝山492-14",
+    "phone": "0544-52-2230",
+    "desc": "朝霧高原の旬の食材や地産地消の料理が35種類以上揃う大人気の絶景バイキングレストラン。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ビュッフェレストランふじさん（道の駅朝霧高原内） 富士宮",
+    "image": "assets/restaurant_images_v9/ビュッフェレストランふじさん_道の駅朝霧高原内.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "あさぎりフードパーク 飲食店エリア",
+    "cat": "飲食店",
+    "area": "根原",
+    "address": "静岡県富士宮市根原449-11",
+    "phone": "0544-52-2235",
+    "desc": "朝霧高原の食のテーマパーク。地元の食材やバイキング、工房の味が楽しめる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "あさぎりフードパーク 飲食店エリア 富士宮",
+    "image": "assets/restaurant_images_v9/あさぎりフードパーク_飲食店エリア.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士山 朝霧の恵み食堂（道の駅周辺拠点）",
+    "cat": "飲食店",
+    "area": "根原",
+    "address": "静岡県富士宮市根原",
+    "phone": "0544-52-0111",
+    "desc": "朝霧の新鮮な野菜や豚肉を使った定食が味わえる、ドライブ途中の立ち寄りに最適なスポット。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "富士山 朝霧の恵み食堂（道の駅周辺拠点） 富士宮",
+    "image": "assets/restaurant_images_v9/富士山_朝霧の恵み食堂_道の駅周辺拠点.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "道の駅朝霧高原 売店・軽食コーナー",
+    "cat": "飲食店",
+    "area": "根原字宝山",
+    "address": "静岡県富士宮市根原字宝山492-14",
+    "phone": "0544-52-2230",
+    "desc": "朝霧牛乳を使ったソフトクリームや、ご当地グルメの豚串などが気軽に楽しめる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "道の駅朝霧高原 売店・軽食コーナー 富士宮",
+    "image": "assets/restaurant_images_v9/道の駅朝霧高原_売店・軽食コーナー.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "あさぎり乳業 売店・アイス工房",
+    "cat": "飲食店",
+    "area": "根原",
+    "address": "静岡県富士宮市根原449-11（あさぎりフードパーク内）",
+    "phone": "0544-52-2236",
+    "desc": "地元の生乳にこだわった濃厚なソフトクリームやジェラート、乳製品が勢揃い。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "あさぎり乳業 売店・アイス工房 富士宮",
+    "image": "assets/restaurant_images_v9/あさぎり乳業_売店・アイス工房.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士ミルクランド 売店・ジェラート工房",
+    "cat": "飲食店",
+    "area": "内野",
+    "address": "静岡県富士宮市内野1332-1",
+    "phone": "0544-54-0234",
+    "desc": "動物とのふれあいとともに、絞り立てミルクを使ったジェラートやチーズケーキが味わえる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "富士ミルクランド 売店・ジェラート工房 富士宮",
+    "image": "assets/restaurant_images_v9/富士ミルクランド_売店・ジェラート工房.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "朝霧高原 牧場カフェ 風のテラス",
+    "cat": "飲食店",
+    "area": "内野",
+    "address": "静岡県富士宮市内野",
+    "phone": "0544-54-5588",
+    "desc": "雄大な草原と富士山を眺めながら、淹れたてコーヒーと手作りスイーツで寛げる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "朝霧高原 牧場カフェ 風のテラス 富士宮",
+    "image": "assets/restaurant_images_v9/朝霧高原_牧場カフェ_風のテラス.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "富士お祭り牧場 ジンギスカンコーナー",
+    "cat": "飲食店",
+    "area": "根原",
+    "address": "静岡県富士宮市根原",
+    "phone": "0544-52-0333",
+    "desc": "朝霧高原の開放的な大自然の中で、新鮮なジンギスカンやバーベキューが堪能できる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "富士お祭り牧場 ジンギスカンコーナー 富士宮",
+    "image": "assets/restaurant_images_v9/富士お祭り牧場_ジンギスカンコーナー.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "あさぎりバーベキューガーデン",
+    "cat": "飲食店",
+    "area": "内野",
+    "address": "静岡県富士宮市内野",
+    "phone": "0544-54-4422",
+    "desc": "富士山の絶景を背に、朝霧ヨーグル豚や地元牛のバーベキューが手ぶらで楽しめる。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "あさぎりバーベキューガーデン 富士宮",
+    "image": "assets/restaurant_images_v9/あさぎりバーベキューガーデン.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "朝霧高原 食事処 山ぼうし（高原店）",
+    "cat": "飲食店",
+    "area": "根原",
+    "address": "静岡県富士宮市根原",
+    "phone": "0544-52-1199",
+    "desc": "ドライブの合間に立ち寄れる、温かいスープや肉料理が評判の高原のロッジ風食堂。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "朝霧高原 食事処 山ぼうし（高原店） 富士宮",
+    "image": "assets/restaurant_images_v9/朝霧高原_食事処_山ぼうし_高原店.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "ペンション朝霧 併設カフェ",
+    "cat": "飲食店",
+    "area": "内野",
+    "address": "静岡県富士宮市内野",
+    "phone": "0544-54-1212",
+    "desc": "ヨーロッパの山小屋を思わせる温かい雰囲気の中で、手作りの朝食やコーヒーを提供。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "ペンション朝霧 併設カフェ 富士宮",
+    "image": "assets/restaurant_images_v9/ペンション朝霧_併設カフェ.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "朝霧高原ロッジ レストラン",
+    "cat": "飲食店",
+    "area": "根原",
+    "address": "静岡県富士宮市根原",
+    "phone": "0544-52-0555",
+    "desc": "豊かな自然に囲まれた宿泊施設内のレストラン。地元の食材を活かした素朴な洋食。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "朝霧高原ロッジ レストラン 富士宮",
+    "image": "assets/restaurant_images_v9/朝霧高原ロッジ_レストラン.svg",
+    "imageType": "illustration"
+  },
+  {
+    "name": "カントリーカフェ あさぎり",
+    "cat": "飲食店",
+    "area": "内野",
+    "address": "静岡県富士宮市内野",
+    "phone": "0544-54-7733",
+    "desc": "カントリー調の店内で、自家製ハーブティーやホットサンドが味わえる隠れ家的なお店。 富士宮観光の食事候補として、周辺観光と組み合わせて立ち寄りやすい一店です。",
+    "q": "カントリーカフェ あさぎり 富士宮",
+    "image": "assets/restaurant_images_v9/カントリーカフェ_あさぎり.svg",
     "imageType": "illustration"
   }
 ]
