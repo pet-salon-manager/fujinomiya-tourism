@@ -264,7 +264,7 @@ body>header,body>main,body>script{position:relative;z-index:2}
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=43">
+<link rel="manifest" href="./manifest.webmanifest?v=44">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -302,6 +302,9 @@ body>header,body>main,body>script{position:relative;z-index:2}
       <input id="admArea" placeholder="エリア">
       <input id="admPhone" placeholder="電話番号">
       <input class="full" id="admAddress" placeholder="住所">
+      <input id="admLatitude" inputmode="decimal" placeholder="緯度（例 35.22）">
+      <input id="admLongitude" inputmode="decimal" placeholder="経度（例 138.61）">
+      <button type="button" class="admin-secondary full" id="admGeocodeOneBtn">📍 この施設の位置を住所・名称から取得</button>
       <input class="full" id="admHomepage" placeholder="ホームページURL">
       <textarea class="full" id="admDesc" placeholder="説明文"></textarea>
 
@@ -325,7 +328,9 @@ body>header,body>main,body>script{position:relative;z-index:2}
       <button class="admin-secondary" id="admExportBtn">編集データを書き出す</button>
       <button class="admin-secondary" id="admImportBtn">編集データを読み込む</button>
       <input type="file" id="admImportFile" accept="application/json" hidden>
+      <button class="admin-secondary" id="admPrepareCoordsBtn">📍 全施設の位置を一度だけ準備</button>
       <button class="admin-secondary" id="admLogoutBtn">ログアウト</button>
+      <div class="full" id="coordPrepStatus" style="font-size:13px;line-height:1.6;color:#49645d;margin-top:8px"></div>
     </div>
   </section>
 
@@ -337,7 +342,7 @@ body>header,body>main,body>script{position:relative;z-index:2}
   <section class="transit-map-section" id="transitSection">
     <h2>🚉 駅・バス停マップ</h2>
     <p class="transit-map-lead">
-      地図の表示範囲を富士宮市内に固定しています。指で移動・ピンチ拡大縮小できますが、市外へ移動できません。鉄道駅・バス停も富士宮市内だけを常時表示します。
+      施設ピンは保存済みの緯度・経度から即表示します。地図は富士宮市内に固定し、指で移動・ピンチ拡大縮小できます。鉄道駅・バス停も常時表示します。
     </p>
     <div class="transit-map-tools">
       <button type="button" id="reloadTransit">駅・バス停を再読み込み</button>
@@ -360,7 +365,7 @@ body>header,body>main,body>script{position:relative;z-index:2}
       <span><i class="transit-dot" style="background:#ffd83d"></i>カテゴリ施設</span>
     </div>
     <div class="transit-status" id="transitStatus">地図データを読み込みます…</div>
-    <button type="button" id="reloadCategoryMap" class="transit-map-open" style="border:0;margin-top:8px">カテゴリピンを再読み込み</button>
+    <button type="button" id="reloadCategoryMap" class="transit-map-open" style="border:0;margin-top:8px">保存済みピンを再表示</button>
     <a id="openTransitMapExternal"
        class="transit-map-open"
        href="https://www.openstreetmap.org/#map=11/35.28/138.65"
@@ -389,7 +394,42 @@ const cats = ["すべて","観光","自然","体験","グルメ","富士宮や�
 const favs = () => JSON.parse(localStorage.getItem("favs") || "[]");
 
 
+const SPOT_COORD_CACHE_KEY = "fujinomiya_spot_coords_v44";
+const FUJINOMIYA_COORD_BOUNDS = {south:35.10,north:35.46,west:138.50,east:138.78};
+
+function readSpotCoordCache(){
+  try{return JSON.parse(localStorage.getItem(SPOT_COORD_CACHE_KEY)||"{}");}
+  catch{return {};}
+}
+function writeSpotCoordCache(cache){
+  localStorage.setItem(SPOT_COORD_CACHE_KEY,JSON.stringify(cache));
+}
+function normalizeSpotCoord(s){
+  const lat = Number(s?.latitude ?? s?.lat ?? "");
+  const lon = Number(s?.longitude ?? s?.lng ?? s?.lon ?? "");
+  if(Number.isFinite(lat) && Number.isFinite(lon) &&
+     lat>=FUJINOMIYA_COORD_BOUNDS.south && lat<=FUJINOMIYA_COORD_BOUNDS.north &&
+     lon>=FUJINOMIYA_COORD_BOUNDS.west && lon<=FUJINOMIYA_COORD_BOUNDS.east){
+    return {lat,lon};
+  }
+  const cached=readSpotCoordCache()[s?.name||""];
+  if(cached && Number.isFinite(Number(cached.lat)) && Number.isFinite(Number(cached.lon))){
+    const clat=Number(cached.lat), clon=Number(cached.lon);
+    if(clat>=FUJINOMIYA_COORD_BOUNDS.south && clat<=FUJINOMIYA_COORD_BOUNDS.north &&
+       clon>=FUJINOMIYA_COORD_BOUNDS.west && clon<=FUJINOMIYA_COORD_BOUNDS.east){
+      return {lat:clat,lon:clon};
+    }
+  }
+  return null;
+}
+function saveSpotCoordLocal(name,lat,lon){
+  const cache=readSpotCoordCache();
+  cache[name]={lat:Number(lat),lon:Number(lon),savedAt:Date.now()};
+  writeSpotCoordCache(cache);
+}
+
 function isFujinomiyaSpot(s){
+  if(normalizeSpotCoord(s)) return true;
   const text = [
     s?.address || "",
     s?.area || "",
@@ -763,7 +803,7 @@ async function uploadAdminPhoto(){
 
 function clearAdminForm(){
   editingName=null;
-  ["admName","admArea","admPhone","admAddress","admHomepage","admDesc","admPhotoUrl"].forEach(id=>{
+  ["admName","admArea","admPhone","admAddress","admLatitude","admLongitude","admHomepage","admDesc","admPhotoUrl"].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value="";
   });
   const pf=document.getElementById("admPhotoFile"); if(pf) pf.value="";
@@ -781,6 +821,9 @@ function editSpot(name){
   document.getElementById("admArea").value=s.area||"";
   document.getElementById("admPhone").value=s.phone||"";
   document.getElementById("admAddress").value=s.address||"";
+  const pos=normalizeSpotCoord(s);
+  document.getElementById("admLatitude").value=pos?.lat ?? "";
+  document.getElementById("admLongitude").value=pos?.lon ?? "";
   document.getElementById("admHomepage").value=s.homepage||"";
   document.getElementById("admDesc").value=s.desc||"";
   document.getElementById("admPhotoUrl").value=s.image||"";
@@ -797,6 +840,8 @@ function currentFormSpot(){
     area:document.getElementById("admArea").value.trim() || null,
     phone:document.getElementById("admPhone").value.trim() || null,
     address:document.getElementById("admAddress").value.trim() || null,
+    latitude:(()=>{const v=Number(document.getElementById("admLatitude").value);return Number.isFinite(v)?v:null;})(),
+    longitude:(()=>{const v=Number(document.getElementById("admLongitude").value);return Number.isFinite(v)?v:null;})(),
     homepage:document.getElementById("admHomepage").value.trim() || null,
     desc:document.getElementById("admDesc").value.trim() || null,
     image:document.getElementById("admPhotoUrl").value.trim() || null,
@@ -806,15 +851,120 @@ function currentFormSpot(){
   };
 }
 
+async function geocodeFujinomiyaSpot(spot){
+  const q=[spot.address,spot.name,"富士宮市","静岡県"].filter(Boolean).join(" ");
+  const url="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=jp&bounded=1&viewbox=138.50,35.46,138.78,35.10&q="+encodeURIComponent(q);
+  const res=await fetch(url,{headers:{"Accept":"application/json"},cache:"no-store"});
+  if(!res.ok) throw new Error("位置検索 HTTP "+res.status);
+  const arr=await res.json();
+  if(!arr.length) return null;
+  const lat=Number(arr[0].lat), lon=Number(arr[0].lon);
+  if(!Number.isFinite(lat)||!Number.isFinite(lon)) return null;
+  if(lat<FUJINOMIYA_COORD_BOUNDS.south||lat>FUJINOMIYA_COORD_BOUNDS.north||
+     lon<FUJINOMIYA_COORD_BOUNDS.west||lon>FUJINOMIYA_COORD_BOUNDS.east) return null;
+  return {lat,lon};
+}
+
+async function saveSpotCoordCloud(name,lat,lon){
+  await supabaseRequest('/rest/v1/spots?name=eq.'+encodeURIComponent(name),{
+    method:'PATCH',
+    headers:{'Prefer':'return=minimal'},
+    body:JSON.stringify({
+      latitude:Number(lat),
+      longitude:Number(lon),
+      updated_at:new Date().toISOString()
+    })
+  },true);
+}
+
+async function geocodeCurrentAdminSpot(){
+  const name=document.getElementById("admName").value.trim();
+  const address=document.getElementById("admAddress").value.trim();
+  if(!name){alert("施設名を入力してください。");return;}
+  const btn=document.getElementById("admGeocodeOneBtn");
+  if(btn){btn.disabled=true;btn.textContent="位置を取得中…";}
+  try{
+    const pos=await geocodeFujinomiyaSpot({name,address});
+    if(!pos){alert("富士宮市内で位置を特定できませんでした。住所を確認してください。");return;}
+    document.getElementById("admLatitude").value=pos.lat.toFixed(7);
+    document.getElementById("admLongitude").value=pos.lon.toFixed(7);
+    saveSpotCoordLocal(name,pos.lat,pos.lon);
+    refreshCategoryMap();
+  }catch(e){
+    alert("位置を取得できませんでした。\n"+e.message);
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent="📍 この施設の位置を住所・名称から取得";}
+  }
+}
+
+let coordPrepRunning=false;
+async function prepareAllSpotCoordinates(){
+  if(coordPrepRunning) return;
+  if(!adminMode || !supabaseAccessToken){
+    alert("先に管理者ログインしてください。");
+    return;
+  }
+  if(!confirm("位置未登録の富士宮市内施設を順番に検索して保存します。初回だけ数分かかります。ページを閉じずに続けますか？")) return;
+
+  coordPrepRunning=true;
+  const btn=document.getElementById("admPrepareCoordsBtn");
+  const status=document.getElementById("coordPrepStatus");
+  if(btn) btn.disabled=true;
+
+  const targets=spots.filter(s=>(s.cat||"").trim()!=="交通" && !normalizeSpotCoord(s));
+  let ok=0,fail=0,cloudFail=0;
+
+  try{
+    for(let i=0;i<targets.length;i++){
+      const s=targets[i];
+      if(status) status.textContent=`位置準備中 ${i+1}/${targets.length}：${s.name}　成功 ${ok} / 未特定 ${fail}`;
+      try{
+        const pos=await geocodeFujinomiyaSpot(s);
+        if(pos){
+          saveSpotCoordLocal(s.name,pos.lat,pos.lon);
+          s.latitude=pos.lat;
+          s.longitude=pos.lon;
+          ok++;
+          try{
+            await saveSpotCoordCloud(s.name,pos.lat,pos.lon);
+          }catch(e){
+            cloudFail++;
+            // SQL未実行でもこの端末ではローカル保存を継続
+            console.warn("cloud coordinate save failed",s.name,e);
+          }
+          if(i%4===0) refreshCategoryMap();
+        }else{
+          fail++;
+        }
+      }catch(e){
+        fail++;
+      }
+      // 公開ジオコーダーへ負荷をかけないよう1秒以上あける
+      await new Promise(r=>setTimeout(r,1150));
+    }
+
+    refreshCategoryMap();
+    if(status) status.textContent=`位置準備完了：${ok}件登録 / ${fail}件未特定${cloudFail?` / クラウド保存失敗 ${cloudFail}件（SQL実行を確認）`:""}`;
+    alert(`位置情報の準備が完了しました。\n登録 ${ok}件 / 未特定 ${fail}件`);
+  }finally{
+    coordPrepRunning=false;
+    if(btn) btn.disabled=false;
+  }
+}
+
 async function refreshSpots(){
   spots = await loadSpotsFromSupabase();
   baseSpots = spots;
   render();
+  refreshCategoryMap();
 }
 
 async function saveAdminSpot(){
   const item=currentFormSpot();
   if(!item){alert("施設名・店舗名・場所名を入力してください。");return;}
+  if(Number.isFinite(Number(item.latitude)) && Number.isFinite(Number(item.longitude))){
+    saveSpotCoordLocal(item.name,item.latitude,item.longitude);
+  }
   if(!supabaseAccessToken){alert("管理者ログインが必要です。");return;}
   try{
     if(editingName){
@@ -888,6 +1038,8 @@ document.getElementById("adminLoginBtn").onclick=async()=>{
   adminLogin();
 };
 document.getElementById("admSaveBtn").onclick=saveAdminSpot;
+document.getElementById("admGeocodeOneBtn").onclick=geocodeCurrentAdminSpot;
+document.getElementById("admPrepareCoordsBtn").onclick=prepareAllSpotCoordinates;
 document.getElementById("admNewBtn").onclick=clearAdminForm;
 document.getElementById("admDeleteBtn").onclick=deleteAdminSpot;
 
@@ -929,7 +1081,7 @@ loadSpotsFromSupabase()
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      const r = await fetch("./spots.json?rev=43", {cache:"no-store"});
+      const r = await fetch("./spots.json?rev=44", {cache:"no-store"});
       const d = await r.json();
       baseSpots = d;
       spots = d;
@@ -948,7 +1100,7 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=43").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=44").catch(()=>{});
 }
 </script>
 
@@ -961,6 +1113,7 @@ let mapCenter = {lat:35.27, lon:138.62};
 let mapZoom = 12;
 let transitMode = "all";
 let transitItems = [];
+const TRANSIT_CACHE_KEY="fujinomiya_transit_points_v44";
 let poiItems = [];
 let currentLocation = null;
 const geocodeCacheKey = "fujinomiya_geocode_cache_v42_city_only";
@@ -1226,7 +1379,20 @@ function cleanTransitElements(elements){
   return out;
 }
 
-async function loadTransitMap(){
+async function loadTransitMap(force=false){
+  if(!force){
+    try{
+      const saved=JSON.parse(localStorage.getItem(TRANSIT_CACHE_KEY)||"null");
+      if(saved?.items?.length){
+        transitItems=saved.items;
+        renderMapMarkers();
+        const stations=transitItems.filter(x=>x.type==="station").length;
+        const buses=transitItems.filter(x=>x.type==="bus").length;
+        setTransitStatus(`保存済み交通データ：鉄道駅 ${stations}件・バス停 ${buses}件`);
+        return;
+      }
+    }catch(e){}
+  }
   setTransitStatus("鉄道駅・バス停を取得中…");
   const query=`
 [out:json][timeout:30];
@@ -1258,234 +1424,54 @@ out center tags;`;
     return;
   }
   transitItems=cleanTransitElements(data.elements||[]);
+  localStorage.setItem(TRANSIT_CACHE_KEY,JSON.stringify({savedAt:Date.now(),items:transitItems}));
   const stations=transitItems.filter(x=>x.type==="station");
   const buses=transitItems.filter(x=>x.type==="bus");
   renderMapMarkers();
   setTransitStatus(`富士宮市内：鉄道駅 ${stations.length}件・バス停 ${buses.length}件を常時表示`);
 }
 
-const FUJINOMIYA_AREA_QUERY = 'area["boundary"="administrative"]["name"="富士宮市"]["admin_level"~"^(7|8)$"]->.searchArea;';
-let categoryAbortController = null;
-let categoryRequestId = 0;
-const categoryCacheKey = "fujinomiya_category_pois_v42_city_only";
+function buildSavedCategoryPins(){
+  const candidates=spots.filter(s=>{
+    if((s.cat||"").trim()==="交通") return false;
+    if(!isFujinomiyaSpot(s)) return false;
+    if(selected==="すべて") return true;
+    if(selected==="お気に入り") return favs().includes(s.name);
+    return categoryMatches(s,selected);
+  });
 
-function categoryOverpassParts(cat){
-  switch(cat){
-    case "観光":
-      return [
-        `nwr["tourism"~"^(attraction|viewpoint|artwork|information)$"]["name"](area.searchArea)`,
-        `nwr["historic"]["name"](area.searchArea)`,
-        `nwr["amenity"="place_of_worship"]["name"](area.searchArea)`
-      ];
-    case "自然":
-      return [
-        `nwr["waterway"="waterfall"]["name"](area.searchArea)`,
-        `nwr["leisure"~"^(park|nature_reserve|garden)$"]["name"](area.searchArea)`,
-        `nwr["natural"~"^(peak|spring|water|wood)$"]["name"](area.searchArea)`
-      ];
-    case "体験":
-      return [
-        `nwr["tourism"~"^(theme_park|zoo|aquarium)$"]["name"](area.searchArea)`,
-        `nwr["leisure"~"^(sports_centre|playground|park)$"]["name"](area.searchArea)`,
-        `nwr["attraction"]["name"](area.searchArea)`
-      ];
-    case "グルメ":
-    case "飲食店":
-      return [
-        `nwr["amenity"~"^(restaurant|cafe|fast_food|food_court)$"]["name"](area.searchArea)`
-      ];
-    case "富士宮やきそば":
-      return [
-        `nwr["amenity"~"^(restaurant|cafe|fast_food|food_court)$"]["name"~"やきそば|焼きそば|焼そば|Yakisoba",i](area.searchArea)`
-      ];
-    case "宿泊":
-      return [
-        `nwr["tourism"~"^(hotel|guest_house|hostel|motel|chalet|apartment)$"]["name"](area.searchArea)`
-      ];
-    case "温泉":
-      return [
-        `nwr["natural"="hot_spring"]["name"](area.searchArea)`,
-        `nwr["amenity"~"^(public_bath|spa)$"]["name"](area.searchArea)`,
-        `nwr["leisure"="sauna"]["name"](area.searchArea)`
-      ];
-    case "キャンプ":
-      return [
-        `nwr["tourism"~"^(camp_site|caravan_site)$"]["name"](area.searchArea)`
-      ];
-    case "学ぶ":
-      return [
-        `nwr["tourism"~"^(museum|gallery)$"]["name"](area.searchArea)`,
-        `nwr["amenity"~"^(library|community_centre)$"]["name"](area.searchArea)`
-      ];
-    case "登山":
-      return [
-        `nwr["natural"~"^(peak|saddle)$"]["name"](area.searchArea)`,
-        `nwr["tourism"="viewpoint"]["name"](area.searchArea)`
-      ];
-    default:
-      return [];
-  }
-}
-
-function osmTypeToCategory(tags){
-  const t=tags||{};
-  if(t.amenity==="restaurant" || t.amenity==="cafe" || t.amenity==="fast_food" || t.amenity==="food_court")
-    return selected==="富士宮やきそば" ? "富士宮やきそば" : "グルメ";
-  if(["hotel","guest_house","hostel","motel","chalet","apartment"].includes(t.tourism)) return "宿泊";
-  if(["camp_site","caravan_site"].includes(t.tourism)) return "キャンプ";
-  if(t.natural==="hot_spring" || t.amenity==="public_bath" || t.amenity==="spa" || t.leisure==="sauna") return "温泉";
-  if(t.tourism==="museum" || t.tourism==="gallery" || t.amenity==="library") return "学ぶ";
-  if(t.natural==="peak" || t.natural==="saddle") return "登山";
-  if(t.waterway==="waterfall" || t.natural || ["nature_reserve","garden"].includes(t.leisure)) return "自然";
-  if(["theme_park","zoo","aquarium"].includes(t.tourism) || ["sports_centre","playground"].includes(t.leisure)) return "体験";
-  return selected==="すべて" ? "観光" : selected;
-}
-
-function cleanCategoryElements(elements){
-  const seen=new Set(), out=[];
-  for(const el of elements||[]){
-    const ll=getTransitLatLng(el);
-    if(!ll) continue;
-    if(ll[0]<BASE_BOUNDS.south || ll[0]>BASE_BOUNDS.north ||
-       ll[1]<BASE_BOUNDS.west || ll[1]>BASE_BOUNDS.east) continue;
-
-    const tags=el.tags||{};
-    const name=tags.name||tags["name:ja"];
-    if(!name) continue;
-
-    const key=`${name}|${ll[0].toFixed(5)}|${ll[1].toFixed(5)}`;
-    if(seen.has(key)) continue;
-    seen.add(key);
-
-    out.push({
-      name,
-      cat:osmTypeToCategory(tags),
-      address:[tags["addr:full"],tags["addr:street"],tags["addr:housenumber"]].filter(Boolean).join(" "),
-      lat:ll[0], lon:ll[1]
+  poiItems=[];
+  let missing=0;
+  for(const s of candidates){
+    const pos=normalizeSpotCoord(s);
+    if(!pos){ missing++; continue; }
+    poiItems.push({
+      name:s.name,
+      cat:s.cat,
+      address:s.address||"",
+      lat:pos.lat,
+      lon:pos.lon
     });
   }
-  return out;
+  return {total:candidates.length,shown:poiItems.length,missing};
 }
 
-function getCategoryCache(){
-  try { return JSON.parse(localStorage.getItem(categoryCacheKey)||"{}"); }
-  catch { return {}; }
-}
-function putCategoryCache(cat, items){
-  const c=getCategoryCache();
-  c[cat]={savedAt:Date.now(),items};
-  localStorage.setItem(categoryCacheKey,JSON.stringify(c));
-}
-function readFreshCategoryCache(cat){
-  const c=getCategoryCache()[cat];
-  if(!c || !Array.isArray(c.items)) return null;
-  if(Date.now()-c.savedAt > 24*60*60*1000) return null;
-  return c.items;
-}
-
-async function fetchCategoryOverpass(query, endpoint, signal){
-  const timerController = new AbortController();
-  const timeout = setTimeout(()=>timerController.abort(), 18000);
-  const forwardAbort=()=>timerController.abort();
-  signal?.addEventListener("abort",forwardAbort,{once:true});
-  try{
-    const res=await fetch(endpoint,{
-      method:"POST",
-      headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
-      body:"data="+encodeURIComponent(query),
-      cache:"no-store",
-      signal:timerController.signal
-    });
-    if(!res.ok) throw new Error("HTTP "+res.status);
-    return await res.json();
-  } finally {
-    clearTimeout(timeout);
-    signal?.removeEventListener("abort",forwardAbort);
-  }
-}
-
-async function refreshCategoryMap(){
-  const requestId=++categoryRequestId;
-  if(categoryAbortController) categoryAbortController.abort();
-  categoryAbortController=new AbortController();
-
+function refreshCategoryMap(){
   const label=document.getElementById("mapCategoryLabel");
   if(label) label.textContent=`選択カテゴリ：${selected}`;
 
-  poiItems=[];
-  renderMapMarkers();
-
-  // 「すべて」は重い一括検索をしない。カテゴリ選択時に確実に表示する設計。
-  if(selected==="すべて"){
-    setTransitStatus("カテゴリを選ぶと、その施設・場所を黄色いピンで表示します。鉄道駅・バス停は常時表示中です。");
-    return;
-  }
-  if(selected==="お気に入り"){
-    setTransitStatus("お気に入りはカード一覧で確認できます。鉄道駅・バス停は常時表示中です。");
-    return;
-  }
-
-  const cached=readFreshCategoryCache(selected);
-  if(cached){
-    poiItems=cached;
-    renderMapMarkers();
-    const stations=transitItems.filter(x=>x.type==="station").length;
-    const buses=transitItems.filter(x=>x.type==="bus").length;
-    setTransitStatus(`富士宮市内：${selected} ${poiItems.length}件・鉄道駅 ${stations}件・バス停 ${buses}件を表示`);
-    return;
-  }
-
-  const parts=categoryOverpassParts(selected);
-  if(!parts.length){
-    setTransitStatus(`${selected}の地図データはまだありません。`);
-    return;
-  }
-
-  setTransitStatus(`富士宮市内の${selected}施設・場所を地図に読み込み中…`);
-
-  const query=`
-[out:json][timeout:18];
-${FUJINOMIYA_AREA_QUERY}
-(
-  ${parts.map(x=>x+";").join("\n  ")}
-);
-out center 120;`;
-
-  const endpoints=[
-    "https://overpass-api.de/api/interpreter",
-    "https://overpass.kumi.systems/api/interpreter"
-  ];
-
-  let data=null;
-  for(const endpoint of endpoints){
-    if(categoryAbortController.signal.aborted) return;
-    try{
-      data=await fetchCategoryOverpass(query,endpoint,categoryAbortController.signal);
-      if(data) break;
-    }catch(e){
-      if(categoryAbortController.signal.aborted) return;
-      console.warn("Category map API failed",endpoint,e);
-    }
-  }
-
-  if(requestId!==categoryRequestId || categoryAbortController.signal.aborted) return;
-
-  if(!data){
-    setTransitStatus(`${selected}のピンを取得できませんでした。カテゴリーをもう一度押してください。`);
-    return;
-  }
-
-  poiItems=cleanCategoryElements(data.elements).slice(0,120);
-  putCategoryCache(selected,poiItems);
+  const r=buildSavedCategoryPins();
   renderMapMarkers();
 
   const stations=transitItems.filter(x=>x.type==="station").length;
   const buses=transitItems.filter(x=>x.type==="bus").length;
 
-  if(poiItems.length){
-    setTransitStatus(`富士宮市内：${selected} ${poiItems.length}件・鉄道駅 ${stations}件・バス停 ${buses}件を表示`);
+  if(selected==="すべて"){
+    setTransitStatus(`保存済み施設ピン ${r.shown}件・鉄道駅 ${stations}件・バス停 ${buses}件を表示`);
+  }else if(r.shown){
+    setTransitStatus(`${selected}：保存済みピン ${r.shown}件を即表示${r.missing?`（位置未登録 ${r.missing}件）`:""}。鉄道駅・バス停は常時表示`);
   }else{
-    setTransitStatus(`${selected}に該当する登録地点を地図データから見つけられませんでした。`);
+    setTransitStatus(`${selected}：位置登録済み施設がまだありません。管理者画面の「全施設の位置を一度だけ準備」を実行してください。`);
   }
 }
 
@@ -1577,11 +1563,8 @@ function requestCurrentLocation(){
   window.addEventListener("mouseup",()=>{mouseDown=false;map.classList.remove("dragging");});
 })();
 
-document.getElementById("reloadTransit")?.addEventListener("click",loadTransitMap);
+document.getElementById("reloadTransit")?.addEventListener("click",()=>loadTransitMap(true));
 document.getElementById("reloadCategoryMap")?.addEventListener("click",()=>{
-  const c=getCategoryCache();
-  delete c[selected];
-  localStorage.setItem(categoryCacheKey,JSON.stringify(c));
   refreshCategoryMap();
 });
 document.getElementById("mapZoomIn")?.addEventListener("click",()=>zoomMapBy(1));
