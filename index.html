@@ -274,11 +274,37 @@ body>header,body>main,body>script{position:relative;z-index:2}
 }
 #transitMap.manual-map-mode .manual-map-hint{display:block}
 
+
+.transit-marker.poi{
+  z-index:7 !important;
+  width:38px !important;
+  height:46px !important;
+  filter:drop-shadow(0 4px 5px rgba(0,0,0,.36)) !important;
+}
+.transit-marker.poi .poi-pin-body{
+  width:36px !important;
+  height:36px !important;
+  background:#ffd21f !important;
+  border:3px solid #fff !important;
+}
+.transit-marker.poi .poi-pin-emoji{font-size:19px !important}
+
+
+.spots-section{margin-top:26px;padding:20px 0 40px}
+.spots-heading-wrap{
+  background:rgba(255,255,255,.9);
+  border-radius:20px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  backdrop-filter:blur(8px)
+}
+.spots-heading-wrap h2{margin:0}
+
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=46">
+<link rel="manifest" href="./manifest.webmanifest?v=48">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -358,7 +384,7 @@ body>header,body>main,body>script{position:relative;z-index:2}
   <section class="transit-map-section" id="transitSection">
     <h2>🚉 駅・バス停マップ</h2>
     <p class="transit-map-lead">
-      施設ピンは保存済みの緯度・経度から即表示します。地図は富士宮市内に固定し、指で移動・ピンチ拡大縮小できます。鉄道駅・バス停も常時表示します。
+      保存済みの施設は黄色いピンで地図に表示します。地図の下にはこれまで通り施設カード一覧を表示します。地図は富士宮市内に固定し、鉄道駅・バス停も常時表示します。
     </p>
     <div class="transit-map-tools">
       <button type="button" id="reloadTransit">駅・バス停を再読み込み</button>
@@ -375,7 +401,10 @@ body>header,body>main,body>script{position:relative;z-index:2}
       <div id="transitPopup" class="transit-map-popup"></div>
       <div class="map-attribution">© OpenStreetMap contributors</div>
     </div>
-    <div class="map-cat-label" id="mapCategoryLabel">選択カテゴリ：すべて</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <div class="map-cat-label" id="mapCategoryLabel">選択カテゴリ：すべて</div>
+      <div class="map-cat-label" id="savedPinCount">施設ピン：0件</div>
+    </div>
     <div class="transit-legend">
       <span><i class="transit-dot station"></i>鉄道駅</span>
       <span><i class="transit-dot bus"></i>バス停</span>
@@ -390,9 +419,13 @@ body>header,body>main,body>script{position:relative;z-index:2}
        style="margin-top:12px">大きな地図で見る</a>
   </section>
 
-  <h2>おすすめスポット <span class="count" id="spotCount"></span></h2>
-<div id="dataStatus" style="font-size:12px;color:#627b75;margin:-4px 0 12px;"></div>
-  <section class="grid" id="cards"></section>
+  <section class="spots-section" id="spotsSection">
+    <div class="spots-heading-wrap">
+      <h2>おすすめスポット <span class="count" id="spotCount"></span></h2>
+      <div id="dataStatus" style="font-size:12px;color:#627b75;margin-top:6px;"></div>
+    </div>
+    <section class="grid" id="cards"></section>
+  </section>
 </main>
 
 <script>
@@ -403,6 +436,7 @@ let supabaseAccessToken = sessionStorage.getItem("fujinomiya_supabase_access_tok
 let supabaseRefreshToken = localStorage.getItem("fujinomiya_supabase_refresh_token") || sessionStorage.getItem("fujinomiya_supabase_refresh_token") || "";
 
 let spots = [];
+const FUJINOMIYA_SPOTS_CACHE_V48 = "fujinomiya_spots_cache_v48";
 const PAGE_SIZE = 5;
 let currentPage = 1;
 let selected = "すべて";
@@ -447,6 +481,7 @@ function saveSpotCoordLocal(name,lat,lon){
 
 function isFujinomiyaSpot(s){
   if(normalizeSpotCoord(s)) return true;
+
   const text = [
     s?.address || "",
     s?.area || "",
@@ -454,18 +489,15 @@ function isFujinomiyaSpot(s){
     s?.desc || ""
   ].join(" ");
 
-  // Explicit Fujinomiya references are accepted.
-  if(text.includes("富士宮市")) return true;
-
-  // If another municipality is explicitly written, reject it.
-  const otherCities = [
+  const outside = [
     "富士市","御殿場市","裾野市","沼津市","三島市","静岡市","清水区",
     "山梨県","南部町","身延町","富士吉田市","鳴沢村","富士河口湖町"
   ];
-  if(otherCities.some(name => text.includes(name))) return false;
+  if(outside.some(name => text.includes(name))) return false;
 
-  // For records with no usable municipality information, do not show them.
-  return false;
+  // This table is the curated Fujinomiya dataset.
+  // Keep entries like "上井出" even when "富士宮市" is omitted from the address text.
+  return true;
 }
 
 function categoryMatches(s, selectedCat){
@@ -570,7 +602,7 @@ function render(){
         </div>
       </div>
     </article>
-  `).join("") : `<div class="empty">該当する施設がありません。</div>`;
+  `).join("") : `<div class="empty">このカテゴリーの施設カードはありません。「すべて」を選ぶと全施設カードを表示します。</div>`;
 
   if(list.length > 0){
     cards.insertAdjacentHTML("beforeend", `
@@ -1104,7 +1136,7 @@ async function refreshSpots(){
   spots = await loadSpotsFromSupabase();
   baseSpots = spots;
   render();
-  refreshCategoryMap();
+  setTimeout(()=>refreshCategoryMap(), 80);
 }
 
 async function saveAdminSpot(){
@@ -1232,35 +1264,54 @@ loadSpotsFromSupabase()
   .then(d => {
     baseSpots = d;
     spots = d;
+    try{localStorage.setItem(FUJINOMIYA_SPOTS_CACHE_V48,JSON.stringify(d));}catch(e){}
     const st=document.getElementById("dataStatus");
     if(st) st.textContent = `Supabase最新データ：${d.length}件読み込み済み`;
     renderChips();
     render();
+    setTimeout(()=>refreshCategoryMap(), 120);
     
   })
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      const r = await fetch("./spots.json?rev=46", {cache:"no-store"});
-      const d = await r.json();
+      let d=null;
+
+      try{
+        const cached=JSON.parse(localStorage.getItem(FUJINOMIYA_SPOTS_CACHE_V48)||"null");
+        if(Array.isArray(cached) && cached.length) d=cached;
+      }catch(e){}
+
+      if(!d){
+        try{
+          const r = await fetch("./spots.json?rev=48", {cache:"no-store"});
+          if(r.ok) d = await r.json();
+        }catch(e){}
+      }
+
+      if(!Array.isArray(d) || !d.length) throw new Error("no fallback data");
+
       baseSpots = d;
       spots = d;
       const st=document.getElementById("dataStatus");
-      if(st) st.textContent = `予備データ：${d.length}件`;
+      if(st) st.textContent = `保存済み施設データ：${d.length}件`;
       renderChips();
       render();
-      
+      setTimeout(()=>refreshCategoryMap(), 120);
+
       const box=document.getElementById("cards");
-      if(box) box.insertAdjacentHTML("afterbegin", '<div class="guide">クラウドDBへの接続に失敗したため、端末内の予備データを表示しています。</div>');
+      if(box) box.insertAdjacentHTML("afterbegin", '<div class="guide">クラウドDBに接続できないため、この端末に保存した直近の施設データを表示しています。</div>');
     }catch(e){
-      document.getElementById("cards").innerHTML = `<div class="empty">施設データを読み込めませんでした。</div>`;
+      const st=document.getElementById("dataStatus");
+      if(st) st.textContent="施設データの読み込みに失敗しました";
+      document.getElementById("cards").innerHTML = `<div class="empty">施設カードを読み込めませんでした。通信状態を確認してページを再読み込みしてください。</div>`;
     }
   });
 
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=46").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=48").catch(()=>{});
 }
 </script>
 
@@ -1545,7 +1596,7 @@ async function loadTransitMap(force=false){
       const saved=JSON.parse(localStorage.getItem(TRANSIT_CACHE_KEY)||"null");
       if(saved?.items?.length){
         transitItems=saved.items;
-        renderMapMarkers();
+        refreshCategoryMap();
         const stations=transitItems.filter(x=>x.type==="station").length;
         const buses=transitItems.filter(x=>x.type==="bus").length;
         setTransitStatus(`保存済み交通データ：鉄道駅 ${stations}件・バス停 ${buses}件`);
@@ -1585,6 +1636,7 @@ out center tags;`;
   }
   transitItems=cleanTransitElements(data.elements||[]);
   localStorage.setItem(TRANSIT_CACHE_KEY,JSON.stringify({savedAt:Date.now(),items:transitItems}));
+  refreshCategoryMap();
   const stations=transitItems.filter(x=>x.type==="station");
   const buses=transitItems.filter(x=>x.type==="bus");
   renderMapMarkers();
@@ -1623,15 +1675,18 @@ function refreshCategoryMap(){
   const r=buildSavedCategoryPins();
   renderMapMarkers();
 
+  const count=document.getElementById("savedPinCount");
+  if(count) count.textContent=`施設ピン：${r.shown}件`;
+
   const stations=transitItems.filter(x=>x.type==="station").length;
   const buses=transitItems.filter(x=>x.type==="bus").length;
 
-  if(selected==="すべて"){
-    setTransitStatus(`保存済み施設ピン ${r.shown}件・鉄道駅 ${stations}件・バス停 ${buses}件を表示`);
-  }else if(r.shown){
-    setTransitStatus(`${selected}：保存済みピン ${r.shown}件を即表示${r.missing?`（位置未登録 ${r.missing}件）`:""}。鉄道駅・バス停は常時表示`);
+  if(r.shown){
+    setTransitStatus(`${selected}：黄色の施設ピン ${r.shown}件を表示中${r.missing?` / 位置未登録 ${r.missing}件`:""}。鉄道駅 ${stations}件・バス停 ${buses}件は常時表示`);
+  }else if(r.total){
+    setTransitStatus(`${selected}：対象施設 ${r.total}件のうち位置登録済みは0件です。管理者画面で位置を登録してください。`);
   }else{
-    setTransitStatus(`${selected}：位置登録済み施設がまだありません。管理者画面の「全施設の位置を一度だけ準備」を実行してください。`);
+    setTransitStatus(`${selected}：このカテゴリの富士宮市内施設はありません。`);
   }
 }
 
