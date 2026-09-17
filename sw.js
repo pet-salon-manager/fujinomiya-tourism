@@ -1,4 +1,4 @@
-const C='fujinomiya-v30';
+const C='fujinomiya-v31';
 self.addEventListener('install',e=>{self.skipWaiting();});
 self.addEventListener('activate',e=>{
   e.waitUntil(
@@ -13,7 +13,8 @@ self.addEventListener('fetch',e=>{
     u.pathname.endsWith('/') ||
     u.pathname.endsWith('/index.html') ||
     u.pathname.endsWith('/spots.json') ||
-    u.pathname.endsWith('/manifest.webmanifest')
+    u.pathname.endsWith('/manifest.webmanifest') ||
+    u.pathname.endsWith('/assets/fujinomiya-background.png')
   ){
     e.respondWith(fetch(e.request,{cache:'no-store'}).catch(()=>caches.match(e.request)));
   }

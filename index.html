@@ -13,11 +13,11 @@
 :root{--ink:#12352e;--muted:#61746e;--card:#fff;--accent:#0a8069;--line:#d9e7e2;--bg:#eaf8f5}
 *{box-sizing:border-box}
 html{background:#eaf8f5}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:transparent;position:relative;min-height:100vh}
-body::before{content:"";position:fixed;inset:0;z-index:0;background-image:url("./assets/fujinomiya-background.png");background-position:center center;background-size:cover;background-repeat:no-repeat;pointer-events:none;-webkit-transform:translateZ(0);transform:translateZ(0)}
-body::after{content:"";position:fixed;inset:0;z-index:0;background:rgba(232,248,244,.16);pointer-events:none}
-body>header,body>main,body>script{position:relative;z-index:1}
-.hero{min-height:520px;padding:56px 28px 34px;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(rgba(0,50,42,.20),rgba(0,50,42,.32))}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:transparent;position:relative;min-height:100vh;overflow-x:hidden}
+.app-fixed-bg{position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;object-position:center center;z-index:0;pointer-events:none;user-select:none;-webkit-user-select:none}
+.app-bg-overlay{position:fixed;inset:0;z-index:1;background:rgba(232,248,244,.10);pointer-events:none}
+body>header,body>main,body>script{position:relative;z-index:2}
+.hero{min-height:520px;padding:56px 28px 34px;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(rgba(0,45,39,.16),rgba(0,45,39,.24))}
 .wrap{width:min(760px,100%);margin:auto;padding:0 28px}
 .kicker{font-size:14px;font-weight:800;letter-spacing:.08em}
 h1{font-size:42px;line-height:1.05;margin:10px 0 18px;text-shadow:0 2px 12px #0007}
@@ -101,11 +101,13 @@ body.admin-mode .edit-chip{display:block}
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=30">
+<link rel="manifest" href="./manifest.webmanifest?v=31">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
+<img class="app-fixed-bg" src="./assets/fujinomiya-background.png?v=31" alt="" aria-hidden="true">
+<div class="app-bg-overlay" aria-hidden="true"></div>
 <header class="hero">
   <div class="wrap">
     <div class="kicker">FUJINOMIYA CITY GUIDE</div>
@@ -701,7 +703,7 @@ loadSpotsFromSupabase()
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      const r = await fetch("./spots.json?rev=30", {cache:"no-store"});
+      const r = await fetch("./spots.json?rev=31", {cache:"no-store"});
       const d = await r.json();
       baseSpots = d;
       spots = d;
@@ -719,7 +721,7 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=30").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=31").catch(()=>{});
 }
 </script>
 </body>

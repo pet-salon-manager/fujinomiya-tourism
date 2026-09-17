@@ -230,3 +230,11 @@
 - iPhoneで背景が消える原因だった負のz-indexを廃止し、固定背景を前面レイヤーとして安全に表示
 - 背景はスクロールしても動かない固定表示
 - Service Worker / manifest / fallback data のrevをv30へ更新
+
+## v31 iPhone背景表示修正
+- iOS/PWAで消えることがある `body::before` の固定背景を廃止
+- ZIP内の `assets/fujinomiya-background.png` を実際の `<img>` 要素として固定表示
+- 背景画像は `position: fixed` + `object-fit: cover`
+- アプリ本体を背景より前面に固定
+- Service Workerをv31に更新し、背景画像もno-cache対象に追加
+- Supabase接続修正（正しいREST URL）はv30のまま維持
