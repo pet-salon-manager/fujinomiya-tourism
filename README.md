@@ -221,3 +221,12 @@
 - 背景は画面全体に固定し、スクロールしても動きません
 - Supabase最新データ取得・5件ずつページ表示・管理者写真アップロード機能は維持
 - Service Worker / manifest / spots.json に v29 のキャッシュ更新を適用
+
+
+## v30 Supabase接続・固定背景の同時修正
+- Supabase REST取得URLを `/rest/v1/spots?select=*&order=id.asc` に戻し、誤った `&_=` パラメータを削除
+- `fetch` の `cache: no-store` は維持して最新データを取得
+- 背景画像 `assets/fujinomiya-background.png` をZIP内に実ファイルとして保持
+- iPhoneで背景が消える原因だった負のz-indexを廃止し、固定背景を前面レイヤーとして安全に表示
+- 背景はスクロールしても動かない固定表示
+- Service Worker / manifest / fallback data のrevをv30へ更新
