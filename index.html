@@ -226,11 +226,45 @@ body>header,body>main,body>script{position:relative;z-index:2}
   border-radius:4px;padding:2px 5px;pointer-events:none
 }
 
+
+.transit-marker.poi{
+  width:34px;height:40px;
+  border:0;background:transparent;
+  transform:translate(-50%,-92%);
+  padding:0;overflow:visible;
+  filter:drop-shadow(0 3px 4px rgba(0,0,0,.28));
+}
+.transit-marker.poi .poi-pin-body{
+  width:32px;height:32px;border-radius:50% 50% 50% 8px;
+  background:#ffd83d;border:2px solid #fff7b0;
+  transform:rotate(-45deg);
+  display:flex;align-items:center;justify-content:center;
+}
+.transit-marker.poi .poi-pin-emoji{
+  transform:rotate(45deg);
+  display:block;font-size:17px;line-height:1
+}
+.transit-marker.station,
+.transit-marker.bus{
+  z-index:4;
+}
+.transit-marker.station::after,
+.transit-marker.bus::after{
+  content:attr(data-label);
+  position:absolute;left:50%;top:-8px;transform:translate(-50%,-100%);
+  white-space:nowrap;background:rgba(255,255,255,.97);color:#173d35;
+  border:1px solid #d5e3df;border-radius:8px;padding:4px 7px;
+  font-size:11px;font-weight:800;box-shadow:0 2px 7px #0002;
+  opacity:0;pointer-events:none;transition:opacity .12s;
+}
+.transit-marker.station.show-label::after,
+.transit-marker.bus.show-label::after{opacity:1}
+
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=39">
+<link rel="manifest" href="./manifest.webmanifest?v=40">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -323,6 +357,7 @@ body>header,body>main,body>script{position:relative;z-index:2}
     <div class="transit-legend">
       <span><i class="transit-dot station"></i>鉄道駅</span>
       <span><i class="transit-dot bus"></i>バス停</span>
+      <span><i class="transit-dot" style="background:#ffd83d"></i>カテゴリ施設</span>
     </div>
     <div class="transit-status" id="transitStatus">地図データを読み込みます…</div>
     <a id="openTransitMapExternal"
@@ -348,7 +383,7 @@ let spots = [];
 const PAGE_SIZE = 5;
 let currentPage = 1;
 let selected = "すべて";
-const cats = ["すべて","観光","自然","体験","グルメ","富士宮やきそば","飲食店","宿泊","温泉","キャンプ","学ぶ","登山","交通","お気に入り"];
+const cats = ["すべて","観光","自然","体験","グルメ","富士宮やきそば","飲食店","宿泊","温泉","キャンプ","学ぶ","登山","お気に入り"];
 
 const favs = () => JSON.parse(localStorage.getItem("favs") || "[]");
 
@@ -864,11 +899,12 @@ loadSpotsFromSupabase()
     if(st) st.textContent = `Supabase最新データ：${d.length}件読み込み済み`;
     renderChips();
     render();
+    setTimeout(refreshCategoryMap, 50);
   })
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      const r = await fetch("./spots.json?rev=39", {cache:"no-store"});
+      const r = await fetch("./spots.json?rev=40", {cache:"no-store"});
       const d = await r.json();
       baseSpots = d;
       spots = d;
@@ -876,6 +912,7 @@ loadSpotsFromSupabase()
       if(st) st.textContent = `予備データ：${d.length}件`;
       renderChips();
       render();
+      setTimeout(refreshCategoryMap, 50);
       const box=document.getElementById("cards");
       if(box) box.insertAdjacentHTML("afterbegin", '<div class="guide">クラウドDBへの接続に失敗したため、端末内の予備データを表示しています。</div>');
     }catch(e){
@@ -886,7 +923,7 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=39").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=40").catch(()=>{});
 }
 </script>
 
@@ -998,10 +1035,25 @@ function showMapPopup(item, type){
   popup.querySelector(".close")?.addEventListener("click",()=>popup.style.display="none");
 }
 
+function categoryEmoji(cat){
+  const c=(cat||selected||"").toString();
+  if(c.includes("自然") || c.includes("滝") || c.includes("湖")) return "🌿";
+  if(c.includes("体験") || c.includes("レジャー") || c.includes("公園")) return "🎡";
+  if(c.includes("グルメ") || c.includes("飲食") || c.includes("やきそば")) return "🍜";
+  if(c.includes("宿泊")) return "🏨";
+  if(c.includes("温泉")) return "♨️";
+  if(c.includes("キャンプ")) return "⛺";
+  if(c.includes("学") || c.includes("博物") || c.includes("文化")) return "📚";
+  if(c.includes("登山")) return "🥾";
+  if(c.includes("観光") || c.includes("世界遺産") || c.includes("社寺") || c.includes("史跡")) return "🗻";
+  return "⭐";
+}
+
 function addMarker(overlay,lat,lon,cls,item,type,title){
   const p=pointToScreen(lat,lon);
   if(!p) return;
-  if(p.x<-24 || p.x>p.w+24 || p.y<-24 || p.y>p.h+24) return;
+  if(p.x<-34 || p.x>p.w+34 || p.y<-44 || p.y>p.h+44) return;
+
   const btn=document.createElement("button");
   btn.type="button";
   btn.className=`transit-marker ${cls}`;
@@ -1009,7 +1061,28 @@ function addMarker(overlay,lat,lon,cls,item,type,title){
   btn.style.top=p.y+"px";
   btn.title=title||item.name||"";
   btn.setAttribute("aria-label",title||item.name||"");
-  btn.addEventListener("click",e=>{e.stopPropagation();showMapPopup(item,type);});
+
+  if(type==="poi"){
+    btn.innerHTML=`<span class="poi-pin-body"><span class="poi-pin-emoji">${categoryEmoji(item.cat)}</span></span>`;
+  }else if(type==="station" || type==="bus"){
+    btn.dataset.label=item.name||"名称未登録";
+  }
+
+  const open = (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    if(type==="station" || type==="bus"){
+      document.querySelectorAll(".transit-marker.station.show-label,.transit-marker.bus.show-label")
+        .forEach(x=>x.classList.remove("show-label"));
+      btn.classList.add("show-label");
+    }
+    showMapPopup(item,type);
+  };
+  btn.addEventListener("click",open);
+  btn.addEventListener("touchend",e=>{
+    if(e.changedTouches && e.changedTouches.length===1) open(e);
+  },{passive:false});
+
   overlay.appendChild(btn);
 }
 
@@ -1130,47 +1203,172 @@ out center tags;`;
   setTransitStatus(`鉄道駅 ${stations.length}件・バス停 ${buses.length}件を常時表示`);
 }
 
-function getGeoCache(){
-  try{return JSON.parse(localStorage.getItem(geocodeCacheKey)||"{}");}
-  catch{return {};}
-}
-function saveGeoCache(c){localStorage.setItem(geocodeCacheKey,JSON.stringify(c));}
-async function geocodeSpot(spot){
-  const cache=getGeoCache();
-  const key=(spot.name||"")+"|"+(spot.address||"");
-  if(cache[key]) return cache[key];
-  const query=[spot.name,spot.address,"富士宮市","静岡県"].filter(Boolean).join(" ");
-  try{
-    const url="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=jp&q="+encodeURIComponent(query);
-    const res=await fetch(url,{headers:{"Accept":"application/json"},cache:"force-cache"});
-    if(!res.ok) return null;
-    const arr=await res.json(); if(!arr.length) return null;
-    const lat=Number(arr[0].lat),lon=Number(arr[0].lon);
-    if(!Number.isFinite(lat)||!Number.isFinite(lon)) return null;
-    if(lat<BASE_BOUNDS.south||lat>BASE_BOUNDS.north||lon<BASE_BOUNDS.west||lon>BASE_BOUNDS.east) return null;
-    const val={lat,lon}; cache[key]=val; saveGeoCache(cache); return val;
-  }catch(e){return null;}
+function categoryOverpassParts(cat){
+  switch(cat){
+    case "観光":
+      return [
+        'nwr(area.searchArea)["tourism"~"^(attraction|viewpoint|artwork|information)$"]',
+        'nwr(area.searchArea)["historic"]',
+        'nwr(area.searchArea)["amenity"="place_of_worship"]'
+      ];
+    case "自然":
+      return [
+        'nwr(area.searchArea)["natural"]',
+        'nwr(area.searchArea)["waterway"="waterfall"]',
+        'nwr(area.searchArea)["leisure"~"^(park|nature_reserve|garden)$"]'
+      ];
+    case "体験":
+      return [
+        'nwr(area.searchArea)["tourism"~"^(theme_park|zoo|aquarium)$"]',
+        'nwr(area.searchArea)["leisure"~"^(sports_centre|playground|park)$"]',
+        'nwr(area.searchArea)["attraction"]'
+      ];
+    case "グルメ":
+    case "飲食店":
+      return [
+        'nwr(area.searchArea)["amenity"~"^(restaurant|cafe|fast_food|food_court)$"]'
+      ];
+    case "富士宮やきそば":
+      return [
+        'nwr(area.searchArea)["amenity"~"^(restaurant|cafe|fast_food|food_court)$"]["name"~"やきそば|焼きそば|焼そば|Yakisoba",i]'
+      ];
+    case "宿泊":
+      return [
+        'nwr(area.searchArea)["tourism"~"^(hotel|guest_house|hostel|motel|chalet|apartment)$"]'
+      ];
+    case "温泉":
+      return [
+        'nwr(area.searchArea)["natural"="hot_spring"]',
+        'nwr(area.searchArea)["amenity"~"^(public_bath|spa)$"]',
+        'nwr(area.searchArea)["leisure"="sauna"]'
+      ];
+    case "キャンプ":
+      return [
+        'nwr(area.searchArea)["tourism"~"^(camp_site|caravan_site)$"]'
+      ];
+    case "学ぶ":
+      return [
+        'nwr(area.searchArea)["tourism"~"^(museum|gallery)$"]',
+        'nwr(area.searchArea)["amenity"~"^(library|community_centre)$"]'
+      ];
+    case "登山":
+      return [
+        'nwr(area.searchArea)["natural"~"^(peak|saddle)$"]',
+        'nwr(area.searchArea)["tourism"="viewpoint"]'
+      ];
+    case "お気に入り":
+      return [];
+    default:
+      return [
+        'nwr(area.searchArea)["tourism"~"^(attraction|viewpoint|museum|hotel|guest_house|camp_site)$"]',
+        'nwr(area.searchArea)["amenity"~"^(restaurant|cafe|public_bath)$"]',
+        'nwr(area.searchArea)["natural"~"^(peak|water|spring)$"]',
+        'nwr(area.searchArea)["leisure"~"^(park|nature_reserve)$"]'
+      ];
+  }
 }
 
+function osmTypeToCategory(tags){
+  const t=tags||{};
+  if(t.amenity==="restaurant" || t.amenity==="cafe" || t.amenity==="fast_food" || t.amenity==="food_court") return selected==="富士宮やきそば" ? "富士宮やきそば" : "グルメ";
+  if(["hotel","guest_house","hostel","motel","chalet","apartment"].includes(t.tourism)) return "宿泊";
+  if(["camp_site","caravan_site"].includes(t.tourism)) return "キャンプ";
+  if(t.natural==="hot_spring" || t.amenity==="public_bath" || t.amenity==="spa" || t.leisure==="sauna") return "温泉";
+  if(t.tourism==="museum" || t.tourism==="gallery" || t.amenity==="library") return "学ぶ";
+  if(t.natural==="peak" || t.natural==="saddle") return "登山";
+  if(t.natural || t.waterway==="waterfall" || ["nature_reserve","garden"].includes(t.leisure)) return "自然";
+  if(["theme_park","zoo","aquarium"].includes(t.tourism) || ["sports_centre","playground"].includes(t.leisure)) return "体験";
+  return selected==="すべて" ? "観光" : selected;
+}
+
+function cleanCategoryElements(elements){
+  const seen=new Set(), out=[];
+  for(const el of elements||[]){
+    const ll=getTransitLatLng(el);
+    if(!ll) continue;
+    if(ll[0]<BASE_BOUNDS.south || ll[0]>BASE_BOUNDS.north ||
+       ll[1]<BASE_BOUNDS.west || ll[1]>BASE_BOUNDS.east) continue;
+
+    const tags=el.tags||{};
+    const name=tags.name||tags["name:ja"];
+    if(!name) continue;
+
+    const key=`${name}|${ll[0].toFixed(5)}|${ll[1].toFixed(5)}`;
+    if(seen.has(key)) continue;
+    seen.add(key);
+
+    out.push({
+      name,
+      cat:osmTypeToCategory(tags),
+      address:[tags["addr:full"],tags["addr:street"],tags["addr:housenumber"]].filter(Boolean).join(" "),
+      lat:ll[0],lon:ll[1]
+    });
+  }
+  return out;
+}
+
+let categoryRequestId=0;
 async function refreshCategoryMap(){
+  const requestId=++categoryRequestId;
   const label=document.getElementById("mapCategoryLabel");
   if(label) label.textContent=`選択カテゴリ：${selected}`;
-  let candidates=spots.filter(s=>{
-    if((s.cat||"").trim()==="交通") return false;
-    if(selected==="すべて") return true;
-    if(selected==="お気に入り") return favs().includes(s.name);
-    return categoryMatches(s,selected);
-  }).slice(0,30);
 
-  poiItems=[]; renderMapMarkers();
-  let done=0;
-  for(const s of candidates){
-    const pos=await geocodeSpot(s);
-    if(pos) poiItems.push({name:s.name,cat:s.cat,address:s.address||"",lat:pos.lat,lon:pos.lon});
-    done++; if(done%5===0) renderMapMarkers();
-    await new Promise(r=>setTimeout(r,220));
-  }
+  poiItems=[];
   renderMapMarkers();
+
+  if(selected==="お気に入り"){
+    setTransitStatus("お気に入りはカード一覧で確認できます。鉄道駅・バス停は常に表示しています。");
+    return;
+  }
+
+  const parts=categoryOverpassParts(selected);
+  if(!parts.length) return;
+
+  setTransitStatus(`${selected}の施設・場所を地図に読み込み中…`);
+
+  const query=`
+[out:json][timeout:35];
+area["boundary"="administrative"]["name"="富士宮市"]->.searchArea;
+(
+  ${parts.map(x=>x+";").join("\n  ")}
+);
+out center tags;`;
+
+  const endpoints=[
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter"
+  ];
+
+  let data=null;
+  for(const endpoint of endpoints){
+    try{
+      const res=await fetch(endpoint,{
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+        body:"data="+encodeURIComponent(query),
+        cache:"no-store"
+      });
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      data=await res.json();
+      break;
+    }catch(e){
+      console.warn("Category map API failed",endpoint,e);
+    }
+  }
+
+  if(requestId!==categoryRequestId) return;
+
+  if(!data){
+    setTransitStatus(`${selected}の地図ピンを取得できませんでした。もう一度カテゴリーを選んでください。`);
+    return;
+  }
+
+  poiItems=cleanCategoryElements(data.elements).slice(0,120);
+  renderMapMarkers();
+
+  const stations=transitItems.filter(x=>x.type==="station").length;
+  const buses=transitItems.filter(x=>x.type==="bus").length;
+  setTransitStatus(`${selected} ${poiItems.length}件・鉄道駅 ${stations}件・バス停 ${buses}件を表示`);
 }
 
 function requestCurrentLocation(){
@@ -1198,6 +1396,10 @@ function requestCurrentLocation(){
   const mid=(a,b)=>({x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2});
 
   map.addEventListener("touchstart",e=>{
+    if(e.target.closest(".transit-marker,.map-zoom-controls,.map-location-btn,.transit-map-popup,.transit-map-open")){
+      mode=null;
+      return;
+    }
     if(e.touches.length===1){
       mode="drag";
       startX=e.touches[0].clientX; startY=e.touches[0].clientY;
@@ -1235,7 +1437,8 @@ function requestCurrentLocation(){
 
   map.addEventListener("touchend",e=>{
     if(e.touches.length===0){
-      mode=null; map.classList.remove("dragging"); renderMap();
+      if(mode) renderMap();
+      mode=null; map.classList.remove("dragging");
     }else if(e.touches.length===1){
       mode="drag";
       startX=e.touches[0].clientX; startY=e.touches[0].clientY;
