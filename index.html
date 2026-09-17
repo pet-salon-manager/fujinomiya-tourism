@@ -289,22 +289,11 @@ body>header,body>main,body>script{position:relative;z-index:2}
 }
 .transit-marker.poi .poi-pin-emoji{font-size:19px !important}
 
-
-.spots-section{margin-top:26px;padding:20px 0 40px}
-.spots-heading-wrap{
-  background:rgba(255,255,255,.9);
-  border-radius:20px;
-  padding:14px 16px;
-  margin-bottom:12px;
-  backdrop-filter:blur(8px)
-}
-.spots-heading-wrap h2{margin:0}
-
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=48">
+<link rel="manifest" href="./manifest.webmanifest?v=47">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -419,13 +408,9 @@ body>header,body>main,body>script{position:relative;z-index:2}
        style="margin-top:12px">大きな地図で見る</a>
   </section>
 
-  <section class="spots-section" id="spotsSection">
-    <div class="spots-heading-wrap">
-      <h2>おすすめスポット <span class="count" id="spotCount"></span></h2>
-      <div id="dataStatus" style="font-size:12px;color:#627b75;margin-top:6px;"></div>
-    </div>
-    <section class="grid" id="cards"></section>
-  </section>
+  <h2>おすすめスポット <span class="count" id="spotCount"></span></h2>
+<div id="dataStatus" style="font-size:12px;color:#627b75;margin:-4px 0 12px;"></div>
+  <section class="grid" id="cards"></section>
 </main>
 
 <script>
@@ -436,7 +421,6 @@ let supabaseAccessToken = sessionStorage.getItem("fujinomiya_supabase_access_tok
 let supabaseRefreshToken = localStorage.getItem("fujinomiya_supabase_refresh_token") || sessionStorage.getItem("fujinomiya_supabase_refresh_token") || "";
 
 let spots = [];
-const FUJINOMIYA_SPOTS_CACHE_V48 = "fujinomiya_spots_cache_v48";
 const PAGE_SIZE = 5;
 let currentPage = 1;
 let selected = "すべて";
@@ -481,7 +465,6 @@ function saveSpotCoordLocal(name,lat,lon){
 
 function isFujinomiyaSpot(s){
   if(normalizeSpotCoord(s)) return true;
-
   const text = [
     s?.address || "",
     s?.area || "",
@@ -489,15 +472,18 @@ function isFujinomiyaSpot(s){
     s?.desc || ""
   ].join(" ");
 
-  const outside = [
+  // Explicit Fujinomiya references are accepted.
+  if(text.includes("富士宮市")) return true;
+
+  // If another municipality is explicitly written, reject it.
+  const otherCities = [
     "富士市","御殿場市","裾野市","沼津市","三島市","静岡市","清水区",
     "山梨県","南部町","身延町","富士吉田市","鳴沢村","富士河口湖町"
   ];
-  if(outside.some(name => text.includes(name))) return false;
+  if(otherCities.some(name => text.includes(name))) return false;
 
-  // This table is the curated Fujinomiya dataset.
-  // Keep entries like "上井出" even when "富士宮市" is omitted from the address text.
-  return true;
+  // For records with no usable municipality information, do not show them.
+  return false;
 }
 
 function categoryMatches(s, selectedCat){
@@ -602,7 +588,7 @@ function render(){
         </div>
       </div>
     </article>
-  `).join("") : `<div class="empty">このカテゴリーの施設カードはありません。「すべて」を選ぶと全施設カードを表示します。</div>`;
+  `).join("") : `<div class="empty">該当する施設がありません。</div>`;
 
   if(list.length > 0){
     cards.insertAdjacentHTML("beforeend", `
@@ -1264,7 +1250,6 @@ loadSpotsFromSupabase()
   .then(d => {
     baseSpots = d;
     spots = d;
-    try{localStorage.setItem(FUJINOMIYA_SPOTS_CACHE_V48,JSON.stringify(d));}catch(e){}
     const st=document.getElementById("dataStatus");
     if(st) st.textContent = `Supabase最新データ：${d.length}件読み込み済み`;
     renderChips();
@@ -1275,43 +1260,27 @@ loadSpotsFromSupabase()
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      let d=null;
-
-      try{
-        const cached=JSON.parse(localStorage.getItem(FUJINOMIYA_SPOTS_CACHE_V48)||"null");
-        if(Array.isArray(cached) && cached.length) d=cached;
-      }catch(e){}
-
-      if(!d){
-        try{
-          const r = await fetch("./spots.json?rev=48", {cache:"no-store"});
-          if(r.ok) d = await r.json();
-        }catch(e){}
-      }
-
-      if(!Array.isArray(d) || !d.length) throw new Error("no fallback data");
-
+      const r = await fetch("./spots.json?rev=47", {cache:"no-store"});
+      const d = await r.json();
       baseSpots = d;
       spots = d;
       const st=document.getElementById("dataStatus");
-      if(st) st.textContent = `保存済み施設データ：${d.length}件`;
+      if(st) st.textContent = `予備データ：${d.length}件`;
       renderChips();
       render();
       setTimeout(()=>refreshCategoryMap(), 120);
-
+      
       const box=document.getElementById("cards");
-      if(box) box.insertAdjacentHTML("afterbegin", '<div class="guide">クラウドDBに接続できないため、この端末に保存した直近の施設データを表示しています。</div>');
+      if(box) box.insertAdjacentHTML("afterbegin", '<div class="guide">クラウドDBへの接続に失敗したため、端末内の予備データを表示しています。</div>');
     }catch(e){
-      const st=document.getElementById("dataStatus");
-      if(st) st.textContent="施設データの読み込みに失敗しました";
-      document.getElementById("cards").innerHTML = `<div class="empty">施設カードを読み込めませんでした。通信状態を確認してページを再読み込みしてください。</div>`;
+      document.getElementById("cards").innerHTML = `<div class="empty">施設データを読み込めませんでした。</div>`;
     }
   });
 
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=48").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=47").catch(()=>{});
 }
 </script>
 
