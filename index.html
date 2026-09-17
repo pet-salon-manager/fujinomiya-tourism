@@ -138,7 +138,10 @@ body>header,body>main,body>script{position:relative;z-index:2}
   background:#fff;color:var(--ink);font-size:14px;font-weight:800
 }
 .transit-map-tools button.active{background:var(--ink);color:#fff}
-#transitMap{width:100%;height:440px;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:#dfeee9;position:relative;z-index:1;isolation:isolate}
+#transitMap{
+  width:100%;height:440px;border-radius:20px;overflow:hidden;
+  border:1px solid var(--line);background:#dfeee9;position:relative
+}
 .transit-status{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}
 .transit-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--muted)}
 .transit-dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
@@ -149,26 +152,35 @@ body>header,body>main,body>script{position:relative;z-index:2}
 @media(max-width:600px){#transitMap{height:390px;min-height:390px}.transit-map-section{padding:14px}}
 
 
-#transitMap .leaflet-pane{z-index:400}
-#transitMap .leaflet-tile-pane{z-index:200}
-#transitMap .leaflet-overlay-pane{z-index:400}
-#transitMap .leaflet-marker-pane{z-index:600}
-#transitMap .leaflet-tooltip-pane{z-index:650}
-#transitMap .leaflet-popup-pane{z-index:700}
-#transitMap .leaflet-tile{will-change:transform}
+
+.transit-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#dfeee9}
+.transit-overlay{position:absolute;inset:0;pointer-events:none}
+.transit-marker{
+  position:absolute;transform:translate(-50%,-50%);
+  border-radius:50%;border:2px solid #fff;box-shadow:0 1px 5px #0005;
+  pointer-events:auto;cursor:pointer;padding:0;min-width:0
+}
+.transit-marker.station{width:16px;height:16px;background:#0a8069}
+.transit-marker.bus{width:11px;height:11px;background:#df6b3a;border-width:1.5px}
+.transit-map-popup{
+  position:absolute;left:12px;right:12px;bottom:12px;z-index:5;
+  background:rgba(255,255,255,.96);border-radius:14px;padding:11px 13px;
+  box-shadow:0 6px 20px #0002;font-size:13px;line-height:1.5;display:none
+}
+.transit-map-popup strong{font-size:14px}
+.transit-map-popup .close{float:right;border:0;background:transparent;padding:0 4px;font-size:18px;color:#52635e}
+.transit-map-open{
+  display:inline-flex;margin-top:8px;padding:8px 10px;border-radius:10px;
+  background:#eef6f3;color:#12352e;text-decoration:none;font-weight:800
+}
 
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=35">
+<link rel="manifest" href="./manifest.webmanifest?v=36">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIINfQ3ynsYdKAvxQ7K2rQ4QH7RZkIh4VwM=" crossorigin="">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 </head>
 <body>
@@ -239,7 +251,7 @@ body>header,body>main,body>script{position:relative;z-index:2}
   <section class="transit-map-section" id="transitSection">
     <h2>🚉 駅・バス停マップ</h2>
     <p class="transit-map-lead">
-      富士宮市内の鉄道駅とバス停を地図上に表示します。交通情報はカード一覧から外し、この地図にまとめています。
+      富士宮市内の鉄道駅とバス停を地図上に表示します。背景地図はOpenStreetMap、駅・バス停位置はその上に重ねて表示します。
     </p>
     <div class="transit-map-tools">
       <button type="button" id="showAllTransit" class="active">すべて</button>
@@ -247,7 +259,17 @@ body>header,body>main,body>script{position:relative;z-index:2}
       <button type="button" id="showBusStops">バス停</button>
       <button type="button" id="reloadTransit">再読み込み</button>
     </div>
-    <div id="transitMap" aria-label="富士宮市内の鉄道駅とバス停の地図"></div>
+    <div id="transitMap" aria-label="富士宮市内の鉄道駅とバス停の地図">
+      <iframe
+        id="transitBaseMap"
+        class="transit-frame"
+        title="富士宮市交通地図"
+        loading="lazy"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=138.47%2C35.08%2C138.82%2C35.48&amp;layer=mapnik">
+      </iframe>
+      <div id="transitOverlay" class="transit-overlay"></div>
+      <div id="transitPopup" class="transit-map-popup"></div>
+    </div>
     <div class="transit-legend">
       <span><i class="transit-dot station"></i>鉄道駅</span>
       <span><i class="transit-dot bus"></i>バス停</span>
@@ -790,7 +812,7 @@ loadSpotsFromSupabase()
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      const r = await fetch("./spots.json?rev=35", {cache:"no-store"});
+      const r = await fetch("./spots.json?rev=36", {cache:"no-store"});
       const d = await r.json();
       baseSpots = d;
       spots = d;
@@ -808,52 +830,30 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=35").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=36").catch(()=>{});
 }
 </script>
 
 <script>
-let transitMap = null;
-let transitStationLayer = null;
-let transitBusLayer = null;
+const TRANSIT_BOUNDS = {
+  west: 138.47,
+  south: 35.08,
+  east: 138.82,
+  north: 35.48
+};
+
 let transitMode = "all";
+let transitItems = [];
 
 function setTransitStatus(msg){
   const el = document.getElementById("transitStatus");
   if(el) el.textContent = msg;
 }
 
-function transitIcon(color, symbol){
-  return L.divIcon({
-    className:"",
-    html:`<div style="width:28px;height:28px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 8px #0004;font-size:14px;font-weight:900">${symbol}</div>`,
-    iconSize:[28,28],
-    iconAnchor:[14,14],
-    popupAnchor:[0,-14]
-  });
-}
-
 function getTransitLatLng(el){
   if(typeof el.lat === "number" && typeof el.lon === "number") return [el.lat, el.lon];
   if(el.center && typeof el.center.lat === "number" && typeof el.center.lon === "number") return [el.center.lat, el.center.lon];
   return null;
-}
-
-function cleanTransitElements(elements){
-  const seen = new Set();
-  const out = [];
-  for(const el of elements){
-    const ll = getTransitLatLng(el);
-    if(!ll) continue;
-    // Exclude obvious out-of-area coordinates even if an external relation is malformed.
-    if(ll[0] < 35.08 || ll[0] > 35.48 || ll[1] < 138.47 || ll[1] > 138.82) continue;
-    const name = (el.tags && (el.tags.name || el.tags["name:ja"])) || "名称未登録";
-    const key = `${name}|${ll[0].toFixed(5)}|${ll[1].toFixed(5)}`;
-    if(seen.has(key)) continue;
-    seen.add(key);
-    out.push({el,ll,name});
-  }
-  return out;
 }
 
 function classifyTransit(el){
@@ -863,75 +863,102 @@ function classifyTransit(el){
   return null;
 }
 
+function cleanTransitElements(elements){
+  const seen = new Set();
+  const out = [];
+  for(const el of elements){
+    const ll = getTransitLatLng(el);
+    if(!ll) continue;
+    if(
+      ll[0] < TRANSIT_BOUNDS.south || ll[0] > TRANSIT_BOUNDS.north ||
+      ll[1] < TRANSIT_BOUNDS.west || ll[1] > TRANSIT_BOUNDS.east
+    ) continue;
+
+    const type = classifyTransit(el);
+    if(!type) continue;
+
+    const name = (el.tags && (el.tags.name || el.tags["name:ja"])) || "名称未登録";
+    const key = `${type}|${name}|${ll[0].toFixed(5)}|${ll[1].toFixed(5)}`;
+    if(seen.has(key)) continue;
+    seen.add(key);
+
+    out.push({el,ll,name,type});
+  }
+  return out;
+}
+
+function projectTransit(lat, lon){
+  const x = ((lon - TRANSIT_BOUNDS.west) / (TRANSIT_BOUNDS.east - TRANSIT_BOUNDS.west)) * 100;
+  const y = ((TRANSIT_BOUNDS.north - lat) / (TRANSIT_BOUNDS.north - TRANSIT_BOUNDS.south)) * 100;
+  return [Math.max(0,Math.min(100,x)), Math.max(0,Math.min(100,y))];
+}
+
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+
+function showTransitPopup(item){
+  const popup = document.getElementById("transitPopup");
+  if(!popup) return;
+
+  const t = item.el.tags || {};
+  const typeLabel = item.type === "station" ? "鉄道駅" : "バス停";
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.ll[0]+","+item.ll[1])}`;
+
+  popup.innerHTML = `
+    <button type="button" class="close" aria-label="閉じる">×</button>
+    <strong>${escapeHtml(item.name)}</strong><br>
+    ${typeLabel}${t.operator ? `<br>${escapeHtml(t.operator)}` : ""}
+    <br><a class="transit-map-open" href="${mapsUrl}" target="_blank" rel="noopener">地図アプリで見る</a>
+  `;
+  popup.style.display = "block";
+  popup.querySelector(".close")?.addEventListener("click",()=>popup.style.display="none");
+}
+
+function renderTransitMarkers(){
+  const overlay = document.getElementById("transitOverlay");
+  if(!overlay) return;
+  overlay.innerHTML = "";
+
+  const filtered = transitItems.filter(item =>
+    transitMode === "all" || item.type === transitMode
+  );
+
+  for(const item of filtered){
+    const [x,y] = projectTransit(item.ll[0], item.ll[1]);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `transit-marker ${item.type}`;
+    btn.style.left = x + "%";
+    btn.style.top = y + "%";
+    btn.title = item.name;
+    btn.setAttribute("aria-label", item.name);
+    btn.addEventListener("click",()=>showTransitPopup(item));
+    overlay.appendChild(btn);
+  }
+}
+
 function applyTransitMode(mode){
   transitMode = mode;
+
   const allBtn = document.getElementById("showAllTransit");
   const stBtn = document.getElementById("showStations");
   const busBtn = document.getElementById("showBusStops");
+
   [allBtn,stBtn,busBtn].forEach(b=>b && b.classList.remove("active"));
   if(mode==="all") allBtn?.classList.add("active");
   if(mode==="station") stBtn?.classList.add("active");
   if(mode==="bus") busBtn?.classList.add("active");
 
-  if(!transitMap) return;
-  if(transitStationLayer){
-    if(mode==="all" || mode==="station") transitStationLayer.addTo(transitMap);
-    else transitMap.removeLayer(transitStationLayer);
-  }
-  if(transitBusLayer){
-    if(mode==="all" || mode==="bus") transitBusLayer.addTo(transitMap);
-    else transitMap.removeLayer(transitBusLayer);
-  }
+  renderTransitMarkers();
 }
 
 async function loadTransitMap(){
-  if(typeof L === "undefined"){
-    setTransitStatus("地図ライブラリを読み込めませんでした。通信状態を確認してください。");
-    return;
-  }
-
-  if(!transitMap){
-    const fujinomiyaBounds = L.latLngBounds(
-      [35.08, 138.47],
-      [35.48, 138.82]
-    );
-
-    transitMap = L.map("transitMap", {
-      zoomControl:true,
-      minZoom:10,
-      maxZoom:18,
-      maxBounds:fujinomiyaBounds.pad(0.08),
-      maxBoundsViscosity:0.75
-    });
-
-    const baseLayer = L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-      {
-        maxZoom:19,
-        minZoom:9,
-        attribution:'Tiles &copy; Esri — Source: Esri, HERE, Garmin, USGS, OpenStreetMap contributors',
-        updateWhenIdle:false,
-        updateWhenZooming:false,
-        keepBuffer:5
-      }
-    );
-
-    baseLayer.on("tileerror", function(){
-      setTransitStatus("地図画像の一部を再取得しています…");
-    });
-
-    baseLayer.on("load", function(){
-      if(transitMap) transitMap.invalidateSize(false);
-    });
-
-    baseLayer.addTo(transitMap);
-    transitMap.fitBounds(fujinomiyaBounds, {padding:[12,12], maxZoom:12});
-
-    // iPhone/PWA sometimes calculates the map size before layout is complete.
-    setTimeout(()=>transitMap && transitMap.invalidateSize(true), 250);
-    setTimeout(()=>transitMap && transitMap.invalidateSize(true), 900);
-  }
-
   setTransitStatus("富士宮市内の鉄道駅・バス停を取得中…");
 
   const query = `
@@ -951,7 +978,6 @@ out center tags;
   ];
 
   let data = null;
-  let lastErr = null;
   for(const endpoint of endpoints){
     try{
       const res = await fetch(endpoint, {
@@ -963,59 +989,21 @@ out center tags;
       if(!res.ok) throw new Error("HTTP "+res.status);
       data = await res.json();
       break;
-    }catch(e){ lastErr = e; }
+    }catch(e){
+      console.warn("Transit API failed:", endpoint, e);
+    }
   }
 
   if(!data){
-    setTransitStatus("駅・バス停データを取得できませんでした。通信状態を確認して「再読み込み」を押してください。");
-    console.warn("Transit Overpass error", lastErr);
+    setTransitStatus("駅・バス停データを取得できませんでした。「再読み込み」を押してください。");
     return;
   }
 
-  const items = cleanTransitElements(data.elements || []);
-  const stations = items.filter(x => classifyTransit(x.el)==="station");
-  const buses = items.filter(x => classifyTransit(x.el)==="bus");
+  transitItems = cleanTransitElements(data.elements || []);
+  const stations = transitItems.filter(x=>x.type==="station");
+  const buses = transitItems.filter(x=>x.type==="bus");
 
-  if(transitStationLayer) transitMap.removeLayer(transitStationLayer);
-  if(transitBusLayer) transitMap.removeLayer(transitBusLayer);
-
-  transitStationLayer = L.layerGroup();
-  transitBusLayer = L.layerGroup();
-
-  for(const x of stations){
-    const t = x.el.tags || {};
-    const marker = L.circleMarker(x.ll,{
-      radius:7,
-      color:"#ffffff",
-      weight:2,
-      fillColor:"#0a8069",
-      fillOpacity:1
-    });
-    marker.bindTooltip(x.name,{direction:"top",offset:[0,-6]});
-    marker.bindPopup(`<div class="transit-popup"><strong>${x.name}</strong><br>鉄道駅${t.operator?`<br>${t.operator}`:""}</div>`);
-    marker.addTo(transitStationLayer);
-  }
-
-  for(const x of buses){
-    const t = x.el.tags || {};
-    const marker = L.circleMarker(x.ll,{
-      radius:5,
-      color:"#ffffff",
-      weight:1.5,
-      fillColor:"#df6b3a",
-      fillOpacity:0.95
-    });
-    marker.bindTooltip(x.name,{direction:"top",offset:[0,-5]});
-    marker.bindPopup(`<div class="transit-popup"><strong>${x.name}</strong><br>バス停${t.operator?`<br>${t.operator}`:""}</div>`);
-    marker.addTo(transitBusLayer);
-  }
-
-  applyTransitMode(transitMode);
-
-  const cityBounds = L.latLngBounds([35.08,138.47],[35.48,138.82]);
-  transitMap.fitBounds(cityBounds,{padding:[14,14],maxZoom:12});
-  setTimeout(()=>transitMap.invalidateSize(true),150);
-
+  renderTransitMarkers();
   setTransitStatus(`富士宮市内：鉄道駅 ${stations.length}件・バス停 ${buses.length}件を表示中`);
 }
 
@@ -1024,7 +1012,7 @@ document.getElementById("showStations")?.addEventListener("click",()=>applyTrans
 document.getElementById("showBusStops")?.addEventListener("click",()=>applyTransitMode("bus"));
 document.getElementById("reloadTransit")?.addEventListener("click",loadTransitMap);
 
-window.addEventListener("load",()=>setTimeout(loadTransitMap,350));
+window.addEventListener("load",()=>setTimeout(loadTransitMap,250));
 </script>
 
 </body>
