@@ -153,7 +153,6 @@ body>header,body>main,body>script{position:relative;z-index:2}
 
 
 
-.transit-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#dfeee9;pointer-events:none}
 .transit-overlay{position:absolute;inset:0;pointer-events:none}
 .transit-marker{
   position:absolute;transform:translate(-50%,-50%);
@@ -203,11 +202,35 @@ body>header,body>main,body>script{position:relative;z-index:2}
   font-size:12px;font-weight:800
 }
 
+
+#transitMap{
+  touch-action:none;
+  -webkit-user-select:none;
+  user-select:none;
+  overscroll-behavior:contain;
+  cursor:grab;
+}
+#transitMap.dragging{cursor:grabbing}
+.map-tile-layer{
+  position:absolute;inset:0;overflow:hidden;background:#dfeee9;z-index:1
+}
+.map-tile{
+  position:absolute;width:256px;height:256px;max-width:none;
+  user-select:none;-webkit-user-drag:none;pointer-events:none
+}
+.transit-overlay{z-index:3}
+.map-zoom-controls,.map-location-btn,.transit-map-popup{z-index:8}
+.map-attribution{
+  position:absolute;left:6px;bottom:5px;z-index:7;
+  font-size:10px;line-height:1.2;color:#334;background:rgba(255,255,255,.84);
+  border-radius:4px;padding:2px 5px;pointer-events:none
+}
+
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=38">
+<link rel="manifest" href="./manifest.webmanifest?v=39">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -280,22 +303,13 @@ body>header,body>main,body>script{position:relative;z-index:2}
   <section class="transit-map-section" id="transitSection">
     <h2>🚉 駅・バス停マップ</h2>
     <p class="transit-map-lead">
-      選択したカテゴリの施設・場所を地図に表示します。鉄道駅とバス停はカテゴリに関係なく常に表示し、現在地も表示できます。＋／−で拡大・縮小できます。
+      地図は指1本で移動、2本指のピンチで拡大・縮小できます。＋／−ボタンでも操作できます。鉄道駅・バス停は常に表示し、現在地も表示できます。
     </p>
     <div class="transit-map-tools">
-      <button type="button" id="showAllTransit" class="active">すべて</button>
-      <button type="button" id="showStations">鉄道駅</button>
-      <button type="button" id="showBusStops">バス停</button>
-      <button type="button" id="reloadTransit">再読み込み</button>
+      <button type="button" id="reloadTransit">駅・バス停を再読み込み</button>
     </div>
     <div id="transitMap" aria-label="富士宮市内の施設・鉄道駅・バス停の地図">
-      <iframe
-        id="transitBaseMap"
-        class="transit-frame"
-        title="富士宮市地図"
-        loading="lazy"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=138.47%2C35.08%2C138.82%2C35.48&amp;layer=mapnik">
-      </iframe>
+      <div id="mapTileLayer" class="map-tile-layer"></div>
       <div id="transitOverlay" class="transit-overlay"></div>
       <div class="map-zoom-controls">
         <button type="button" id="mapZoomIn" aria-label="地図を拡大">＋</button>
@@ -303,6 +317,7 @@ body>header,body>main,body>script{position:relative;z-index:2}
       </div>
       <button type="button" id="mapMyLocation" class="map-location-btn">📍 現在地</button>
       <div id="transitPopup" class="transit-map-popup"></div>
+      <div class="map-attribution">© OpenStreetMap contributors</div>
     </div>
     <div class="map-cat-label" id="mapCategoryLabel">選択カテゴリ：すべて</div>
     <div class="transit-legend">
@@ -853,7 +868,7 @@ loadSpotsFromSupabase()
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      const r = await fetch("./spots.json?rev=38", {cache:"no-store"});
+      const r = await fetch("./spots.json?rev=39", {cache:"no-store"});
       const d = await r.json();
       baseSpots = d;
       spots = d;
@@ -871,71 +886,87 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=38").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=39").catch(()=>{});
 }
 </script>
 
 <script>
 const BASE_BOUNDS = { west:138.47, south:35.08, east:138.82, north:35.48 };
-let mapBounds = {...BASE_BOUNDS};
+const TILE_SIZE = 256;
+let mapCenter = {lat:35.28, lon:138.65};
+let mapZoom = 11;
 let transitMode = "all";
 let transitItems = [];
 let poiItems = [];
 let currentLocation = null;
-let mapZoomLevel = 0;
-const geocodeCacheKey = "fujinomiya_geocode_cache_v38";
+const geocodeCacheKey = "fujinomiya_geocode_cache_v39";
 
 function setTransitStatus(msg){
   const el = document.getElementById("transitStatus");
   if(el) el.textContent = msg;
 }
 
-function mercatorY(lat){
-  const rad = lat * Math.PI / 180;
-  return Math.log(Math.tan(Math.PI / 4 + rad / 2));
+function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
+
+function lonLatToWorld(lon,lat,zoom){
+  const scale = TILE_SIZE * Math.pow(2,zoom);
+  const x = (lon + 180) / 360 * scale;
+  const sinLat = Math.sin(clamp(lat,-85.05112878,85.05112878) * Math.PI/180);
+  const y = (0.5 - Math.log((1+sinLat)/(1-sinLat))/(4*Math.PI)) * scale;
+  return {x,y};
 }
 
-function projectPoint(lat, lon){
-  const x = ((lon - mapBounds.west) / (mapBounds.east - mapBounds.west)) * 100;
-  const northY = mercatorY(mapBounds.north);
-  const southY = mercatorY(mapBounds.south);
-  const pointY = mercatorY(lat);
-  const y = ((northY - pointY) / (northY - southY)) * 100;
-  return [x,y];
+function worldToLonLat(x,y,zoom){
+  const scale = TILE_SIZE * Math.pow(2,zoom);
+  const lon = x / scale * 360 - 180;
+  const n = Math.PI - 2*Math.PI*y/scale;
+  const lat = 180/Math.PI * Math.atan(0.5*(Math.exp(n)-Math.exp(-n)));
+  return {lon,lat};
 }
 
-function insideMap(lat,lon){
-  return lat>=mapBounds.south && lat<=mapBounds.north &&
-         lon>=mapBounds.west && lon<=mapBounds.east;
+function renderTiles(){
+  const map = document.getElementById("transitMap");
+  const layer = document.getElementById("mapTileLayer");
+  if(!map || !layer) return;
+
+  const w = map.clientWidth;
+  const h = map.clientHeight;
+  if(!w || !h) return;
+
+  const center = lonLatToWorld(mapCenter.lon,mapCenter.lat,mapZoom);
+  const topLeftX = center.x - w/2;
+  const topLeftY = center.y - h/2;
+
+  const minTileX = Math.floor(topLeftX/TILE_SIZE)-1;
+  const maxTileX = Math.floor((topLeftX+w)/TILE_SIZE)+1;
+  const minTileY = Math.floor(topLeftY/TILE_SIZE)-1;
+  const maxTileY = Math.floor((topLeftY+h)/TILE_SIZE)+1;
+  const tileCount = Math.pow(2,mapZoom);
+
+  layer.innerHTML = "";
+  for(let ty=minTileY; ty<=maxTileY; ty++){
+    if(ty<0 || ty>=tileCount) continue;
+    for(let tx=minTileX; tx<=maxTileX; tx++){
+      const wrappedX = ((tx % tileCount)+tileCount)%tileCount;
+      const img = document.createElement("img");
+      img.className = "map-tile";
+      img.alt = "";
+      img.draggable = false;
+      img.src = `https://tile.openstreetmap.org/${mapZoom}/${wrappedX}/${ty}.png`;
+      img.style.left = (tx*TILE_SIZE - topLeftX) + "px";
+      img.style.top = (ty*TILE_SIZE - topLeftY) + "px";
+      layer.appendChild(img);
+    }
+  }
 }
 
-function updateBaseMap(){
-  const frame = document.getElementById("transitBaseMap");
-  if(!frame) return;
-  const b = mapBounds;
-  frame.src = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(b.west)}%2C${encodeURIComponent(b.south)}%2C${encodeURIComponent(b.east)}%2C${encodeURIComponent(b.north)}&layer=mapnik`;
-  renderMapMarkers();
-}
-
-function zoomMap(factor){
-  const cx = (mapBounds.west + mapBounds.east)/2;
-  const cy = (mapBounds.south + mapBounds.north)/2;
-  const halfW = (mapBounds.east-mapBounds.west)*factor/2;
-  const halfH = (mapBounds.north-mapBounds.south)*factor/2;
-  mapBounds = {west:cx-halfW,east:cx+halfW,south:cy-halfH,north:cy+halfH};
-  mapZoomLevel += factor<1 ? 1 : -1;
-  mapZoomLevel = Math.max(-2,Math.min(5,mapZoomLevel));
-  updateBaseMap();
-}
-
-function centerMap(lat,lon,spanFactor=0.24){
-  const baseW = BASE_BOUNDS.east-BASE_BOUNDS.west;
-  const baseH = BASE_BOUNDS.north-BASE_BOUNDS.south;
-  const w = baseW*spanFactor;
-  const h = baseH*spanFactor;
-  mapBounds = {west:lon-w/2,east:lon+w/2,south:lat-h/2,north:lat+h/2};
-  mapZoomLevel = 2;
-  updateBaseMap();
+function pointToScreen(lat,lon){
+  const map = document.getElementById("transitMap");
+  if(!map) return null;
+  const w=map.clientWidth,h=map.clientHeight;
+  const center=lonLatToWorld(mapCenter.lon,mapCenter.lat,mapZoom);
+  const p=lonLatToWorld(lon,lat,mapZoom);
+  return {x:p.x-center.x+w/2, y:p.y-center.y+h/2, w,h};
 }
 
 function escapeHtml(s){
@@ -948,45 +979,37 @@ function escapeHtml(s){
 function showMapPopup(item, type){
   const popup = document.getElementById("transitPopup");
   if(!popup) return;
-  let label = "";
-  let name = item.name || "名称未登録";
-  let lat = item.lat, lon = item.lon;
-  let extra = "";
-
+  let label="", name=item.name||"名称未登録", lat=item.lat, lon=item.lon, extra="";
   if(type==="station"){
-    label="鉄道駅";
-    extra=item.operator ? `<br>${escapeHtml(item.operator)}` : "";
+    label="鉄道駅"; extra=item.operator?`<br>${escapeHtml(item.operator)}`:"";
   }else if(type==="bus"){
-    label="バス停";
-    extra=item.operator ? `<br>${escapeHtml(item.operator)}` : "";
+    label="バス停"; extra=item.operator?`<br>${escapeHtml(item.operator)}`:"";
   }else if(type==="current"){
     label="現在地";
   }else{
-    label=item.cat || "施設・場所";
-    if(item.address) extra=`<br>${escapeHtml(item.address)}`;
+    label=item.cat||"施設・場所"; if(item.address) extra=`<br>${escapeHtml(item.address)}`;
   }
-
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat+","+lon)}`;
-  popup.innerHTML = `
+  const mapsUrl=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat+","+lon)}`;
+  popup.innerHTML=`
     <button type="button" class="close" aria-label="閉じる">×</button>
     <strong>${escapeHtml(name)}</strong><br>${escapeHtml(label)}${extra}
-    <br><a class="transit-map-open" href="${mapsUrl}" target="_blank" rel="noopener">地図アプリで見る</a>
-  `;
+    <br><a class="transit-map-open" href="${mapsUrl}" target="_blank" rel="noopener">地図アプリで見る</a>`;
   popup.style.display="block";
   popup.querySelector(".close")?.addEventListener("click",()=>popup.style.display="none");
 }
 
-function addOverlayMarker(overlay, lat, lon, cls, item, type, title){
-  if(!insideMap(lat,lon)) return;
-  const [x,y] = projectPoint(lat,lon);
+function addMarker(overlay,lat,lon,cls,item,type,title){
+  const p=pointToScreen(lat,lon);
+  if(!p) return;
+  if(p.x<-24 || p.x>p.w+24 || p.y<-24 || p.y>p.h+24) return;
   const btn=document.createElement("button");
   btn.type="button";
   btn.className=`transit-marker ${cls}`;
-  btn.style.left=x+"%";
-  btn.style.top=y+"%";
-  btn.title=title || item.name || "";
-  btn.setAttribute("aria-label",title || item.name || "");
-  btn.addEventListener("click",()=>showMapPopup(item,type));
+  btn.style.left=p.x+"px";
+  btn.style.top=p.y+"px";
+  btn.title=title||item.name||"";
+  btn.setAttribute("aria-label",title||item.name||"");
+  btn.addEventListener("click",e=>{e.stopPropagation();showMapPopup(item,type);});
   overlay.appendChild(btn);
 }
 
@@ -995,23 +1018,18 @@ function renderMapMarkers(){
   if(!overlay) return;
   overlay.innerHTML="";
 
-  // 鉄道駅・バス停は常に表示
   for(const item of transitItems){
     if(item.type==="station"){
-      addOverlayMarker(overlay,item.lat,item.lon,"station",item,"station",item.name);
+      addMarker(overlay,item.lat,item.lon,"station",item,"station",item.name);
     }else if(item.type==="bus"){
-      addOverlayMarker(overlay,item.lat,item.lon,"bus",item,"bus",item.name);
+      addMarker(overlay,item.lat,item.lon,"bus",item,"bus",item.name);
     }
   }
-
-  // 選択カテゴリ施設
   for(const item of poiItems){
-    addOverlayMarker(overlay,item.lat,item.lon,"poi",item,"poi",item.name);
+    addMarker(overlay,item.lat,item.lon,"poi",item,"poi",item.name);
   }
-
-  // 現在地
   if(currentLocation){
-    addOverlayMarker(
+    addMarker(
       overlay,currentLocation.lat,currentLocation.lon,"current",
       {name:"現在地",lat:currentLocation.lat,lon:currentLocation.lon},
       "current","現在地"
@@ -1019,36 +1037,57 @@ function renderMapMarkers(){
   }
 }
 
+function renderMap(){
+  renderTiles();
+  renderMapMarkers();
+  const ext=document.getElementById("openTransitMapExternal");
+  if(ext) ext.href=`https://www.openstreetmap.org/#map=${mapZoom}/${mapCenter.lat}/${mapCenter.lon}`;
+}
+
+function setMapZoom(z){
+  mapZoom=clamp(Math.round(z),9,18);
+  renderMap();
+}
+
+function zoomMapBy(delta){
+  setMapZoom(mapZoom+delta);
+}
+
+function centerMap(lat,lon,zoom=15){
+  mapCenter={lat,lon};
+  mapZoom=clamp(Math.round(zoom),9,18);
+  renderMap();
+}
+
+function panByPixels(dx,dy,startCenter,startZoom){
+  const world=lonLatToWorld(startCenter.lon,startCenter.lat,startZoom);
+  const target=worldToLonLat(world.x-dx,world.y-dy,startZoom);
+  mapCenter={lat:target.lat,lon:target.lon};
+  renderMap();
+}
+
 function getTransitLatLng(el){
   if(typeof el.lat==="number" && typeof el.lon==="number") return [el.lat,el.lon];
   if(el.center && typeof el.center.lat==="number" && typeof el.center.lon==="number") return [el.center.lat,el.center.lon];
   return null;
 }
-
 function classifyTransit(el){
   const t=el.tags||{};
   if(t.railway==="station" || t.railway==="halt") return "station";
   if(t.highway==="bus_stop" || t.bus==="yes" || t.public_transport==="platform") return "bus";
   return null;
 }
-
 function cleanTransitElements(elements){
-  const seen=new Set(), out=[];
+  const seen=new Set(),out=[];
   for(const el of elements){
-    const ll=getTransitLatLng(el);
-    if(!ll) continue;
+    const ll=getTransitLatLng(el); if(!ll) continue;
     if(ll[0]<BASE_BOUNDS.south || ll[0]>BASE_BOUNDS.north ||
        ll[1]<BASE_BOUNDS.west || ll[1]>BASE_BOUNDS.east) continue;
-    const type=classifyTransit(el);
-    if(!type) continue;
-    const name=(el.tags && (el.tags.name||el.tags["name:ja"])) || "名称未登録";
+    const type=classifyTransit(el); if(!type) continue;
+    const name=(el.tags&&(el.tags.name||el.tags["name:ja"]))||"名称未登録";
     const key=`${type}|${name}|${ll[0].toFixed(5)}|${ll[1].toFixed(5)}`;
-    if(seen.has(key)) continue;
-    seen.add(key);
-    out.push({
-      name,type,lat:ll[0],lon:ll[1],
-      operator:(el.tags&&el.tags.operator)||""
-    });
+    if(seen.has(key)) continue; seen.add(key);
+    out.push({name,type,lat:ll[0],lon:ll[1],operator:(el.tags&&el.tags.operator)||""});
   }
   return out;
 }
@@ -1064,32 +1103,26 @@ area["boundary"="administrative"]["name"="富士宮市"]->.searchArea;
   nwr(area.searchArea)["public_transport"="platform"]["bus"="yes"];
 );
 out center tags;`;
-
   const endpoints=[
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter"
   ];
-
   let data=null;
   for(const endpoint of endpoints){
     try{
       const res=await fetch(endpoint,{
         method:"POST",
         headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
-        body:"data="+encodeURIComponent(query),
-        cache:"no-store"
+        body:"data="+encodeURIComponent(query),cache:"no-store"
       });
       if(!res.ok) throw new Error("HTTP "+res.status);
-      data=await res.json();
-      break;
+      data=await res.json(); break;
     }catch(e){ console.warn("Transit API failed",endpoint,e); }
   }
-
   if(!data){
     setTransitStatus("駅・バス停を取得できませんでした。「再読み込み」を押してください。");
     return;
   }
-
   transitItems=cleanTransitElements(data.elements||[]);
   const stations=transitItems.filter(x=>x.type==="station");
   const buses=transitItems.filter(x=>x.type==="bus");
@@ -1101,95 +1134,139 @@ function getGeoCache(){
   try{return JSON.parse(localStorage.getItem(geocodeCacheKey)||"{}");}
   catch{return {};}
 }
-function saveGeoCache(c){ localStorage.setItem(geocodeCacheKey,JSON.stringify(c)); }
-
+function saveGeoCache(c){localStorage.setItem(geocodeCacheKey,JSON.stringify(c));}
 async function geocodeSpot(spot){
   const cache=getGeoCache();
   const key=(spot.name||"")+"|"+(spot.address||"");
   if(cache[key]) return cache[key];
-
   const query=[spot.name,spot.address,"富士宮市","静岡県"].filter(Boolean).join(" ");
   try{
     const url="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=jp&q="+encodeURIComponent(query);
     const res=await fetch(url,{headers:{"Accept":"application/json"},cache:"force-cache"});
     if(!res.ok) return null;
-    const arr=await res.json();
-    if(!arr.length) return null;
-    const lat=Number(arr[0].lat), lon=Number(arr[0].lon);
+    const arr=await res.json(); if(!arr.length) return null;
+    const lat=Number(arr[0].lat),lon=Number(arr[0].lon);
     if(!Number.isFinite(lat)||!Number.isFinite(lon)) return null;
-    if(lat<BASE_BOUNDS.south || lat>BASE_BOUNDS.north || lon<BASE_BOUNDS.west || lon>BASE_BOUNDS.east) return null;
-    const val={lat,lon};
-    cache[key]=val; saveGeoCache(cache);
-    return val;
-  }catch(e){ return null; }
+    if(lat<BASE_BOUNDS.south||lat>BASE_BOUNDS.north||lon<BASE_BOUNDS.west||lon>BASE_BOUNDS.east) return null;
+    const val={lat,lon}; cache[key]=val; saveGeoCache(cache); return val;
+  }catch(e){return null;}
 }
 
 async function refreshCategoryMap(){
   const label=document.getElementById("mapCategoryLabel");
   if(label) label.textContent=`選択カテゴリ：${selected}`;
-
-  // 交通は別扱い。お気に入りはお気に入りのみ。
   let candidates=spots.filter(s=>{
     if((s.cat||"").trim()==="交通") return false;
     if(selected==="すべて") return true;
     if(selected==="お気に入り") return favs().includes(s.name);
     return categoryMatches(s,selected);
-  });
+  }).slice(0,30);
 
-  // 地図が重くならないよう、カテゴリごと最大30件を住所から位置取得。
-  candidates=candidates.slice(0,30);
-  poiItems=[];
-  renderMapMarkers();
-
+  poiItems=[]; renderMapMarkers();
   let done=0;
   for(const s of candidates){
     const pos=await geocodeSpot(s);
-    if(pos){
-      poiItems.push({
-        name:s.name,cat:s.cat,address:s.address||"",
-        lat:pos.lat,lon:pos.lon
-      });
-    }
-    done++;
-    if(done%5===0) renderMapMarkers();
-    // Nominatimへの過剰アクセスを避ける
+    if(pos) poiItems.push({name:s.name,cat:s.cat,address:s.address||"",lat:pos.lat,lon:pos.lon});
+    done++; if(done%5===0) renderMapMarkers();
     await new Promise(r=>setTimeout(r,220));
   }
   renderMapMarkers();
 }
 
 function requestCurrentLocation(){
-  if(!navigator.geolocation){
-    alert("この端末では位置情報を利用できません。");
-    return;
-  }
+  if(!navigator.geolocation){alert("この端末では位置情報を利用できません。");return;}
   setTransitStatus("現在地を取得しています…");
   navigator.geolocation.getCurrentPosition(
     pos=>{
       currentLocation={lat:pos.coords.latitude,lon:pos.coords.longitude};
-      centerMap(currentLocation.lat,currentLocation.lon,0.12);
-      renderMapMarkers();
+      centerMap(currentLocation.lat,currentLocation.lon,15);
       setTransitStatus("現在地を表示しました。鉄道駅・バス停は常に表示されています。");
     },
-    err=>{
-      setTransitStatus("現在地を取得できませんでした。iPhoneの位置情報許可を確認してください。");
-    },
+    ()=>setTransitStatus("現在地を取得できませんでした。iPhoneの位置情報許可を確認してください。"),
     {enableHighAccuracy:true,timeout:10000,maximumAge:30000}
   );
 }
 
-document.getElementById("showAllTransit")?.addEventListener("click",()=>{transitMode="all";renderMapMarkers();});
-document.getElementById("showStations")?.addEventListener("click",()=>{transitMode="station";renderMapMarkers();});
-document.getElementById("showBusStops")?.addEventListener("click",()=>{transitMode="bus";renderMapMarkers();});
+/* 指で移動 / ピンチ拡大縮小 */
+(function setupTouchMap(){
+  const map=document.getElementById("transitMap");
+  if(!map) return;
+  let mode=null,startX=0,startY=0,startCenter=null,startZoom=mapZoom,startDist=0,startMid=null;
+  let raf=0;
+
+  const dist=(a,b)=>Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+  const mid=(a,b)=>({x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2});
+
+  map.addEventListener("touchstart",e=>{
+    if(e.touches.length===1){
+      mode="drag";
+      startX=e.touches[0].clientX; startY=e.touches[0].clientY;
+      startCenter={...mapCenter}; startZoom=mapZoom;
+      map.classList.add("dragging");
+    }else if(e.touches.length===2){
+      mode="pinch";
+      startDist=dist(e.touches[0],e.touches[1]);
+      startMid=mid(e.touches[0],e.touches[1]);
+      startCenter={...mapCenter}; startZoom=mapZoom;
+      map.classList.add("dragging");
+    }
+  },{passive:false});
+
+  map.addEventListener("touchmove",e=>{
+    if(!mode) return;
+    e.preventDefault();
+    cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(()=>{
+      if(mode==="drag" && e.touches.length===1){
+        const dx=e.touches[0].clientX-startX;
+        const dy=e.touches[0].clientY-startY;
+        panByPixels(dx,dy,startCenter,startZoom);
+      }else if(mode==="pinch" && e.touches.length===2){
+        const d=dist(e.touches[0],e.touches[1]);
+        const ratio=d/startDist;
+        const targetZoom=clamp(Math.round(startZoom+Math.log2(ratio)),9,18);
+        const m=mid(e.touches[0],e.touches[1]);
+        const dx=m.x-startMid.x,dy=m.y-startMid.y;
+        mapZoom=targetZoom;
+        panByPixels(dx,dy,startCenter,startZoom);
+      }
+    });
+  },{passive:false});
+
+  map.addEventListener("touchend",e=>{
+    if(e.touches.length===0){
+      mode=null; map.classList.remove("dragging"); renderMap();
+    }else if(e.touches.length===1){
+      mode="drag";
+      startX=e.touches[0].clientX; startY=e.touches[0].clientY;
+      startCenter={...mapCenter}; startZoom=mapZoom;
+    }
+  },{passive:false});
+
+  // PC mouse drag too
+  let mouseDown=false,mx=0,my=0,mc=null,mz=mapZoom;
+  map.addEventListener("mousedown",e=>{
+    if(e.target.closest("button,a")) return;
+    mouseDown=true;mx=e.clientX;my=e.clientY;mc={...mapCenter};mz=mapZoom;map.classList.add("dragging");
+  });
+  window.addEventListener("mousemove",e=>{
+    if(!mouseDown) return;
+    panByPixels(e.clientX-mx,e.clientY-my,mc,mz);
+  });
+  window.addEventListener("mouseup",()=>{mouseDown=false;map.classList.remove("dragging");});
+})();
+
 document.getElementById("reloadTransit")?.addEventListener("click",loadTransitMap);
-document.getElementById("mapZoomIn")?.addEventListener("click",()=>zoomMap(0.62));
-document.getElementById("mapZoomOut")?.addEventListener("click",()=>zoomMap(1.55));
+document.getElementById("mapZoomIn")?.addEventListener("click",()=>zoomMapBy(1));
+document.getElementById("mapZoomOut")?.addEventListener("click",()=>zoomMapBy(-1));
 document.getElementById("mapMyLocation")?.addEventListener("click",requestCurrentLocation);
 
 window.addEventListener("load",()=>{
+  setTimeout(renderMap,80);
   setTimeout(loadTransitMap,250);
   setTimeout(refreshCategoryMap,500);
 });
+window.addEventListener("resize",()=>renderMap());
 </script>
 
 </body>
