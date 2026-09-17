@@ -148,11 +148,20 @@ body>header,body>main,body>script{position:relative;z-index:2}
 .transit-popup strong{font-size:14px}
 @media(max-width:600px){#transitMap{height:390px;min-height:390px}.transit-map-section{padding:14px}}
 
+
+#transitMap .leaflet-pane{z-index:400}
+#transitMap .leaflet-tile-pane{z-index:200}
+#transitMap .leaflet-overlay-pane{z-index:400}
+#transitMap .leaflet-marker-pane{z-index:600}
+#transitMap .leaflet-tooltip-pane{z-index:650}
+#transitMap .leaflet-popup-pane{z-index:700}
+#transitMap .leaflet-tile{will-change:transform}
+
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=34">
+<link rel="manifest" href="./manifest.webmanifest?v=35">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -781,7 +790,7 @@ loadSpotsFromSupabase()
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      const r = await fetch("./spots.json?rev=34", {cache:"no-store"});
+      const r = await fetch("./spots.json?rev=35", {cache:"no-store"});
       const d = await r.json();
       baseSpots = d;
       spots = d;
@@ -799,7 +808,7 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=34").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=35").catch(()=>{});
 }
 </script>
 
@@ -895,19 +904,24 @@ async function loadTransitMap(){
       maxBoundsViscosity:0.75
     });
 
-    const baseLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom:19,
-      minZoom:9,
-      attribution:'&copy; OpenStreetMap contributors',
-      updateWhenIdle:true,
-      keepBuffer:4,
-      crossOrigin:true
+    const baseLayer = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+      {
+        maxZoom:19,
+        minZoom:9,
+        attribution:'Tiles &copy; Esri — Source: Esri, HERE, Garmin, USGS, OpenStreetMap contributors',
+        updateWhenIdle:false,
+        updateWhenZooming:false,
+        keepBuffer:5
+      }
+    );
+
+    baseLayer.on("tileerror", function(){
+      setTransitStatus("地図画像の一部を再取得しています…");
     });
 
-    baseLayer.on("tileerror", function(ev){
-      // A failed tile should not leave the whole map in a broken state.
-      // Leaflet will retry on the next move/zoom; this also forces layout refresh.
-      setTimeout(()=>transitMap && transitMap.invalidateSize(false), 250);
+    baseLayer.on("load", function(){
+      if(transitMap) transitMap.invalidateSize(false);
     });
 
     baseLayer.addTo(transitMap);
@@ -968,19 +982,30 @@ out center tags;
   transitStationLayer = L.layerGroup();
   transitBusLayer = L.layerGroup();
 
-  const stationIcon = transitIcon("#0a8069","駅");
-  const busIcon = transitIcon("#df6b3a","B");
-
   for(const x of stations){
     const t = x.el.tags || {};
-    const marker = L.marker(x.ll,{icon:stationIcon});
+    const marker = L.circleMarker(x.ll,{
+      radius:7,
+      color:"#ffffff",
+      weight:2,
+      fillColor:"#0a8069",
+      fillOpacity:1
+    });
+    marker.bindTooltip(x.name,{direction:"top",offset:[0,-6]});
     marker.bindPopup(`<div class="transit-popup"><strong>${x.name}</strong><br>鉄道駅${t.operator?`<br>${t.operator}`:""}</div>`);
     marker.addTo(transitStationLayer);
   }
 
   for(const x of buses){
     const t = x.el.tags || {};
-    const marker = L.marker(x.ll,{icon:busIcon});
+    const marker = L.circleMarker(x.ll,{
+      radius:5,
+      color:"#ffffff",
+      weight:1.5,
+      fillColor:"#df6b3a",
+      fillOpacity:0.95
+    });
+    marker.bindTooltip(x.name,{direction:"top",offset:[0,-5]});
     marker.bindPopup(`<div class="transit-popup"><strong>${x.name}</strong><br>バス停${t.operator?`<br>${t.operator}`:""}</div>`);
     marker.addTo(transitBusLayer);
   }
