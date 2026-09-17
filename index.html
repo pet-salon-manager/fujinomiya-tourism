@@ -174,11 +174,40 @@ body>header,body>main,body>script{position:relative;z-index:2}
   background:#eef6f3;color:#12352e;text-decoration:none;font-weight:800
 }
 
+
+.map-zoom-controls{
+  position:absolute;right:10px;top:10px;z-index:8;
+  display:flex;flex-direction:column;gap:6px
+}
+.map-zoom-controls button{
+  width:44px;height:44px;border-radius:12px;border:1px solid #d7e5e0;
+  background:rgba(255,255,255,.96);font-size:25px;font-weight:900;
+  color:#12352e;padding:0;box-shadow:0 3px 10px #0002
+}
+.map-location-btn{
+  position:absolute;right:10px;bottom:10px;z-index:8;
+  border:1px solid #d7e5e0;background:rgba(255,255,255,.96);
+  color:#12352e;border-radius:12px;padding:10px 12px;font-weight:800;
+  box-shadow:0 3px 10px #0002
+}
+.transit-marker.poi{
+  width:14px;height:14px;background:#2b78d0;border:2px solid #fff
+}
+.transit-marker.current{
+  width:18px;height:18px;background:#1677ff;border:4px solid #fff;
+  box-shadow:0 0 0 5px rgba(22,119,255,.24),0 2px 8px #0004
+}
+.map-cat-label{
+  display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+  padding:7px 10px;border-radius:999px;background:#eef5ff;color:#245c9f;
+  font-size:12px;font-weight:800
+}
+
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v24.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v24.png">
-<link rel="manifest" href="./manifest.webmanifest?v=37">
+<link rel="manifest" href="./manifest.webmanifest?v=38">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -251,7 +280,7 @@ body>header,body>main,body>script{position:relative;z-index:2}
   <section class="transit-map-section" id="transitSection">
     <h2>🚉 駅・バス停マップ</h2>
     <p class="transit-map-lead">
-      富士宮市内の鉄道駅とバス停を地図上に表示します。地図は富士宮市周辺に固定し、駅・バス停の位置を正確に重ねて表示します。
+      選択したカテゴリの施設・場所を地図に表示します。鉄道駅とバス停はカテゴリに関係なく常に表示し、現在地も表示できます。＋／−で拡大・縮小できます。
     </p>
     <div class="transit-map-tools">
       <button type="button" id="showAllTransit" class="active">すべて</button>
@@ -259,17 +288,23 @@ body>header,body>main,body>script{position:relative;z-index:2}
       <button type="button" id="showBusStops">バス停</button>
       <button type="button" id="reloadTransit">再読み込み</button>
     </div>
-    <div id="transitMap" aria-label="富士宮市内の鉄道駅とバス停の地図">
+    <div id="transitMap" aria-label="富士宮市内の施設・鉄道駅・バス停の地図">
       <iframe
         id="transitBaseMap"
         class="transit-frame"
-        title="富士宮市交通地図"
+        title="富士宮市地図"
         loading="lazy"
         src="https://www.openstreetmap.org/export/embed.html?bbox=138.47%2C35.08%2C138.82%2C35.48&amp;layer=mapnik">
       </iframe>
       <div id="transitOverlay" class="transit-overlay"></div>
+      <div class="map-zoom-controls">
+        <button type="button" id="mapZoomIn" aria-label="地図を拡大">＋</button>
+        <button type="button" id="mapZoomOut" aria-label="地図を縮小">−</button>
+      </div>
+      <button type="button" id="mapMyLocation" class="map-location-btn">📍 現在地</button>
       <div id="transitPopup" class="transit-map-popup"></div>
     </div>
+    <div class="map-cat-label" id="mapCategoryLabel">選択カテゴリ：すべて</div>
     <div class="transit-legend">
       <span><i class="transit-dot station"></i>鉄道駅</span>
       <span><i class="transit-dot bus"></i>バス停</span>
@@ -353,6 +388,7 @@ function renderChips(){
       currentPage = 1;
       renderChips();
       render();
+      refreshCategoryMap();
     });
   });
 }
@@ -817,7 +853,7 @@ loadSpotsFromSupabase()
   .catch(async err => {
     console.warn("Supabase load failed, using local fallback", err);
     try{
-      const r = await fetch("./spots.json?rev=37", {cache:"no-store"});
+      const r = await fetch("./spots.json?rev=38", {cache:"no-store"});
       const d = await r.json();
       baseSpots = d;
       spots = d;
@@ -835,61 +871,23 @@ loadSpotsFromSupabase()
 document.getElementById("search").addEventListener("input", ()=>{currentPage=1; render();});
 
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js?rev=37").catch(()=>{});
+  navigator.serviceWorker.register("./sw.js?rev=38").catch(()=>{});
 }
 </script>
 
 <script>
-const TRANSIT_BOUNDS = {
-  west: 138.47,
-  south: 35.08,
-  east: 138.82,
-  north: 35.48
-};
-
+const BASE_BOUNDS = { west:138.47, south:35.08, east:138.82, north:35.48 };
+let mapBounds = {...BASE_BOUNDS};
 let transitMode = "all";
 let transitItems = [];
+let poiItems = [];
+let currentLocation = null;
+let mapZoomLevel = 0;
+const geocodeCacheKey = "fujinomiya_geocode_cache_v38";
 
 function setTransitStatus(msg){
   const el = document.getElementById("transitStatus");
   if(el) el.textContent = msg;
-}
-
-function getTransitLatLng(el){
-  if(typeof el.lat === "number" && typeof el.lon === "number") return [el.lat, el.lon];
-  if(el.center && typeof el.center.lat === "number" && typeof el.center.lon === "number") return [el.center.lat, el.center.lon];
-  return null;
-}
-
-function classifyTransit(el){
-  const t = el.tags || {};
-  if(t.railway === "station" || t.railway === "halt") return "station";
-  if(t.highway === "bus_stop" || t.bus === "yes" || t.public_transport === "platform") return "bus";
-  return null;
-}
-
-function cleanTransitElements(elements){
-  const seen = new Set();
-  const out = [];
-  for(const el of elements){
-    const ll = getTransitLatLng(el);
-    if(!ll) continue;
-    if(
-      ll[0] < TRANSIT_BOUNDS.south || ll[0] > TRANSIT_BOUNDS.north ||
-      ll[1] < TRANSIT_BOUNDS.west || ll[1] > TRANSIT_BOUNDS.east
-    ) continue;
-
-    const type = classifyTransit(el);
-    if(!type) continue;
-
-    const name = (el.tags && (el.tags.name || el.tags["name:ja"])) || "名称未登録";
-    const key = `${type}|${name}|${ll[0].toFixed(5)}|${ll[1].toFixed(5)}`;
-    if(seen.has(key)) continue;
-    seen.add(key);
-
-    out.push({el,ll,name,type});
-  }
-  return out;
 }
 
 function mercatorY(lat){
@@ -897,90 +895,167 @@ function mercatorY(lat){
   return Math.log(Math.tan(Math.PI / 4 + rad / 2));
 }
 
-function projectTransit(lat, lon){
-  const x = ((lon - TRANSIT_BOUNDS.west) /
-            (TRANSIT_BOUNDS.east - TRANSIT_BOUNDS.west)) * 100;
-
-  const northY = mercatorY(TRANSIT_BOUNDS.north);
-  const southY = mercatorY(TRANSIT_BOUNDS.south);
+function projectPoint(lat, lon){
+  const x = ((lon - mapBounds.west) / (mapBounds.east - mapBounds.west)) * 100;
+  const northY = mercatorY(mapBounds.north);
+  const southY = mercatorY(mapBounds.south);
   const pointY = mercatorY(lat);
   const y = ((northY - pointY) / (northY - southY)) * 100;
+  return [x,y];
+}
 
-  return [
-    Math.max(0, Math.min(100, x)),
-    Math.max(0, Math.min(100, y))
-  ];
+function insideMap(lat,lon){
+  return lat>=mapBounds.south && lat<=mapBounds.north &&
+         lon>=mapBounds.west && lon<=mapBounds.east;
+}
+
+function updateBaseMap(){
+  const frame = document.getElementById("transitBaseMap");
+  if(!frame) return;
+  const b = mapBounds;
+  frame.src = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(b.west)}%2C${encodeURIComponent(b.south)}%2C${encodeURIComponent(b.east)}%2C${encodeURIComponent(b.north)}&layer=mapnik`;
+  renderMapMarkers();
+}
+
+function zoomMap(factor){
+  const cx = (mapBounds.west + mapBounds.east)/2;
+  const cy = (mapBounds.south + mapBounds.north)/2;
+  const halfW = (mapBounds.east-mapBounds.west)*factor/2;
+  const halfH = (mapBounds.north-mapBounds.south)*factor/2;
+  mapBounds = {west:cx-halfW,east:cx+halfW,south:cy-halfH,north:cy+halfH};
+  mapZoomLevel += factor<1 ? 1 : -1;
+  mapZoomLevel = Math.max(-2,Math.min(5,mapZoomLevel));
+  updateBaseMap();
+}
+
+function centerMap(lat,lon,spanFactor=0.24){
+  const baseW = BASE_BOUNDS.east-BASE_BOUNDS.west;
+  const baseH = BASE_BOUNDS.north-BASE_BOUNDS.south;
+  const w = baseW*spanFactor;
+  const h = baseH*spanFactor;
+  mapBounds = {west:lon-w/2,east:lon+w/2,south:lat-h/2,north:lat+h/2};
+  mapZoomLevel = 2;
+  updateBaseMap();
 }
 
 function escapeHtml(s){
   return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;")
+    .replaceAll(">","&gt;").replaceAll('"',"&quot;")
     .replaceAll("'","&#39;");
 }
 
-function showTransitPopup(item){
+function showMapPopup(item, type){
   const popup = document.getElementById("transitPopup");
   if(!popup) return;
+  let label = "";
+  let name = item.name || "名称未登録";
+  let lat = item.lat, lon = item.lon;
+  let extra = "";
 
-  const t = item.el.tags || {};
-  const typeLabel = item.type === "station" ? "鉄道駅" : "バス停";
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.ll[0]+","+item.ll[1])}`;
+  if(type==="station"){
+    label="鉄道駅";
+    extra=item.operator ? `<br>${escapeHtml(item.operator)}` : "";
+  }else if(type==="bus"){
+    label="バス停";
+    extra=item.operator ? `<br>${escapeHtml(item.operator)}` : "";
+  }else if(type==="current"){
+    label="現在地";
+  }else{
+    label=item.cat || "施設・場所";
+    if(item.address) extra=`<br>${escapeHtml(item.address)}`;
+  }
 
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat+","+lon)}`;
   popup.innerHTML = `
     <button type="button" class="close" aria-label="閉じる">×</button>
-    <strong>${escapeHtml(item.name)}</strong><br>
-    ${typeLabel}${t.operator ? `<br>${escapeHtml(t.operator)}` : ""}
+    <strong>${escapeHtml(name)}</strong><br>${escapeHtml(label)}${extra}
     <br><a class="transit-map-open" href="${mapsUrl}" target="_blank" rel="noopener">地図アプリで見る</a>
   `;
-  popup.style.display = "block";
+  popup.style.display="block";
   popup.querySelector(".close")?.addEventListener("click",()=>popup.style.display="none");
 }
 
-function renderTransitMarkers(){
-  const overlay = document.getElementById("transitOverlay");
+function addOverlayMarker(overlay, lat, lon, cls, item, type, title){
+  if(!insideMap(lat,lon)) return;
+  const [x,y] = projectPoint(lat,lon);
+  const btn=document.createElement("button");
+  btn.type="button";
+  btn.className=`transit-marker ${cls}`;
+  btn.style.left=x+"%";
+  btn.style.top=y+"%";
+  btn.title=title || item.name || "";
+  btn.setAttribute("aria-label",title || item.name || "");
+  btn.addEventListener("click",()=>showMapPopup(item,type));
+  overlay.appendChild(btn);
+}
+
+function renderMapMarkers(){
+  const overlay=document.getElementById("transitOverlay");
   if(!overlay) return;
-  overlay.innerHTML = "";
+  overlay.innerHTML="";
 
-  const filtered = transitItems.filter(item =>
-    transitMode === "all" || item.type === transitMode
-  );
+  // 鉄道駅・バス停は常に表示
+  for(const item of transitItems){
+    if(item.type==="station"){
+      addOverlayMarker(overlay,item.lat,item.lon,"station",item,"station",item.name);
+    }else if(item.type==="bus"){
+      addOverlayMarker(overlay,item.lat,item.lon,"bus",item,"bus",item.name);
+    }
+  }
 
-  for(const item of filtered){
-    const [x,y] = projectTransit(item.ll[0], item.ll[1]);
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = `transit-marker ${item.type}`;
-    btn.style.left = x + "%";
-    btn.style.top = y + "%";
-    btn.title = item.name;
-    btn.setAttribute("aria-label", item.name);
-    btn.addEventListener("click",()=>showTransitPopup(item));
-    overlay.appendChild(btn);
+  // 選択カテゴリ施設
+  for(const item of poiItems){
+    addOverlayMarker(overlay,item.lat,item.lon,"poi",item,"poi",item.name);
+  }
+
+  // 現在地
+  if(currentLocation){
+    addOverlayMarker(
+      overlay,currentLocation.lat,currentLocation.lon,"current",
+      {name:"現在地",lat:currentLocation.lat,lon:currentLocation.lon},
+      "current","現在地"
+    );
   }
 }
 
-function applyTransitMode(mode){
-  transitMode = mode;
+function getTransitLatLng(el){
+  if(typeof el.lat==="number" && typeof el.lon==="number") return [el.lat,el.lon];
+  if(el.center && typeof el.center.lat==="number" && typeof el.center.lon==="number") return [el.center.lat,el.center.lon];
+  return null;
+}
 
-  const allBtn = document.getElementById("showAllTransit");
-  const stBtn = document.getElementById("showStations");
-  const busBtn = document.getElementById("showBusStops");
+function classifyTransit(el){
+  const t=el.tags||{};
+  if(t.railway==="station" || t.railway==="halt") return "station";
+  if(t.highway==="bus_stop" || t.bus==="yes" || t.public_transport==="platform") return "bus";
+  return null;
+}
 
-  [allBtn,stBtn,busBtn].forEach(b=>b && b.classList.remove("active"));
-  if(mode==="all") allBtn?.classList.add("active");
-  if(mode==="station") stBtn?.classList.add("active");
-  if(mode==="bus") busBtn?.classList.add("active");
-
-  renderTransitMarkers();
+function cleanTransitElements(elements){
+  const seen=new Set(), out=[];
+  for(const el of elements){
+    const ll=getTransitLatLng(el);
+    if(!ll) continue;
+    if(ll[0]<BASE_BOUNDS.south || ll[0]>BASE_BOUNDS.north ||
+       ll[1]<BASE_BOUNDS.west || ll[1]>BASE_BOUNDS.east) continue;
+    const type=classifyTransit(el);
+    if(!type) continue;
+    const name=(el.tags && (el.tags.name||el.tags["name:ja"])) || "名称未登録";
+    const key=`${type}|${name}|${ll[0].toFixed(5)}|${ll[1].toFixed(5)}`;
+    if(seen.has(key)) continue;
+    seen.add(key);
+    out.push({
+      name,type,lat:ll[0],lon:ll[1],
+      operator:(el.tags&&el.tags.operator)||""
+    });
+  }
+  return out;
 }
 
 async function loadTransitMap(){
-  setTransitStatus("富士宮市内の鉄道駅・バス停を取得中…");
-
-  const query = `
+  setTransitStatus("鉄道駅・バス停を取得中…");
+  const query=`
 [out:json][timeout:30];
 area["boundary"="administrative"]["name"="富士宮市"]->.searchArea;
 (
@@ -988,50 +1063,133 @@ area["boundary"="administrative"]["name"="富士宮市"]->.searchArea;
   nwr(area.searchArea)["highway"="bus_stop"];
   nwr(area.searchArea)["public_transport"="platform"]["bus"="yes"];
 );
-out center tags;
-`;
+out center tags;`;
 
-  const endpoints = [
+  const endpoints=[
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter"
   ];
 
-  let data = null;
+  let data=null;
   for(const endpoint of endpoints){
     try{
-      const res = await fetch(endpoint, {
+      const res=await fetch(endpoint,{
         method:"POST",
         headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
         body:"data="+encodeURIComponent(query),
         cache:"no-store"
       });
       if(!res.ok) throw new Error("HTTP "+res.status);
-      data = await res.json();
+      data=await res.json();
       break;
-    }catch(e){
-      console.warn("Transit API failed:", endpoint, e);
-    }
+    }catch(e){ console.warn("Transit API failed",endpoint,e); }
   }
 
   if(!data){
-    setTransitStatus("駅・バス停データを取得できませんでした。「再読み込み」を押してください。");
+    setTransitStatus("駅・バス停を取得できませんでした。「再読み込み」を押してください。");
     return;
   }
 
-  transitItems = cleanTransitElements(data.elements || []);
-  const stations = transitItems.filter(x=>x.type==="station");
-  const buses = transitItems.filter(x=>x.type==="bus");
-
-  renderTransitMarkers();
-  setTransitStatus(`富士宮市内：鉄道駅 ${stations.length}件・バス停 ${buses.length}件を表示中`);
+  transitItems=cleanTransitElements(data.elements||[]);
+  const stations=transitItems.filter(x=>x.type==="station");
+  const buses=transitItems.filter(x=>x.type==="bus");
+  renderMapMarkers();
+  setTransitStatus(`鉄道駅 ${stations.length}件・バス停 ${buses.length}件を常時表示`);
 }
 
-document.getElementById("showAllTransit")?.addEventListener("click",()=>applyTransitMode("all"));
-document.getElementById("showStations")?.addEventListener("click",()=>applyTransitMode("station"));
-document.getElementById("showBusStops")?.addEventListener("click",()=>applyTransitMode("bus"));
-document.getElementById("reloadTransit")?.addEventListener("click",loadTransitMap);
+function getGeoCache(){
+  try{return JSON.parse(localStorage.getItem(geocodeCacheKey)||"{}");}
+  catch{return {};}
+}
+function saveGeoCache(c){ localStorage.setItem(geocodeCacheKey,JSON.stringify(c)); }
 
-window.addEventListener("load",()=>setTimeout(loadTransitMap,250));
+async function geocodeSpot(spot){
+  const cache=getGeoCache();
+  const key=(spot.name||"")+"|"+(spot.address||"");
+  if(cache[key]) return cache[key];
+
+  const query=[spot.name,spot.address,"富士宮市","静岡県"].filter(Boolean).join(" ");
+  try{
+    const url="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=jp&q="+encodeURIComponent(query);
+    const res=await fetch(url,{headers:{"Accept":"application/json"},cache:"force-cache"});
+    if(!res.ok) return null;
+    const arr=await res.json();
+    if(!arr.length) return null;
+    const lat=Number(arr[0].lat), lon=Number(arr[0].lon);
+    if(!Number.isFinite(lat)||!Number.isFinite(lon)) return null;
+    if(lat<BASE_BOUNDS.south || lat>BASE_BOUNDS.north || lon<BASE_BOUNDS.west || lon>BASE_BOUNDS.east) return null;
+    const val={lat,lon};
+    cache[key]=val; saveGeoCache(cache);
+    return val;
+  }catch(e){ return null; }
+}
+
+async function refreshCategoryMap(){
+  const label=document.getElementById("mapCategoryLabel");
+  if(label) label.textContent=`選択カテゴリ：${selected}`;
+
+  // 交通は別扱い。お気に入りはお気に入りのみ。
+  let candidates=spots.filter(s=>{
+    if((s.cat||"").trim()==="交通") return false;
+    if(selected==="すべて") return true;
+    if(selected==="お気に入り") return favs().includes(s.name);
+    return categoryMatches(s,selected);
+  });
+
+  // 地図が重くならないよう、カテゴリごと最大30件を住所から位置取得。
+  candidates=candidates.slice(0,30);
+  poiItems=[];
+  renderMapMarkers();
+
+  let done=0;
+  for(const s of candidates){
+    const pos=await geocodeSpot(s);
+    if(pos){
+      poiItems.push({
+        name:s.name,cat:s.cat,address:s.address||"",
+        lat:pos.lat,lon:pos.lon
+      });
+    }
+    done++;
+    if(done%5===0) renderMapMarkers();
+    // Nominatimへの過剰アクセスを避ける
+    await new Promise(r=>setTimeout(r,220));
+  }
+  renderMapMarkers();
+}
+
+function requestCurrentLocation(){
+  if(!navigator.geolocation){
+    alert("この端末では位置情報を利用できません。");
+    return;
+  }
+  setTransitStatus("現在地を取得しています…");
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      currentLocation={lat:pos.coords.latitude,lon:pos.coords.longitude};
+      centerMap(currentLocation.lat,currentLocation.lon,0.12);
+      renderMapMarkers();
+      setTransitStatus("現在地を表示しました。鉄道駅・バス停は常に表示されています。");
+    },
+    err=>{
+      setTransitStatus("現在地を取得できませんでした。iPhoneの位置情報許可を確認してください。");
+    },
+    {enableHighAccuracy:true,timeout:10000,maximumAge:30000}
+  );
+}
+
+document.getElementById("showAllTransit")?.addEventListener("click",()=>{transitMode="all";renderMapMarkers();});
+document.getElementById("showStations")?.addEventListener("click",()=>{transitMode="station";renderMapMarkers();});
+document.getElementById("showBusStops")?.addEventListener("click",()=>{transitMode="bus";renderMapMarkers();});
+document.getElementById("reloadTransit")?.addEventListener("click",loadTransitMap);
+document.getElementById("mapZoomIn")?.addEventListener("click",()=>zoomMap(0.62));
+document.getElementById("mapZoomOut")?.addEventListener("click",()=>zoomMap(1.55));
+document.getElementById("mapMyLocation")?.addEventListener("click",requestCurrentLocation);
+
+window.addEventListener("load",()=>{
+  setTimeout(loadTransitMap,250);
+  setTimeout(refreshCategoryMap,500);
+});
 </script>
 
 </body>
