@@ -238,3 +238,11 @@
 - アプリ本体を背景より前面に固定
 - Service Workerをv31に更新し、背景画像もno-cache対象に追加
 - Supabase接続修正（正しいREST URL）はv30のまま維持
+
+## v32 背景画像の完全埋め込み修正
+- 背景写真を `index.html` 内に直接埋め込み（Data URI）
+- GitHub上で `assets` フォルダのパスやアップロード漏れがあっても背景が消えない方式
+- 背景は `position: fixed` で画面全体に固定
+- 同じ写真を `assets/fujinomiya-background-v32.jpg` にも予備保存
+- iPhone/PWAで壊れた画像アイコンが出ない構成に変更
+- Supabase接続処理はv30/v31の正しいREST URL修正を維持
